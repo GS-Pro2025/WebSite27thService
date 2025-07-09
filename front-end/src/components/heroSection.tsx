@@ -26,7 +26,7 @@ const HeroSection: React.FC = () => {
         </div>
         
         {/** Quote here */}
-        <div className="absolute inset-0 z-10 flex items-center">
+        <div className="absolute inset-0 z-10 flex items-center bottom-40">
             <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-left text-white max-w-lg ml-8 lg:ml-16">
                     <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold mb-6 uppercase leading-tight">
