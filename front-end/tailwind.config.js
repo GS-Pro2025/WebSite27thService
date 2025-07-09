@@ -9,8 +9,11 @@ export default {
       colors: {
         primary: "#7BABAF",
         secondary: "#0E6F7E",
-        customgray: "#A7C3BC",
-        
+        third: "#A7C3BC",
+        yellow: "#FFE67B",
+        gray: "#D9D9D9",
+        white : "#FFFFFF",
+        black: "#000000"
       },
     },
   },
