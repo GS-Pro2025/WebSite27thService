@@ -2,43 +2,45 @@ import React from 'react';
 
 const HeroSection: React.FC = () => {
   return (
-    <section className="relative w-full h-screen overflow-hidden">
-        {/** BACKGROUND */}
-        <div className="absolute inset-0 z-0">
-            {/* Imagen para móviles */}
-            <img
-                src="/assets/hero_group.svg"
-                alt="Hero Background"
-                className="block sm:hidden w-full h-full object-cover object-left"
-            />
-            {/* Imagen para tablets */}
-            <img
-                src="/assets/hero_group.svg"
-                alt="Hero Background"
-                className="hidden sm:block lg:hidden w-full h-full object-cover object-center"
-            />
-            {/* Imagen para desktop */}
-            <img
-                src="/assets/hero_group.svg"
-                alt="Hero Background"
-                className="hidden lg:block w-full h-full object-cover object-center"
-            />
+    <section className="relative w-full bg-[#C6D7CE] overflow-hidden min-h-[600px] md:min-h-[700px] lg:min-h-[800px] flex items-center pt-20 pb-20"> 
+
+      <div className="absolute bottom-0 left-0 w-full z-0">
+        <img
+          src="/assets/superior.svg"
+          alt="Ola inferior"
+          className="w-full h-auto object-cover object-bottom"
+        />
+      </div>
+
+        {/* IMAGEN SUPERIOR DERECHA */}
+        <div className="absolute top-0 right-0 z-10 hidden md:block">
+        <img
+            src="/assets/logo_principal_inicio.png"
+            alt="Equipo Twenty Seventh"
+            className="w-[350px] sm:w-[450px] md:w-[500px] lg:w-[600px] xl:w-[700px] h-auto object-cover"
+        />
         </div>
-        
-        {/** Quote here */}
-        <div className="absolute inset-0 z-10 flex items-center bottom-40">
-            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-left text-white max-w-lg ml-8 lg:ml-16">
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold mb-6 uppercase leading-tight">
-                        Un nuevo comienzo<br />
-                        <span className="text-yellow">inicia aquí</span>
-                    </h1>
-                    <button className="bg-yellow hover:bg-yellow/80 text-black font-semibold px-6 py-3 sm:px-8 sm:py-3 rounded-full transition-colors uppercase tracking-wide text-sm sm:text-base">
-                        Cotiza aquí
-                    </button>
-                </div>
-            </div>
+
+
+      {/* CONTENIDO TEXTO */}
+      <div className="relative z-20 max-w-7x1 px-20 flex items-start h-full -mt-20"> 
+        <div className="max-w-xl text-center md:text-left">
+          <h1 className="text-[#FFFF] text-3xl sm:text-4xl lg:text-5xl font-bold uppercase mb-6 leading-tight">
+            Un nuevo comienzo<br />
+            Inicia aquí
+          </h1>
+
+          <button className="bg-[#FEDC56] hover:bg-[#FEDC56]/80 text-[#000000] font-semibold px-8 py-3 rounded-full uppercase text-sm sm:text-base mb-8 transition-colors">
+            Cotiza aquí
+          </button>
+
+          <p className="text-[#585858] text-base sm:text-lg font-medium leading-relaxed">
+            Tu mudanza hace parte de tu nueva historia por eso, <br />
+            <span className="text-[#FFE67B] font-bold">estamos aquí para cuidar lo que amas</span> y guiarte en cada paso del trayecto.
+          </p>
         </div>
+      </div>
+
     </section>
   );
 };

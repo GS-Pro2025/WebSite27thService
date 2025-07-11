@@ -38,7 +38,7 @@ const Navbar: React.FC = () => {
                 isScrolled ? 'text-gray-700' : 'text-white'
               }`}
             >
-              SERVICES
+              SERVICIOS
             </a>
             <a 
               href="#moving" 
@@ -46,7 +46,7 @@ const Navbar: React.FC = () => {
                 isScrolled ? 'text-gray-700' : 'text-white'
               }`}
             >
-              YOUR MOVING
+              TU MUDANZA
             </a>
             <a 
               href="#about-us" 
@@ -54,7 +54,7 @@ const Navbar: React.FC = () => {
                 isScrolled ? 'text-gray-700' : 'text-white'
               }`}
             >
-              ABOUT US
+              NOSOTROS
             </a>
             <a 
               href="#coverage" 
@@ -62,14 +62,14 @@ const Navbar: React.FC = () => {
                 isScrolled ? 'text-gray-700' : 'text-white'
               }`}
             >
-              COVERAGE
+              COBERTURA
             </a>
           </div>
 
           {/* Contact Button */}
           <div className="flex items-center ml-8">
             <button className="bg-yellow hover:bg-yellow/80 text-black font-semibold px-6 py-2 rounded-full transition-colors">
-              CONTACT US
+              CONTÁCTANOS
             </button>
           </div>
 
