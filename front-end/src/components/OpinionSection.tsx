@@ -127,10 +127,6 @@ const TexturedSection = () => {
         />
       </div>
 
-      {/* Contenido adicional */}
-      <div className="absolute inset-0 z-10 flex items-center justify-center">
-        {/* Texto u otros elementos aquí */}
-      </div>
     </section>
   );
 };
