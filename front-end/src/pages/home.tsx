@@ -9,12 +9,12 @@ import MidSection from '../components/MidSection';
 const Home: React.FC = () => {
   return (
     <div className="w-full min-h-screen bg-white overflow-visible">
-      <HeroSection />
+      {/* <HeroSection />
       <ProcessSection />
       <UsSection />
       <MidSection />
-      <ServicesSection />
-      {/* <OpinionSection /> */}
+      <ServicesSection /> */}
+      <OpinionSection />
     </div>
   );
 };
