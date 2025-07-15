@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import logo27 from '../../public/assets/27_logo_white.svg';
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -24,7 +23,7 @@ const Navbar: React.FC = () => {
           {/* Logo */}
           <div className="flex items-center">
             <img 
-              src={logo27} 
+              src="/assets/27_logo_white.svg" 
               alt="Twenty Seventh" 
               className="h-12 w-auto transition-transform duration-300 hover:scale-110 cursor-pointer"
             />
