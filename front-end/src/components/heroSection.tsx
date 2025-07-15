@@ -4,14 +4,15 @@ const HeroSection: React.FC = () => {
   return (
     <section className="relative w-full bg-[#C6D7CE] overflow-hidden min-h-[600px] md:min-h-[700px] lg:min-h-[800px] flex items-center pt-20 pb-20">
 
-      {/* Ola superior */}
-      <div className="absolute top-0 lg:bottom-0 lg:top-auto left-0 w-full z-0">
-        <img
-          src="/assets/superior.svg"
-          alt="Ola inferior"
-          className="w-full h-auto object-cover object-bottom"
-        />
-      </div>
+{/* Ola superior */}
+<div className="absolute top-0 left-0 w-full z-0">
+  <img
+    src="/assets/superior.svg"
+    alt="Ola superior"
+    className="w-full h-auto object-cover object-bottom"
+  />
+</div>
+
 
       {/* Imagen decorativa derecha */}
       <div className="absolute top-0 right-0 z-10 hidden md:block">
