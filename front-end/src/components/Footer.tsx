@@ -3,6 +3,9 @@ import React from 'react';
 const Footer: React.FC = () => {
   return (
     <footer className="relative w-full overflow-hidden bg-[#7AACAE]">
+      {/* <div>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#0099ff" fill-opacity="1" d="M0,224L120,234.7C240,245,480,267,720,250.7C960,235,1200,181,1320,154.7L1440,128L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"></path></svg>
+      </div> */}
 
       {/* Contenido principal del footer */}
       <div className="relative z-20 flex flex-col md:flex-row w-full">

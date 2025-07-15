@@ -5,16 +5,6 @@ const ProcessSection: React.FC = () => {
   return (
     <section className="relative w-full -mt-83 z-10 bg-[#7AACAE] overflow-hidden pt-24 pb-16">
 
-      {/* OLA SUPERIOR SOBRE EL HERO */}
-      <div className="absolute -top-1 left-0 w-full">
-        <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg" className="w-full h-32">
-          <path
-            fill="#7AACAE"
-            d="M0,64L48,85.3C96,107,192,149,288,149.3C384,149,480,107,576,101.3C672,96,768,128,864,149.3C960,171,1056,181,1152,186.7C1248,192,1344,192,1392,192L1440,192L1440,0L0,0Z"
-          />
-        </svg>
-      </div>
-
       {/* CONTENIDO */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 

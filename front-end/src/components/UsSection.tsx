@@ -9,13 +9,13 @@ const UsSection: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
           
           {/* Imagen */}
-          <div className="relative w-full max-w-2xl mx-auto">
+          <div className="relative w-full max-w-7xl mx-auto transform -translate-y-12">
             <img
-              src="/assets/equipo.png"
+              src="/assets/banner.png"
               alt="Nuestro equipo"
-              className="rounded shadow-xl border border-gray-300"
+              className="w-full rounded"
             />
-            <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-[#FFE67B] text-white font-bold text-sm px-6 py-2 rounded-full shadow uppercase">
+            <div className="absolute top-7 left-1/2 transform -translate-x-1/2 bg-[#FFE67B] text-white font-bold text-sm px-10 py-3 rounded-full shadow uppercase">
               Nosotros
             </div>
           </div>
