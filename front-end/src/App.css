@@ -1,3 +1,4 @@
+@import "tailwindcss";
 #root {
   /* Eliminar las restricciones de ancho y centrado */
   width: 100%;

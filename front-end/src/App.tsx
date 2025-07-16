@@ -1,16 +1,25 @@
-import Navbar from './components/navbar'
-import './App.css'
-import Home from './pages/home'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/navbar';
+import './App.css';
+import Home from './pages/home';
+import Service from './pages/service';
 import Footer from './components/Footer';
 
 function App() {
   return (
-    <div className="w-full overflow-visible">
-      <Navbar />
-      <Home/>
-            <Footer />
-    </div>
-  )
+    <Router>
+      <div className="w-full overflow-visible">
+        <Navbar />
+        
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/services" element={<Service />} />
+        </Routes>
+        
+        <Footer />
+      </div>
+    </Router>
+  );
 }
 
-export default App
+export default App;
