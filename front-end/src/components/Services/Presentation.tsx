@@ -27,16 +27,16 @@ const Presentation: React.FC = () => {
     <div className="relative min-h-screen bg-[#68A2A6] overflow-hidden">
       
       {/* Right Section - Family Image (Fondo) */}
-      <div className="absolute top-0 right-0 w-full md:w-2/3 lg:w-1/2 h-full">
+      <div className="absolute right-0 w-full md:w-2/3 lg:w-5/10 h-full">
         <img 
           src={Family} 
           alt="Familia feliz" 
-          className="w-full h-11/12 object-cover object-center"
+          className="w-full h-auto object-cover object-center"
         />
         
         {/* Overlay con texto */}
-        <div className="absolute bottom-8 right-8 text-right">
-          <h2 className="text-white text-lg md:text-xl lg:text-2xl xl:text-3xl font-light leading-tight">
+        <div className="absolute bottom-60 right-20 text-right">
+          <h2 className="text-white text-lg md:text-xl lg:text-2xl xl:text-4xl font-medium leading-tight">
             Hacemos de cada{' '}
             <span className="text-[#FFE67B] font-bold">movimiento</span>
             <br />
@@ -51,21 +51,21 @@ const Presentation: React.FC = () => {
         <img 
           src={logoFlecha} 
           alt="Twenty Seventh Logo" 
-          className="w-80 md:w-96 lg:w-[500px] xl:w-[1200px] h-auto"
+          className="w-80 md:w-96 lg:w-5/7 xl:w-270 h-auto"
         />
       </div>
 
       {/* Vector decorativo - Debajo del contenido pero encima de la familia */}
-      <div className="absolute top-110 -left-10 w-full z-5">
+      <div className="absolute top-80 left-0 w-full z-5">
         <img 
           src={onda} 
           alt="Vector decorativo" 
-          className="w-full h-full object-cover opacity-80"
+          className="w-full h-150 object-cover"
         />
       </div>
 
       {/* Left Section - Contenido principal */}
-      <div className="relative top-50 mb-60  z-10 flex flex-col justify-center min-h-screen px-4 md:px-8 lg:px-16 pt-32 md:pt-40">
+      <div className="relative top-50 mb-10  z-10 flex flex-col justify-center min-h-screen px-4 md:px-8 lg:px-16 pt-32 md:pt-40">
         <div className="max-w-md lg:max-w-lg">
           
           {/* Título */}
