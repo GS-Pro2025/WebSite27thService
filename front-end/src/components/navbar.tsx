@@ -101,7 +101,6 @@ const Navbar: React.FC = () => {
               COVERAGE
             </span>
           </div>
-
           {/* Contact Button */}
           <div className="flex items-center ml-8">
             <button

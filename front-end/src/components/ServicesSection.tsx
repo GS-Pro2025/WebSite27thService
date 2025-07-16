@@ -3,9 +3,6 @@ import React from 'react';
 const ServicesSection: React.FC = () => {
   return (
     <section className="relative w-full h-[750px] sm:h-[800px] md:h-[850px] lg:h-[900px] overflow-hidden font-['Montserrat'] -mt-20 sm:-mt-24 md:-mt-28 lg:-mt-32 z-0">
-      
-      {/* Fondo degradado */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#F7F7F7] to-[#076d7c] z-0" />
 
       {/* Imagen pareja SOLO en la parte inferior de la sección */}
       <img
