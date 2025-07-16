@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import CardTS from '../Services/CardTS';
 import CardComponent from '../Services/CardCom';
-
-import icon from "/assets/27_logo_white.svg"
+import CardHome from '../Services/CardHg';
+import icon from "/assets/LogoAzul.svg"
 import icon1 from "/assets/RecursoSlider1.svg"
 import icon2 from "/assets/RecursoSlider2.svg"
 import icon3 from "/assets/RecursoSlider3.svg"
@@ -144,7 +144,9 @@ const TabsCarousel: React.FC = () => {
               <CardTS />
             ) : index === 1 ? (
               <CardComponent /> 
-            ) : (
+            ) :index === 2 ? (
+            <CardHome/>
+          ):(
               <div className="flex items-center justify-center h-full px-4">
                 <div className="text-center">
                   <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">

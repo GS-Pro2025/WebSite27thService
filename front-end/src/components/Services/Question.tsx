@@ -1,0 +1,262 @@
+import React, { useState } from "react";
+import bagroundImg from "/assets/FondoQuestion.svg";
+import box from "/assets/Box.png";
+import linea from "/assets/Linea.svg";
+const FAQComponent = () => {
+  const [selectedFAQ, setSelectedFAQ] = useState(null);
+
+  const faqs = [
+    {
+      id: 1,
+      question: "¿Qué determina el costo de mi mudanza?",
+      answer:
+        "El costo depende de factores como la distancia, el volumen de objetos, servicios adicionales y la temporada.",
+      position: "top-left",
+      
+    },
+    {
+      id: 2,
+      question: "¿Puedo hacer una mudanza personalizada?",
+      answer:
+        "Sí, ofrecemos servicios personalizados según tus necesidades específicas y presupuesto.",
+      position: "top-right",
+     
+    },
+    {
+      id: 3,
+      question: "¿puedo mover un solo objeto?",
+      answer:
+        "Por supuesto, manejamos desde objetos individuales hasta mudanzas completas.",
+      position: "bottom-left",
+      
+    },
+    {
+      id: 4,
+      question: "¿puedo calcular cuanto peso llevo?",
+      answer:
+        "Sí, te ayudamos a calcular el peso aproximado y te damos recomendaciones.",
+      position: "bottom-center",
+     
+    },
+    {
+      id: 5,
+      question: "¿cómo cuidan mis objetos de alto valor?",
+      answer:
+        "Utilizamos materiales especiales, seguros y personal capacitado para objetos valiosos.",
+      position: "bottom-right",
+    
+    },
+  ];
+
+  const getPositionClasses = (position) => {
+    switch (position) {
+      case "top-left":
+        return "absolute top-6 left-4 md:left-8";
+      case "top-right":
+        return "absolute top-6 right-4 md:right-8";
+      case "bottom-left":
+        return "absolute bottom-20 left-4 md:left-8";
+      case "bottom-center":
+        return "absolute bottom-4 left-1/2 transform -translate-x-1/2";
+      case "bottom-right":
+        return "absolute bottom-20 right-4 md:right-8";
+      default:
+        return "";
+    }
+  };
+
+  return (
+    <div className="relative h-lvw overflow-hidden bg-gradient-to-b from-[#68A2A6] to-[#0E6F7E]/60">
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <img
+          src={bagroundImg}
+          alt="Background"
+          className="w-full h-full object-cover opacity-80"
+        />
+      </div>
+
+      {/* Boxes Background */}
+      <div className="absolute bottom-100 left-0 w-1/3 h-1/3">
+        <img
+          src={box}
+          alt="Moving boxes"
+          className="w-full h-full object-cover object-top"
+        />
+      </div>
+      <div className="absolute bottom-60 w-full h-auto">
+        <img
+          src={linea}
+          alt="Lines"
+          className="w-full h-full object-cover object-top"
+        />
+      </div>
+      <div className="flex flex-col items-center justify-center">
+        <div className="bg-[#FFE67B] backdrop-blur-sm mx-4 md:mx-8 lg:mx-20 w-1/3 rounded-3xl p-6 shadow-2xl">
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-2 text-center">
+            <span className="text-white">Resolvemos tus dudas</span>
+          </h1>
+        </div>
+        <p className="text-lg md:text-3xl text-[#585858] text-center">
+          Porque mudarse debe ser{" "}
+          <span className="text-[#FFE67B] font-semibold">
+            fácil, tranquilo y confiable
+          </span>
+        </p>
+      </div>
+      {/* Central Circle */}
+      <div className="relative z-10 flex items-center justify-center h-full -top-120">
+        <div className="relative">
+          {/* Outer circle */}
+          <div className="w-[500px] h-[500px] md:w-[900px] md:h-[900px] rounded-full border-4 border-white/50 flex items-center justify-center">
+            {/* Inner circle */}
+            <div className="w-80 h-80 md:w-150 md:h-150 rounded-full border-2 border-white/50 flex items-center justify-center">
+              {/* Center circle */}
+              <div className="w-60 h-60 md:w-100 md:h-100 bg-teal-600 rounded-full flex items-center justify-center shadow-2xl">
+                <div className="text-center">
+                  <h2 className="text-white font-bold text-xl md:text-3xl mb-1">
+                    PREGUNTAS
+                  </h2>
+                  <h2 className="text-white font-bold text-xl md:text-3xl">
+                    FRECUENTES
+                  </h2>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* FAQ Cards */}
+          {faqs.map((faq) => (
+            <div
+              key={faq.id}
+              className={`${getPositionClasses(
+                faq.position
+              )} w-48 md:w-56 group cursor-pointer transform transition-all duration-300 hover:scale-105`}
+              onClick={() =>
+                setSelectedFAQ(selectedFAQ === faq.id ? null : faq.id)
+              }
+            >
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/50 hover:bg-white/90 transition-all duration-300">
+                <div className="flex items-start gap-3">
+                  <div className="text-2xl flex-shrink-0 mt-1">{faq.icon}</div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-gray-800 text-sm leading-tight mb-2">
+                      {faq.question}
+                    </h3>
+                    {selectedFAQ === faq.id && (
+                      <div className="animate-in slide-in-from-top duration-300">
+                        <p className="text-xs text-gray-600 leading-relaxed border-t border-gray-200 pt-2">
+                          {faq.answer}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Connector line to center */}
+                <div className="absolute inset-0 pointer-events-none">
+                  <div className="w-px h-8 bg-gradient-to-b from-teal-400 to-transparent absolute top-full left-1/2 transform -translate-x-1/2 opacity-30"></div>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* Connection lines */}
+          <svg
+            className="absolute inset-0 w-full h-full pointer-events-none"
+            style={{
+              width: "600px",
+              height: "600px",
+              left: "-100px",
+              top: "-100px",
+            }}
+          >
+            <defs>
+              <pattern
+                id="dots"
+                x="0"
+                y="0"
+                width="20"
+                height="20"
+                patternUnits="userSpaceOnUse"
+              >
+                <circle cx="10" cy="10" r="1" fill="white" opacity="0.3" />
+              </pattern>
+            </defs>
+
+            {/* Dotted connection lines */}
+            <line
+              x1="100"
+              y1="100"
+              x2="300"
+              y2="300"
+              stroke="url(#dots)"
+              strokeWidth="2"
+              opacity="0.5"
+            />
+            <line
+              x1="500"
+              y1="100"
+              x2="300"
+              y2="300"
+              stroke="url(#dots)"
+              strokeWidth="2"
+              opacity="0.5"
+            />
+            <line
+              x1="100"
+              y1="500"
+              x2="300"
+              y2="300"
+              stroke="url(#dots)"
+              strokeWidth="2"
+              opacity="0.5"
+            />
+            <line
+              x1="300"
+              y1="550"
+              x2="300"
+              y2="300"
+              stroke="url(#dots)"
+              strokeWidth="2"
+              opacity="0.5"
+            />
+            <line
+              x1="500"
+              y1="500"
+              x2="300"
+              y2="300"
+              stroke="url(#dots)"
+              strokeWidth="2"
+              opacity="0.5"
+            />
+          </svg>
+        </div>
+      </div>
+
+      {/* Modal for mobile */}
+      {selectedFAQ && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 md:hidden">
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-bold text-gray-800 text-lg">
+                {faqs.find((f) => f.id === selectedFAQ)?.question}
+              </h3>
+              <button
+                onClick={() => setSelectedFAQ(null)}
+                className="text-gray-400 hover:text-gray-600 text-2xl"
+              >
+                ×
+              </button>
+            </div>
+            <p className="text-gray-600 leading-relaxed">
+              {faqs.find((f) => f.id === selectedFAQ)?.answer}
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default FAQComponent;

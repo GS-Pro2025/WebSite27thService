@@ -1,7 +1,7 @@
 import React from 'react';
 import Presentation from '../components/Services/Presentation';
 import SliderServices from '../components/Services/SliderServices';
-
+import Question from '../components/Services/Question';
 
 const Service: React.FC = () => {
   return (
@@ -14,6 +14,9 @@ const Service: React.FC = () => {
       {/* SliderServices */}
       <div className="relative z-10 ">
         <SliderServices/>
+      </div>
+      <div className="relative z-11 ">
+        <Question/>
       </div>
     </section>
   );
