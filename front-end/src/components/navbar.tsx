@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -11,7 +10,6 @@ const Navbar: React.FC = () => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -41,9 +39,7 @@ const Navbar: React.FC = () => {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-[#0E6F7E]/60 backdrop-blur-md shadow-lg"
-          : "bg-transparent"
+        isScrolled ? "bg-white/90 backdrop-blur-md shadow-lg" : "bg-transparent"
       }`}
     >
       <div className="w-full px-4 sm:px-6 lg:px-8">
@@ -60,42 +56,42 @@ const Navbar: React.FC = () => {
 
           {/* Navigation Links - Desktop */}
           <div className="hidden md:flex items-center space-x-8 ml-8">
-            <span
-              onClick={() => navigateToPage("services")}
-              className={`font-medium transition-colors hover:text-[#FFE67B] cursor-pointer text-white ${
-                isActivePage("services")
-                  ? "text-[#FFE67B] border-b-2 border-[#FFE67B]"
-                  : ""
+            <a
+              href="#services"
+              className={`font-medium transition-colors duration-300 ${
+                isScrolled
+                  ? "text-gray-700 hover:text-[#FFE67B]"
+                  : "text-white hover:text-[#FFE67B]"
               }`}
             >
-              SERVICES
-            </span>
-            <span
-              onClick={() => navigateToPage("your-move")}
-              className={`font-medium transition-colors hover:text-[#FFE67B] cursor-pointer text-white ${
-                isActivePage("your-move")
-                  ? "text-[#FFE67B] border-b-2 border-[#FFE67B]"
-                  : ""
+              SERVICIOS
+            </a>
+            <a
+              href="#moving"
+              className={`font-medium transition-colors duration-300 ${
+                isScrolled
+                  ? "text-gray-700 hover:text-[#FFE67B]"
+                  : "text-white hover:text-[#FFE67B]"
               }`}
             >
-              YOUR MOVE
-            </span>
-            <span
-              onClick={() => navigateToPage("about-us")}
-              className={`font-medium transition-colors hover:text-[#FFE67B] cursor-pointer text-white ${
-                isActivePage("about-us")
-                  ? "text-[#FFE67B] border-b-2 border-[#FFE67B]"
-                  : ""
+              TU MUDANZA
+            </a>
+            <a
+              href="#about-us"
+              className={`font-medium transition-colors duration-300 ${
+                isScrolled
+                  ? "text-gray-700 hover:text-[#FFE67B]"
+                  : "text-white hover:text-[#FFE67B]"
               }`}
             >
-              ABOUT US
-            </span>
-            <span
-              onClick={() => navigateToPage("coverage")}
-              className={`font-medium transition-colors hover:text-[#FFE67B] cursor-pointer text-white ${
-                isActivePage("coverage")
-                  ? "text-[#FFE67B] border-b-2 border-[#FFE67B]"
-                  : ""
+              NOSOTROS
+            </a>
+            <a
+              href="#coverage"
+              className={`font-medium transition-colors duration-300 ${
+                isScrolled
+                  ? "text-gray-700 hover:text-[#FFE67B]"
+                  : "text-white hover:text-[#FFE67B]"
               }`}
             >
               COVERAGE
@@ -109,30 +105,26 @@ const Navbar: React.FC = () => {
             >
               CONTACT US
             </button>
-
-            {/* Mobile menu button */}
-            <div className="md:hidden ml-4">
-              <button
-                onClick={toggleMobileMenu}
-                className="p-2 rounded-md text-white"
+          </div>
+          {/* Mobile menu button */}
+          <div className="md:hidden ml-auto">
+            <button
+              className={`p-2 rounded-md ${
+                isScrolled ? "text-gray-700" : "text-white"
+              }`}
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  {isMobileMenuOpen ? (
-                    <path d="M6 18L18 6M6 6l12 12"></path>
-                  ) : (
-                    <path d="M4 6h16M4 12h16M4 18h16"></path>
-                  )}
-                </svg>
-              </button>
-            </div>
+                <path d="M4 6h16M4 12h16M4 18h16"></path>
+              </svg>
+            </button>
           </div>
         </div>
 

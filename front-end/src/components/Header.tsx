@@ -1,4 +1,4 @@
-import logo from '../assets/logo.png';
+import logo from "../assets/logo.png";
 
 const Header = () => {
   return (
@@ -14,10 +14,18 @@ const Header = () => {
 
         {/* Menú de navegación */}
         <nav className="hidden md:flex items-center space-x-6 text-white font-semibold text-base">
-          <a href="#services" className="hover:text-yellow-300">SERVICIOS</a>
-          <a href="#mudanza" className="hover:text-yellow-300">TU MUDANZA</a>
-          <a href="#nosotros" className="hover:text-yellow-300">NOSOTROS</a>
-          <a href="#cobertura" className="hover:text-yellow-300">COBERTURA</a>
+          <a href="#services" className="hover:text-yellow-300">
+            SERVICIOS
+          </a>
+          <a href="#mudanza" className="hover:text-yellow-300">
+            TU MUDANZA
+          </a>
+          <a href="#nosotros" className="hover:text-yellow-300">
+            NOSOTROS
+          </a>
+          <a href="#cobertura" className="hover:text-yellow-300">
+            COBERTURA
+          </a>
         </nav>
 
         {/* Botón de contacto */}
