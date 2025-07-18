@@ -128,7 +128,7 @@ const Footer: React.FC = () => {
           {/* Columna Derecha - Logo */}
           <div className="w-full md:w-1/2 bg-[#0E6F7E] h-[300px] md:h-auto flex items-center justify-center">
             <img
-              src="/assets/27_logo_white_729x729.svg"
+              src="/assets/logofooter.svg"
               alt="Twenty Seventh Logo"
               className="w-full h-full object-contain"
             />

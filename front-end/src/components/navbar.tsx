@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
