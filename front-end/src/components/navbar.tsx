@@ -26,9 +26,9 @@ const Navbar: React.FC = () => {
     navigate("/");
   };
 
-  const toggleMobileMenu = () => {
+  /**const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+  };**/
 
   // Helper function to check if current page is active
   const isActivePage = (page: string) => {

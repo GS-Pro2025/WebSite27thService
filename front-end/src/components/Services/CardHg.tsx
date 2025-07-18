@@ -4,17 +4,17 @@ const MovingHeroComponent = () => {
   const [moveSize, setMoveSize] = useState('');
   
   return (
-    <div className="relative max-h-screen overflow-hidden">
+    <div className="relative w-full h-full overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
           src="/assets/Slider2.png"
           alt="Equipo de mudanzas trabajando"
-          className="w-full h-8/12 object-cover rounded-t-4xl"
+          className="w-full h-full object-cover rounded-t-4xl"
         />
       </div>
 
-      <div className="relative z-10 flex min-h-screen">
+      <div className="relative z-10 flex h-full">
         {/* Left Side - Quote Calculator */}
         <div className="w-full lg:w-2/5 flex items-start justify-center p-2 pt-16">
           <div className="bg-white/30 backdrop-blur-sm rounded-3xl shadow-2xl p-8 w-full max-w-md border border-orange-200">

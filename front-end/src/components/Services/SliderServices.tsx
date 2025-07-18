@@ -61,10 +61,10 @@ const TabsCarousel: React.FC = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(index)}
-              className={`min-w-24 px-10 relative transition-all duration-500 transform bg-white rounded-full border-2 border-black
+              className={`min-w-24 px-10 relative transition-all duration-500 transform rounded-full border-2 border-black
                 ${activeTab === index
-                  ? ' z-20 scale-110 rounded-full'
-                  : 'z-10 hover:scale-105'
+                  ? 'z-20 scale-110 bg-[#FFE67B]'
+                  : 'z-10 hover:scale-105 bg-white'
                 }`}
               style={{
                 marginLeft: index === 0 ? '0' : '-70px',
