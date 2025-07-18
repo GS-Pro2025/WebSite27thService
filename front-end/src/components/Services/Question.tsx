@@ -86,7 +86,7 @@ const FAQComponent = () => {
   };
 
   return (
-    <div className="relative h-lvw overflow-hidden bg-gradient-to-b from-[#68A2A6] to-[#0E6F7E]/60">
+    <div className="relative h-lvw bg-gradient-to-b from-[#68A2A6] to-[#0E6F7E]/60">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
@@ -111,9 +111,15 @@ const FAQComponent = () => {
           className="w-full h-full object-cover object-top"
         />
       </div>
-      <div className="flex flex-col items-center justify-center">
-        <div className="bg-[#FFE67B] backdrop-blur-sm mx-4 md:mx-8 lg:mx-20 w-1/3 rounded-3xl p-6 shadow-2xl">
-          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-2 text-center">
+      <div className="flex flex-col items-center justify-center relative z-30 overflow-visible pt-8">
+        <div className="bg-[#FFE67B] backdrop-blur-sm mx-4 md:mx-8 lg:mx-20 w-1/3 min-w-fit rounded-3xl p-6 shadow-2xl relative overflow-visible">
+          {/* Imagen alineada arriba a la derecha */}
+          <img
+            src="/assets/Recurso_question_faq.svg"
+            alt="FAQ"
+            className="w-12 md:w-16 lg:w-20 absolute -top-6 -right-2 md:-top-8 md:-right-4 z-50"
+          />
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-2 text-center pr-8 md:pr-12">
             <span className="text-white">Resolvemos tus dudas</span>
           </h1>
         </div>
