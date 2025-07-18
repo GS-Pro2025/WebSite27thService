@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import FormCobertura from "./FormCover";
+import FormCobertura from "../FormCover";
 
 const OpinionSection = () => {
   const [rating, setRating] = useState(0);
