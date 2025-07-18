@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -95,7 +96,7 @@ const Navbar: React.FC = () => {
               }`}
             >
               COVERAGE
-            </span>
+            </a>
           </div>
           {/* Contact Button */}
           <div className="flex items-center ml-8">
