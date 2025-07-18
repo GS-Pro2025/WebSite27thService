@@ -2,6 +2,7 @@ import React from 'react';
 import Presentation from '../components/Services/Presentation';
 import SliderServices from '../components/Services/SliderServices';
 import Question from '../components/Services/Question';
+import ValuableObjects from '../components/Services/ValuableObjects';
 
 const Service: React.FC = () => {
   return (
@@ -10,13 +11,20 @@ const Service: React.FC = () => {
       <div className="relative z-10 w-full">
         <Presentation/>
       </div>
-
       {/* SliderServices */}
       <div className="relative z-10 ">
         <SliderServices/>
       </div>
-      <div className="relative z-11 ">
+      <div className="relative z-11 mb-[-200px]">
         <Question/>
+      </div>
+      {/* ValuableObjects */}
+      <div className="relative z-12 ">
+        <ValuableObjects/>
+      </div>
+      {/* Carousel objects */}
+      <div className="relative z-13 ">
+        {/* <CarouselObjects/> */}
       </div>
     </section>
   );
