@@ -25,9 +25,9 @@ const Navbar: React.FC = () => {
     navigate("/");
   };
 
-  const toggleMobileMenu = () => {
+  /**const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+  };**/
 
   // Helper function to check if current page is active
   const isActivePage = (page: string) => {
@@ -57,46 +57,70 @@ const Navbar: React.FC = () => {
 
           {/* Navigation Links - Desktop */}
           <div className="hidden md:flex items-center space-x-8 ml-8">
-            <a
-              href="#services"
+            <button
+              onClick={() => navigateToPage("services")}
               className={`font-medium transition-colors duration-300 ${
                 isScrolled
                   ? "text-gray-700 hover:text-[#FFE67B]"
                   : "text-white hover:text-[#FFE67B]"
               }`}
+              style={{
+                background: "none",
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+              }}
             >
               SERVICIOS
-            </a>
-            <a
-              href="#moving"
+            </button>
+            <button
+              onClick={() => navigateToPage("your-move")}
               className={`font-medium transition-colors duration-300 ${
                 isScrolled
                   ? "text-gray-700 hover:text-[#FFE67B]"
                   : "text-white hover:text-[#FFE67B]"
               }`}
+              style={{
+                background: "none",
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+              }}
             >
               TU MUDANZA
-            </a>
-            <a
-              href="#about-us"
+            </button>
+            <button
+              onClick={() => navigateToPage("about-us")}
               className={`font-medium transition-colors duration-300 ${
                 isScrolled
                   ? "text-gray-700 hover:text-[#FFE67B]"
                   : "text-white hover:text-[#FFE67B]"
               }`}
+              style={{
+                background: "none",
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+              }}
             >
               NOSOTROS
-            </a>
-            <a
-              href="#coverage"
+            </button>
+            <button
+              onClick={() => navigateToPage("coverage")}
               className={`font-medium transition-colors duration-300 ${
                 isScrolled
                   ? "text-gray-700 hover:text-[#FFE67B]"
                   : "text-white hover:text-[#FFE67B]"
               }`}
+              style={{
+                background: "none",
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+              }}
             >
               COVERAGE
-            </a>
+            </button>
           </div>
           {/* Contact Button */}
           <div className="flex items-center ml-8">
