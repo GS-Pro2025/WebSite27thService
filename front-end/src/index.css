@@ -1,6 +1,7 @@
 @import "tailwindcss";
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Montserrat', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -20,6 +21,12 @@ body {
   width: 100%;
   min-width: 320px;
   min-height: 100vh;
-  overflow-x: visible; /* Asegurar que no hay overflow hidden */
+  font-family: 'Montserrat', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  overflow-x: visible;
   overflow-y: visible;
+}
+
+/* Asegurar que todos los elementos hereden Montserrat */
+* {
+  font-family: inherit;
 }
