@@ -5,7 +5,7 @@ const FormCobertura = () => (
     {/* Campo Origen */}
     <div>
       <label className="block text-[#606060] text-sm font-medium mb-0.5 md:mb-1">
-        Origen
+        Origin
       </label>
       <input
         type="text"
@@ -16,7 +16,7 @@ const FormCobertura = () => (
     {/* Campo Destino */}
     <div>
       <label className="block text-[#606060] text-sm font-medium mb-0.5 md:mb-1">
-        Destino
+        Destination 
       </label>
       <input
         type="text"
@@ -39,7 +39,7 @@ const FormCobertura = () => (
         type="submit"
         className="w-full bg-[#FFE67B] text-[#606060] font-semibold py-1.5 md:py-2 rounded-md shadow hover:brightness-110 transition-all"
       >
-        verificar cobertura
+        verify coverage
       </button>
     </div>
   </form>
