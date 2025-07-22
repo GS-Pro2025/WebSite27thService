@@ -3,6 +3,8 @@ import Presentation from '../components/Services/Presentation';
 import SliderServices from '../components/Services/SliderServices';
 import Question from '../components/Services/Question';
 import ValuableObjects from '../components/Services/ValuableObjects';
+import Carousel from '../components/Services/Carousel';
+import OpinionSection from '../components/Services/OpinionSection';
 
 const Service: React.FC = () => {
   return (
@@ -24,8 +26,12 @@ const Service: React.FC = () => {
       </div>
       {/* Carousel objects */}
       <div className="relative z-13 ">
-        {/* <CarouselObjects/> */}
+        <Carousel/>
       </div>
+      {/* OpinionSection */
+      <div className="relative z-14">
+        <OpinionSection/>
+      </div>}
     </section>
   );
 };

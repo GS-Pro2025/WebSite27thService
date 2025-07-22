@@ -24,7 +24,7 @@ const ValuableObjects = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-[#68A2A6] to-[#68A2A6] p-4 md:p-8">
+    <div className="relative min-h-screen bg-gradient-to-b from-[#77ABB1] to-[#0E6F7E]/60p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
           
@@ -59,13 +59,13 @@ const ValuableObjects = () => {
           </div>
 
           {/* Right side - Heart icon, message and Form */}
-          <div className="flex flex-col items-center space-y-6">
+          <div className="flex flex-col items-center space-y-4 -mt-50">
             {/* Heart and hands icon with text below - Centered in right column */}
             <div className="flex flex-col items-center text-center">
               <img
                 src="/assets/recurso_hands_heart.svg"
                 alt="Hands with heart"
-                className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 mb-4"
+                className="w-16 h-16 md:w-20 md:h-20 lg:w-50 lg:h-50 mb-3"
               />
               <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-white leading-tight">
                 <span className="text-[#FFE67B]">Cuidamos</span> de ellos,{" "}

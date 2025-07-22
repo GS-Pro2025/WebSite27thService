@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import bagroundImg from "/assets/FondoQuestion.svg";
 import box from "/assets/Box.png";
-import linea from "/assets/Linea.svg";
+import linea2 from "/assets/linea2.svg";
 const FAQComponent = () => {
   const [selectedFAQ, setSelectedFAQ] = useState<number | null>(null);
 
@@ -106,7 +106,7 @@ const FAQComponent = () => {
       </div>
       <div className="absolute bottom-60 w-full h-auto">
         <img
-          src={linea}
+          src={linea2}
           alt="Lines"
           className="w-full h-full object-cover object-top"
         />
