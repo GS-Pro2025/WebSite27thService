@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import bagroundImg from "/assets/FondoQuestion.svg";
 import box from "/assets/Box.png";
-import linea from "/assets/Linea.svg";
+import linea2 from "/assets/linea2.svg";
 const FAQComponent = () => {
-  const [selectedFAQ, setSelectedFAQ] = useState(null);
+  const [selectedFAQ, setSelectedFAQ] = useState<number | null>(null);
 
   const faqs = [
     {
@@ -12,7 +12,7 @@ const FAQComponent = () => {
       answer:
         "El costo depende de factores como la distancia, el volumen de objetos, servicios adicionales y la temporada.",
       position: "top-left",
-      
+      icon: "/assets/icon_1_circle.svg"
     },
     {
       id: 2,
@@ -20,7 +20,7 @@ const FAQComponent = () => {
       answer:
         "Sí, ofrecemos servicios personalizados según tus necesidades específicas y presupuesto.",
       position: "top-right",
-     
+      icon: "/assets/icon_4_circle.svg"
     },
     {
       id: 3,
@@ -28,7 +28,7 @@ const FAQComponent = () => {
       answer:
         "Por supuesto, manejamos desde objetos individuales hasta mudanzas completas.",
       position: "bottom-left",
-      
+      icon: "/assets/icon_2_circle.svg"
     },
     {
       id: 4,
@@ -36,7 +36,7 @@ const FAQComponent = () => {
       answer:
         "Sí, te ayudamos a calcular el peso aproximado y te damos recomendaciones.",
       position: "bottom-center",
-     
+      icon: "/assets/icon_5_circle.svg"
     },
     {
       id: 5,
@@ -44,29 +44,49 @@ const FAQComponent = () => {
       answer:
         "Utilizamos materiales especiales, seguros y personal capacitado para objetos valiosos.",
       position: "bottom-right",
-    
+      icon: "/assets/icon_3_circle.svg"
     },
   ];
 
-  const getPositionClasses = (position) => {
+  const getPositionClasses = (position: string) => {
     switch (position) {
       case "top-left":
-        return "absolute top-6 left-4 md:left-8";
+        return `
+          hidden md:block absolute left-0 top-1/4 -translate-x-1/2 -translate-y-1/2
+          md:left-0 md:top-1/4 md:-translate-x-1/2 md:-translate-y-1/2
+          w-48 md:w-56
+        `;
       case "top-right":
-        return "absolute top-6 right-4 md:right-8";
+        return `
+          hidden md:block absolute right-0 top-1/4 translate-x-1/2 -translate-y-1/2
+          md:right-0 md:top-1/4 md:translate-x-1/2 md:-translate-y-1/2
+          w-48 md:w-56
+        `;
       case "bottom-left":
-        return "absolute bottom-20 left-4 md:left-8";
+        return `
+          hidden md:block absolute left-0 bottom-1/4 -translate-x-1/2 translate-y-1/2
+          md:left-0 md:bottom-1/4 md:-translate-x-1/2 md:translate-y-1/2
+          w-48 md:w-56
+        `;
       case "bottom-center":
-        return "absolute bottom-4 left-1/2 transform -translate-x-1/2";
+        return `
+          hidden md:block absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2
+          md:left-1/2 md:bottom-0 md:-translate-x-1/2 md:translate-y-1/2
+          w-48 md:w-56
+        `;
       case "bottom-right":
-        return "absolute bottom-20 right-4 md:right-8";
+        return `
+          hidden md:block absolute right-0 bottom-1/4 translate-x-1/2 translate-y-1/2
+          md:right-0 md:bottom-1/4 md:translate-x-1/2 md:translate-y-1/2
+          w-48 md:w-56
+        `;
       default:
         return "";
     }
   };
 
   return (
-    <div className="relative h-lvw overflow-hidden bg-gradient-to-b from-[#68A2A6] to-[#0E6F7E]/60">
+    <div className="relative h-lvw bg-gradient-to-b from-[#68A2A6] to-[#0E6F7E]/60">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
@@ -86,20 +106,26 @@ const FAQComponent = () => {
       </div>
       <div className="absolute bottom-60 w-full h-auto">
         <img
-          src={linea}
+          src={linea2}
           alt="Lines"
           className="w-full h-full object-cover object-top"
         />
       </div>
-      <div className="flex flex-col items-center justify-center">
-        <div className="bg-[#FFE67B] backdrop-blur-sm mx-4 md:mx-8 lg:mx-20 w-1/3 rounded-3xl p-6 shadow-2xl">
-          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-2 text-center">
+      <div className="flex flex-col items-center justify-center relative z-30 overflow-visible pt-8">
+        <div className="bg-[#FFE67B] backdrop-blur-sm mx-4 md:mx-8 lg:mx-20 w-1/3 min-w-fit rounded-3xl p-6 shadow-2xl relative overflow-visible">
+          {/* Imagen alineada arriba a la derecha */}
+          <img
+            src="/assets/Recurso_question_faq.svg"
+            alt="FAQ"
+            className="w-12 md:w-16 lg:w-20 absolute -top-6 -right-2 md:-top-8 md:-right-4 z-50"
+          />
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-2 text-center pr-8 md:pr-12">
             <span className="text-white">Resolvemos tus dudas</span>
           </h1>
         </div>
         <p className="text-lg md:text-3xl text-[#585858] text-center">
           Porque mudarse debe ser{" "}
-          <span className="text-[#FFE67B] font-semibold">
+          <span className="text-[#FFE67B] font-semibold drop-shadow">
             fácil, tranquilo y confiable
           </span>
         </p>
@@ -136,13 +162,13 @@ const FAQComponent = () => {
                 setSelectedFAQ(selectedFAQ === faq.id ? null : faq.id)
               }
             >
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/50 hover:bg-white/90 transition-all duration-300">
+              <div className="bg-gradient-to-b from-[#C6D7CE] to-[#FFF7E6] backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/50 hover:bg-white/90 transition-all duration-300">
                 <div className="flex items-start gap-3">
-                  <div className="text-2xl flex-shrink-0 mt-1">{faq.icon}</div>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-gray-800 text-sm leading-tight mb-2">
+                  <div className="flex-1 text-center">
+                    <h3 className="font-bold text-gray-800 text-lg leading-tight mb-2">
                       {faq.question}
                     </h3>
+                    <img src={faq.icon} alt="" className="w-10 h-10 mx-auto mb-2" />
                     {selectedFAQ === faq.id && (
                       <div className="animate-in slide-in-from-top duration-300">
                         <p className="text-xs text-gray-600 leading-relaxed border-t border-gray-200 pt-2">

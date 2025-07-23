@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import FormCobertura from "../FormCover";
 
 const OpinionSection = () => {
   const [rating, setRating] = useState(0);
@@ -115,8 +116,6 @@ const OpinionSection = () => {
             </button>
           </div>
         </form>
-      </div>
-
       {/* Globo con opiniones superpuestas */}
       <div
         className="
