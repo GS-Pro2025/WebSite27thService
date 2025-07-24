@@ -50,7 +50,7 @@ const Navbar: React.FC = () => {
             <img
               src="/assets/27_logo_white.svg"
               alt="Twenty Seventh"
-              className="h-12 w-auto transition-transform duration-300 hover:scale-110 cursor-pointer"
+              className="h-20 w-auto transition-transform duration-300 hover:scale-110 cursor-pointer"
               onClick={goToHome}
             />
           </div>
@@ -59,11 +59,7 @@ const Navbar: React.FC = () => {
           <div className="hidden md:flex items-center space-x-8 ml-8">
             <button
               onClick={() => navigateToPage("services")}
-              className={`font-medium transition-colors duration-300 ${
-                isScrolled
-                  ? "text-gray-700 hover:text-[#FFE67B]"
-                  : "text-white hover:text-[#FFE67B]"
-              }`}
+              className="text-white font-medium transition-colors duration-300 hover:text-[#FFE67B]"
               style={{
                 background: "none",
                 border: "none",
@@ -71,15 +67,11 @@ const Navbar: React.FC = () => {
                 cursor: "pointer",
               }}
             >
-              SERVICIOS
+              SERVICES
             </button>
             <button
               onClick={() => navigateToPage("your-move")}
-              className={`font-medium transition-colors duration-300 ${
-                isScrolled
-                  ? "text-gray-700 hover:text-[#FFE67B]"
-                  : "text-white hover:text-[#FFE67B]"
-              }`}
+              className="text-white font-medium transition-colors duration-300 hover:text-[#FFE67B]"
               style={{
                 background: "none",
                 border: "none",
@@ -87,15 +79,11 @@ const Navbar: React.FC = () => {
                 cursor: "pointer",
               }}
             >
-              TU MUDANZA
+              YOUR MOVE
             </button>
             <button
               onClick={() => navigateToPage("about-us")}
-              className={`font-medium transition-colors duration-300 ${
-                isScrolled
-                  ? "text-gray-700 hover:text-[#FFE67B]"
-                  : "text-white hover:text-[#FFE67B]"
-              }`}
+              className="text-white font-medium transition-colors duration-300 hover:text-[#FFE67B]"
               style={{
                 background: "none",
                 border: "none",
@@ -103,15 +91,11 @@ const Navbar: React.FC = () => {
                 cursor: "pointer",
               }}
             >
-              NOSOTROS
+              ABOUT US
             </button>
             <button
               onClick={() => navigateToPage("coverage")}
-              className={`font-medium transition-colors duration-300 ${
-                isScrolled
-                  ? "text-gray-700 hover:text-[#FFE67B]"
-                  : "text-white hover:text-[#FFE67B]"
-              }`}
+              className="text-white font-medium transition-colors duration-300 hover:text-[#FFE67B]"
               style={{
                 background: "none",
                 border: "none",

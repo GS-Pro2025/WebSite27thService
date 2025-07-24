@@ -26,23 +26,24 @@ const Footer: React.FC = () => {
         <div className="flex flex-col md:flex-row w-full">
           {/* Columna Izquierda */}
           <div className="w-full md:w-1/2 bg-[#7AACAE] p-8 md:p-16 text-black mt-8 md:mt-12">
-            <div className="flex flex-col md:flex-row md:justify-between md:items-start">
+            {/* Contenedor principal para "Ubicacion y Contacto" y "Find us on social" */}
+            {/* Eliminamos md:flex-row aquí para que siempre sea flex-col */}
+            <div className="flex flex-col md:items-start md:justify-start md:gap-8">
               {/* Información de contacto */}
-              <div className="flex-1 pr-8">
+              <div className="w-full mb-8">
+                {" "}
+                {/* w-full para que siempre ocupe el 100% del ancho disponible */}
                 <h3 className="text-xl font-bold uppercase mb-12">
-                  Location and Contact
+                  LOCATION AND CONTACT
                 </h3>
-
                 <div className="mb-8">
                   <p className="text-sm font-semibold mb-2">Office:</p>
                   <p className="text-base">Chesapeake, Virginia</p>
                 </div>
-
                 <div className="mb-8">
                   <p className="text-sm font-semibold mb-2">Phone:</p>
                   <p className="text-base">+1 (407) 547-7478</p>
                 </div>
-
                 <div className="mb-12">
                   <p className="text-sm font-semibold mb-2">Email:</p>
                   <p className="text-base break-words">
@@ -50,8 +51,12 @@ const Footer: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <div className="flex-shrink-0 mt-10">
-                <h3 className="text-xl font-bold uppercase mb-6">
+
+              {/* Redes sociales */}
+              <div className="flex-none -mt-15">
+                {" "}
+                {/* Eliminamos md:mt-0 ya que no necesitamos resetearlo */}
+                <h3 className="text-xl font-bold uppercase mb-2">
                   Find us on social
                 </h3>
                 <div className="flex space-x-4 mb-16">
@@ -112,7 +117,7 @@ const Footer: React.FC = () => {
             </div>
 
             {/* Enlaces inferiores */}
-            <div className="text-white flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-10 text-sm">
+            <div className="text-white flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-10 text-sm mt-12 md:mt-0">
               <a href="#" className="text-white hover:underline">
                 Terms of Use
               </a>

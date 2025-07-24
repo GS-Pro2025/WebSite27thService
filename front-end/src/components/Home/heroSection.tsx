@@ -2,7 +2,7 @@ import React from "react";
 
 const HeroSection: React.FC = () => {
   return (
-    <section className="w-screen bg-[#68A2A6] overflow-hidden relative">
+    <section className="w-full bg-[#68A2A6] overflow-hidden relative">
       {/* Background Image */}
       <img
         src="/assets/banner1.svg"
