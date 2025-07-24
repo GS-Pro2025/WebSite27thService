@@ -2,10 +2,7 @@ import React from "react";
 import HeroSection from "../components/Home/heroSection";
 import ProcessSection from "../components/Home/processSection";
 import EquipmentSection from "../components/Home/EquipmentSection";
-import UsSection from "../components/Home/UsSection";
-import ServicesSection from "../components/Home/ServicesSection";
 import OpinionSection from "../components/Home/OpinionSection";
-import MidSection from "../components/Home/MidSection";
 
 const Home: React.FC = () => {
   return (
@@ -13,9 +10,6 @@ const Home: React.FC = () => {
       <HeroSection />
       <ProcessSection />
       <EquipmentSection />
-      {/* <UsSection /> */}
-      {/* <MidSection /> */}
-      {/* <ServicesSection /> */}
       <OpinionSection />
     </div>
   );
