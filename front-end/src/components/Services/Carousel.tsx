@@ -190,7 +190,7 @@ const Carousel: React.FC = () => {
         {isMobile && (
           <div className="text-center mt-6">
             <p className="text-white/70 text-sm">
-              Toca las tarjetas para ver más información
+              Click the cards to see more information
             </p>
           </div>
         )}

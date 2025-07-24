@@ -20,7 +20,7 @@ const MovingHeroComponent = () => {
           <div className="bg-white/30 backdrop-blur-sm rounded-3xl shadow-2xl p-8 w-full max-w-md border border-orange-200">
             <div className="text-center mb-8">
               <h2 className="text-xl font-bold text-white mb-2">
-                Guíamos tu mudanza de hogar aquí
+                We guide your home move right here
               </h2>
             </div>
 
@@ -32,7 +32,7 @@ const MovingHeroComponent = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-800 mb-2">
-                    determina el tamaño de tu mudanza
+                    determine the size of your move
                   </h3>
                 </div>
               </div>
@@ -44,7 +44,7 @@ const MovingHeroComponent = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-800 mb-3">
-                    Tamaños de mudanza:
+                    Move sizes:
                   </h3>
                   <div className="space-y-2">
                     <label className="flex items-center gap-3 cursor-pointer group">
@@ -56,7 +56,7 @@ const MovingHeroComponent = () => {
                         className="w-4 h-4 text-orange-500 focus:ring-orange-400"
                       />
                       <span className="text-gray-700 group-hover:text-orange-600 transition-colors">
-                        Pequeña (1-2 habitaciones)
+                        Small (1–2 rooms)
                       </span>
                     </label>
                     <label className="flex items-center gap-3 cursor-pointer group">
@@ -68,7 +68,7 @@ const MovingHeroComponent = () => {
                         className="w-4 h-4 text-orange-500 focus:ring-orange-400"
                       />
                       <span className="text-gray-700 group-hover:text-orange-600 transition-colors">
-                        Mediana (3-4 habitaciones)
+                        Medium (3–4 rooms)
                       </span>
                     </label>
                     <label className="flex items-center gap-3 cursor-pointer group">
@@ -80,7 +80,7 @@ const MovingHeroComponent = () => {
                         className="w-4 h-4 text-orange-500 focus:ring-orange-400"
                       />
                       <span className="text-gray-700 group-hover:text-orange-600 transition-colors">
-                        Grande (5+ habitaciones)
+                        Large (5+ rooms)
                       </span>
                     </label>
                   </div>
@@ -101,7 +101,7 @@ const MovingHeroComponent = () => {
                     }`}
                     disabled={!moveSize}
                   >
-                    cotiza automático aquí
+                    Get an automatic quote here
                   </button>
                 </div>
               </div>
@@ -114,14 +114,14 @@ const MovingHeroComponent = () => {
           {/* Main content */}
           <div className="text-center px-8 relative z-10">
             <h1 className="text-3xl lg:text-4xl font-bold leading-tight mb-2 text-white drop-shadow-lg">
-              <span className="text-white">El </span>
-              <span className="text-yellow-400">nuevo capítulo</span>
-              <span className="text-white"> de tu </span>
-              <span className="text-yellow-400">hogar</span>
-              <span className="text-white"> merece</span>
+              <span className="text-white">The </span>
+              <span className="text-yellow-400">new chapter</span>
+              <span className="text-white"> of your </span>
+              <span className="text-yellow-400">home</span>
+              <span className="text-white"> deserves</span>
               <br />
-              <span className="text-white">un inicio con un </span>
-              <span className="text-yellow-400">recuerdo agradable</span>
+              <span className="text-white">a fresh start with a </span>
+              <span className="text-yellow-400">pleasant memory</span>
             </h1>
           </div>
         </div>
@@ -130,18 +130,18 @@ const MovingHeroComponent = () => {
       {/* Mobile Hero Content */}
       <div className="lg:hidden bg-white/80 backdrop-blur-sm p-8 text-center">
         <h1 className="text-3xl font-bold leading-tight mb-6">
-          <span className="text-gray-800">El </span>
-          <span className="text-yellow-500">nuevo capítulo</span>
-          <span className="text-gray-800"> de tu </span>
-          <span className="text-yellow-500">hogar</span>
-          <span className="text-gray-800"> merece</span>
+          <span className="text-gray-800">The </span>
+          <span className="text-yellow-500">new chapter</span>
+          <span className="text-gray-800"> of your </span>
+          <span className="text-yellow-500">home</span>
+          <span className="text-gray-800"> deserves</span>
           <br />
-          <span className="text-gray-800">un inicio con un </span>
-          <span className="text-yellow-500">recuerdo agradable</span>
+          <span className="text-gray-800">a fresh start with a </span>
+          <span className="text-yellow-500">pleasant memory</span>
         </h1>
         
         <button className="bg-gradient-to-r from-yellow-400 to-amber-500 text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-lg">
-          Comenzar mi mudanza
+          Start my move
         </button>
       </div>
     </div>
