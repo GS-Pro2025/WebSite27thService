@@ -22,32 +22,32 @@ const TabsCarousel: React.FC = () => {
     {
       id: 1,
       icon: icon1,
-      title: "COMERCIAL"
+      title: "COMMERCIAL"
     },
     {
       id: 2,
       icon: icon2,
-      title: "HOGAR"
+      title: "HOME"
     },
     {
       id: 3,
       icon: icon3,
-      title: "EMBALAJE"
+      title: "PACKAGING"
     },
     {
       id: 4,
       icon: icon4,
-      title: "ORGANIZACIÓN"
+      title: "ORGANIZATION"
     },
     {
       id: 5,
       icon: icon5,
-      title: "OFICINAS"
+      title: "OFFICES"
     },
     {
       id: 6,
       icon: icon6,
-      title: "SERVICIOS"
+      title: "SERVICES"
     }
   ];
 

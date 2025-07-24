@@ -7,30 +7,30 @@ const OpinionSection: React.FC = () => {
     {
       id: 1,
       name: "Dolores",
-      location: "Local Guide • 16 reseñas",
+      location: "Local Guide • 16 reviews",
       rating: 5,
-      timeAgo: "Hace 3 días",
-      comment: "Muy contento del trato y la experiencia de compra que ofrecen en esta empresa. Actualmente de lo mejor que se puede encontrar en España que ofrece este servicio. Además muchísimo muy serviciales.",
+      timeAgo: "3 days ago",
+      comment: "Very happy with the service and the overall purchase experience offered by this company. Right now, it's one of the best options available in Spain for this type of service. Also, the staff is incredibly helpful and attentive.",
       likes: 1,
       avatar: "D"
     },
     {
       id: 2,
       name: "Dolores Pérez Carrasco",
-      location: "Local Guide • 16 reseñas",
+      location: "Local Guide • 16 reviews",
       rating: 5,
-      timeAgo: "Hace 4 meses",
-      comment: "A la espera de que me llegué el próximo lote que he comprado. Esperaré en torno a año para que me llegue. Hay de todo pero se verdad que hay cosas caras pero todo. Te pagan. Y las cosas que no están del todo bien te tienen ojo al...",
+      timeAgo: "4 months ago",
+      comment: "Awaiting the arrival of the next batch I purchased. I will wait around a year for it to arrive. There is everything but it is true that there are expensive things but everything. They pay you. And the things that are not quite right they keep an eye on...",
       likes: 1,
       avatar: "D"
     },
     {
       id: 3,
       name: "Jesús González Martínez",
-      location: "Local Guide • 49 reseñas",
+      location: "Local Guide • 49 reviews",
       rating: 5,
-      timeAgo: "Hace 4 meses",
-      comment: "Reconozco que compré un palet de devoluciones de Amazon de productos del hogar con miedo, por lo que fueron. Se haber pactado en el estado junto al personal que estaban listos para atenderme muy grande. Muchas gracias!",
+      timeAgo: "4 months ago",
+      comment: "I admit that I bought a pallet of Amazon returns of household products with fear, for what they were. Having agreed on the condition with the staff who were ready to assist me was very important. Thank you very much!",
       likes: 1,
       avatar: "J"
     }
@@ -124,7 +124,7 @@ const OpinionSection: React.FC = () => {
                     </button>
                     <button className="flex items-center space-x-1 text-gray-500 hover:text-gray-700 transition-colors touch-manipulation">
                       <BiShare className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      <span className="text-xs">Compartir</span>
+                      <span className="text-xs">Share</span>
                     </button>
                   </div>
                 </div>

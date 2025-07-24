@@ -8,43 +8,43 @@ const FAQComponent = () => {
   const faqs = [
     {
       id: 1,
-      question: "¿Qué determina el costo de mi mudanza?",
+      question: "What determines the cost of my move?",
       answer:
-        "El costo depende de factores como la distancia, el volumen de objetos, servicios adicionales y la temporada.",
+        "The cost depends on factors such as distance, item volume, additional services, and the time of year.",
       position: "top-left",
-      icon: "/assets/icon_1_circle.svg"
+      icon: "/assets/icon_1_circle.svg",
     },
     {
       id: 2,
-      question: "¿Puedo hacer una mudanza personalizada?",
+      question: "Can I request a personalized move?",
       answer:
-        "Sí, ofrecemos servicios personalizados según tus necesidades específicas y presupuesto.",
+        "Yes, we offer personalized services tailored to your specific needs and budget.",
       position: "top-right",
-      icon: "/assets/icon_4_circle.svg"
+      icon: "/assets/icon_4_circle.svg",
     },
     {
       id: 3,
-      question: "¿puedo mover un solo objeto?",
+      question: "Can I move just one item?",
       answer:
-        "Por supuesto, manejamos desde objetos individuales hasta mudanzas completas.",
+        "Absolutely — we handle everything from single-item moves to full relocations.",
       position: "bottom-left",
-      icon: "/assets/icon_2_circle.svg"
+      icon: "/assets/icon_2_circle.svg",
     },
     {
       id: 4,
-      question: "¿puedo calcular cuanto peso llevo?",
+      question: "Can I calculate how much weight I’m moving?",
       answer:
-        "Sí, te ayudamos a calcular el peso aproximado y te damos recomendaciones.",
+        "Yes, we’ll help you estimate the approximate weight and provide recommendations.",
       position: "bottom-center",
-      icon: "/assets/icon_5_circle.svg"
+      icon: "/assets/icon_5_circle.svg",
     },
     {
       id: 5,
-      question: "¿cómo cuidan mis objetos de alto valor?",
+      question: "How do you protect my high-value items?",
       answer:
-        "Utilizamos materiales especiales, seguros y personal capacitado para objetos valiosos.",
+        "We use special materials, insurance, and trained staff to ensure the safety of valuable items.",
       position: "bottom-right",
-      icon: "/assets/icon_3_circle.svg"
+      icon: "/assets/icon_3_circle.svg",
     },
   ];
 
@@ -120,13 +120,13 @@ const FAQComponent = () => {
             className="w-12 md:w-16 lg:w-20 absolute -top-6 -right-2 md:-top-8 md:-right-4 z-50"
           />
           <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-2 text-center pr-8 md:pr-12">
-            <span className="text-white">Resolvemos tus dudas</span>
+            <span className="text-white">We answer your questions</span>
           </h1>
         </div>
         <p className="text-lg md:text-3xl text-[#585858] text-center">
-          Porque mudarse debe ser{" "}
+          Because moving should be{" "}
           <span className="text-[#FFE67B] font-semibold drop-shadow">
-            fácil, tranquilo y confiable
+            easy, stress-free, and reliable
           </span>
         </p>
       </div>
@@ -141,10 +141,10 @@ const FAQComponent = () => {
               <div className="w-60 h-60 md:w-100 md:h-100 bg-teal-600 rounded-full flex items-center justify-center shadow-2xl">
                 <div className="text-center">
                   <h2 className="text-white font-bold text-xl md:text-3xl mb-1">
-                    PREGUNTAS
+                    FREQUENTLY 
                   </h2>
                   <h2 className="text-white font-bold text-xl md:text-3xl">
-                    FRECUENTES
+                    ASKED QUESTIONS
                   </h2>
                 </div>
               </div>
@@ -168,7 +168,11 @@ const FAQComponent = () => {
                     <h3 className="font-bold text-gray-800 text-lg leading-tight mb-2">
                       {faq.question}
                     </h3>
-                    <img src={faq.icon} alt="" className="w-10 h-10 mx-auto mb-2" />
+                    <img
+                      src={faq.icon}
+                      alt=""
+                      className="w-10 h-10 mx-auto mb-2"
+                    />
                     {selectedFAQ === faq.id && (
                       <div className="animate-in slide-in-from-top duration-300">
                         <p className="text-xs text-gray-600 leading-relaxed border-t border-gray-200 pt-2">

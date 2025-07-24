@@ -5,20 +5,20 @@ const CardCom: React.FC = () => {
   const services = [
     {
       id: 1,
-      title: "OFICINAS",
-      description: "Movemos objetos, oficinas pequeñas y grandes",
+      title: "OFFICES",
+      description: "We move items, whether from small or large office spaces.",
       bgColor: "bg-[#FFE67B]/60"
     },
     {
       id: 2,
-      title: "LOCALES",
-      description: "Movemos objetos y llevamos tu local a donde lo necesites",
+      title: "STORES",
+      description: "We transport your goods and relocate your store wherever you need.",
       bgColor: "bg-[#FFE67B]/60"
     },
     {
       id: 3,
       title: "CONTAINER",
-      description: "Objetos que mover? o todos? no hay problema nosotros lo hacemos por ti.",
+      description: "Need to move some items — or everything? No problem, we’ve got you covered.",
       bgColor: "bg-[#FFE67B]/60"
     }
   ];
