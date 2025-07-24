@@ -116,6 +116,7 @@ const OpinionSection = () => {
             </button>
           </div>
         </form>
+      </div>
       {/* Globo con opiniones superpuestas */}
       <div
         className="
