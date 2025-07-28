@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useLayoutEffect, useRef } from 'react';
 
 // Imports de las imágenes
 import Recurso2 from "/assets/RecursoSlider1.svg";
@@ -17,8 +17,6 @@ interface ServiceItem {
 
 const ServicesWheel: React.FC = () => {
   const [isPaused, setIsPaused] = useState(false);
-  const [animationDuration, setAnimationDuration] = useState(20);
-
   const services: ServiceItem[] = [
     { id: 1, imageSrc: Recurso2, altText: 'Servicio 1', fallbackIcon: '🚛' },
     { id: 2, imageSrc: Recurso3, altText: 'Servicio 2', fallbackIcon: '🏠' },
@@ -28,80 +26,96 @@ const ServicesWheel: React.FC = () => {
     { id: 6, imageSrc: Recurso7, altText: 'Servicio 6', fallbackIcon: '📥' },
   ];
 
-  const handleClick = () => {
-    setIsPaused(!isPaused);
-  };
+  const wheelRef = useRef<HTMLDivElement>(null);
+  const [wheelSize, setWheelSize] = useState(500); // Tamaño inicial por defecto
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      switch (event.key) {
-        case 'ArrowUp':
-          setAnimationDuration(10); // Más rápido
-          break;
-        case 'ArrowDown':
-          setAnimationDuration(30); // Más lento
-          break;
-        case ' ':
-          event.preventDefault();
-          setAnimationDuration(20); // Velocidad normal
-          break;
+  useLayoutEffect(() => {
+    const updateSize = () => {
+      if (wheelRef.current) {
+        setWheelSize(wheelRef.current.offsetWidth);
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    // Medir al montar el componente
+    updateSize();
+
+    // Usar ResizeObserver para detectar cambios de tamaño del contenedor
+    const resizeObserver = new ResizeObserver(updateSize);
+    if (wheelRef.current) {
+      resizeObserver.observe(wheelRef.current);
+    }
+
+    // Limpiar el observer al desmontar
+    return () => resizeObserver.disconnect();
   }, []);
 
+  // --- CÁLCULOS DINÁMICOS BASADOS EN EL TAMAÑO DEL CONTENEDOR ---
+  const middleRingSize = wheelSize * 0.8;    // 400px / 500px
+  const centerCircleSize = wheelSize * 0.4;  // 200px / 500px
+  const iconRingRadius = wheelSize * 0.44;   // 220px / 500px
+  const iconSize = wheelSize * 0.2;        // 100px / 500px (aprox)
+  const iconImageSize = iconSize * 0.6;      // 60px / 100px (aprox)
+
   const handleImageError = (event: React.SyntheticEvent<HTMLImageElement>, fallbackIcon: string) => {
-    const target = event.target as HTMLImageElement;
-    const parent = target.parentElement;
+    const parent = event.currentTarget.parentElement;
     if (parent) {
-      parent.innerHTML = `<div class="text-3xl">${fallbackIcon}</div>`;
+      parent.innerHTML = `<div style="font-size: ${iconSize * 0.4}px">${fallbackIcon}</div>`;
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-5">
+    <div className="w-full flex items-center justify-center p-4">
+      {/* Contenedor principal ahora con clases responsivas y la ref */}
       <div 
-        className="relative w-[500px] h-[500px] cursor-pointer"
-        onClick={handleClick}
+        ref={wheelRef}
+        className="relative w-full aspect-square max-w-[300px] sm:max-w-[400px] lg:max-w-[500px] cursor-pointer"
+        onClick={() => setIsPaused(!isPaused)}
       >
-
-        {/* Anillo exterior */}
+        {/* Anillo exterior*/}
         <div className="absolute inset-0 border-[5px] border-slate-300 rounded-full z-10"></div>
 
-        {/* Anillo medio */}
-        <div className="absolute top-[50px] left-[50px] w-[400px] h-[400px] border-[5px] border-slate-300 rounded-full shadow-inner z-20"></div>
+        {/* Anillo medio con tamaño dinámico */}
+        <div 
+          className="absolute border-[5px] border-slate-300 rounded-full shadow-inner z-20"
+          style={{
+            width: `${middleRingSize}px`,
+            height: `${middleRingSize}px`,
+            top: `calc(50% - ${middleRingSize / 2}px)`,
+            left: `calc(50% - ${middleRingSize / 2}px)`,
+          }}
+        ></div>
 
         {/* Anillo de servicios rotativo */}
         <div 
           className="absolute inset-0 z-30"
           style={{
-            animation: `spin ${animationDuration}s linear infinite`,
+            animation: `spin 20s linear infinite`,
             animationPlayState: isPaused ? 'paused' : 'running'
           }}
         >
           {services.map((service, index) => {
-            const angle = (index * 60) - 90; // Distribución en 360°/6 = 60°, comenzando desde arriba
-            const radius = 220; // Radio aumentado para estar más cerca del anillo exterior
-            const x = Math.cos((angle * Math.PI) / 180) * radius;
-            const y = Math.sin((angle * Math.PI) / 180) * radius;
+            const angle = (index * 60) - 90;
+            const x = Math.cos((angle * Math.PI) / 180) * iconRingRadius;
+            const y = Math.sin((angle * Math.PI) / 180) * iconRingRadius;
 
             return (
               <div
                 key={service.id}
-                className="absolute w-25 h-25 bg-white rounded-full flex items-center justify-center shadow-lg border-2 border-gray-200"
+                className="absolute bg-white rounded-full flex items-center justify-center shadow-lg border-2 border-gray-200"
                 style={{
-                  left: `calc(50% + ${x}px - 40px)`, // Corregido el espacio
-                  top: `calc(50% + ${y}px - 40px)`,
-                  animation: `counter-spin ${animationDuration}s linear infinite`,
+                  width: `${iconSize}px`,
+                  height: `${iconSize}px`,
+                  left: `calc(50% + ${x}px - ${iconSize / 2}px)`,
+                  top: `calc(50% + ${y}px - ${iconSize / 2}px)`,
+                  animation: `counter-spin 20s linear infinite`,
                   animationPlayState: isPaused ? 'paused' : 'running'
                 }}
               >
                 <img
                   src={service.imageSrc}
                   alt={service.altText}
-                  className="w-14 h-14 object-contain max-w-[90%] max-h-[90%]"
+                  className="object-contain"
+                  style={{ width: `${iconImageSize}px`, height: `${iconImageSize}px` }}
                   onError={(e) => handleImageError(e, service.fallbackIcon)}
                 />
               </div>
@@ -109,35 +123,29 @@ const ServicesWheel: React.FC = () => {
           })}
         </div>
 
-        {/* Círculo central */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] bg-blue-300 rounded-full z-40 flex items-center justify-center text-white font-bold text-2xl text-center shadow-2xl border-4 border-white">
-          SERVICIOS
-        </div>
-
-        {/* Instrucciones */}
-        <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2 text-center text-sm text-gray-600">
-          <p>Clic: Pausar/Reanudar</p>
-          <p>↑ Rápido | ↓ Lento | Espacio: Normal</p>
+        {/* Círculo central con tamaño dinámico */}
+        <div 
+          className="absolute transform -translate-x-1/2 -translate-y-1/2 bg-[#BAD2DD] rounded-full z-40 flex items-center justify-center text-[#848484] font-bold text-center shadow-2xl border-4 border-slate-300"
+          style={{
+            width: `${centerCircleSize}px`,
+            height: `${centerCircleSize}px`,
+            top: '50%',
+            left: '50%',
+            fontSize: `${centerCircleSize * 0.12}px`, // Tamaño de fuente dinámico
+          }}
+        >
+          SERVICES
         </div>
       </div>
 
       <style jsx>{`
         @keyframes spin {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
-
         @keyframes counter-spin {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(-360deg);
-          }
+          from { transform: rotate(0deg); }
+          to { transform: rotate(-360deg); }
         }
       `}</style>
     </div>
