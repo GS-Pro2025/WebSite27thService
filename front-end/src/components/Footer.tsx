@@ -4,18 +4,20 @@ const Footer: React.FC = () => {
   return (
     <div className="relative w-full bg-[#7AACAE] -mt-20 pt-20">
       {/* Cuadro con degradado superpuesto */}
-      <div className="absolute -top-0 left-1/2 transform -translate-x-1/2 z-30 w-[95%] md:w-[85%] flex justify-center">
+      <div className="absolute -top-0 left-1/2 transform -translate-x-1/2 z-30 w-[95%] md:w-[85%] flex justify-center mt-8 lg:mt-0">
         <div
-          className="w-full rounded-xl p-4 md:p-6 text-center text-white font-bold shadow-xl"
+          className="w-full rounded-xl p-2 sm:p-4 md:p-6 text-center text-white font-bold shadow-xl"
           style={{
             background: "linear-gradient(90deg, #0E6F7E 0%, #FFE67B 100%)",
           }}
         >
-          <h2 className="text-lg md:text-2xl mb-4 leading-snug">
+          {/* AJUSTE: Texto más pequeño en móvil */}
+          <h2 className="text-sm sm:text-lg md:text-xl lg:text-2xl mb-2 sm:mb-3 leading-tight">
             Book today, plan with peace of mind, and ensure the care your move
             deserves.
           </h2>
-          <button className="mt-2 px-8 py-2 bg-white text-black font-semibold rounded-full shadow hover:bg-gray-100 transition-colors">
+          {/* AJUSTE: Botón más pequeño en móvil */}
+          <button className="mt-2 px-5 py-1 sm:px-8 sm:py-2 bg-white text-black text-xs sm:text-sm md:text-base font-semibold rounded-full shadow hover:bg-gray-100 transition-colors">
             BOOK HERE
           </button>
         </div>
@@ -27,12 +29,10 @@ const Footer: React.FC = () => {
           {/* Columna Izquierda */}
           <div className="w-full md:w-1/2 bg-[#7AACAE] p-8 md:p-16 text-black mt-8 md:mt-12">
             {/* Contenedor principal para "Ubicacion y Contacto" y "Find us on social" */}
-            {/* Eliminamos md:flex-row aquí para que siempre sea flex-col */}
             <div className="flex flex-col md:items-start md:justify-start md:gap-8">
               {/* Información de contacto */}
               <div className="w-full mb-8">
                 {" "}
-                {/* w-full para que siempre ocupe el 100% del ancho disponible */}
                 <h3 className="text-xl font-bold uppercase mb-12">
                   LOCATION AND CONTACT
                 </h3>
@@ -55,7 +55,6 @@ const Footer: React.FC = () => {
               {/* Redes sociales */}
               <div className="flex-none -mt-15">
                 {" "}
-                {/* Eliminamos md:mt-0 ya que no necesitamos resetearlo */}
                 <h3 className="text-xl font-bold uppercase mb-2">
                   Find us on social
                 </h3>

@@ -141,56 +141,59 @@ const OpinionSection = () => {
     "
         />
 
-        {/* Opinión 1 - Superior izquierda */}
-        <div className="absolute top-[15%] left-[20%] w-[30%] sm:w-[35%] md:w-[40%] max-w-[140px] sm:max-w-[180px] md:max-w-[200px]">
-          <div className="bg-[#0E6F7E] text-white p-1.5 sm:p-2 md:p-3 rounded-md sm:rounded-lg shadow-lg text-[10px] sm:text-xs md:text-sm">
-            <p className="mb-1 sm:mb-1.5 md:mb-2 leading-tight">
+        {/* --- TARJETAS DE OPINIÓN RESPONSIVAS --- */}
+
+        {/* Opinión 1 - Visible en todas las pantallas */}
+        {/* Posición y tamaño ajustados para cada breakpoint */}
+        <div className="absolute top-[16%] left-[10%] md:left-[15%] lg:left-[20%] w-auto max-w-[130px] sm:max-w-[160px] lg:max-w-[200px]">
+          <div className="bg-[#0E6F7E] text-white p-2 lg:p-3 rounded-lg shadow-lg">
+            <p className="font-montserrat text-[10px] sm:text-xs lg:text-sm mb-1.5 leading-tight">
               "I can always find what I'm looking for on Splice, whether it's
               the exact sound I want or just a bit of inspiration."
             </p>
-            <div className="flex items-center space-x-1">
-              <div className="flex text-yellow-400 text-[8px] sm:text-xs">
+            <div className="flex items-center">
+              <div className="flex text-yellow-400 text-[9px] sm:text-[11px] lg:text-xs">
                 ★★★★★
               </div>
             </div>
           </div>
         </div>
 
-        {/* Opinión 2 - Superior derecha - Solo visible desde md */}
-        <div className="hidden md:block absolute top-[16%] right-[22%] w-[38%] max-w-[190px]">
-          <div className="bg-[#0E6F7E] text-white p-2 md:p-3 rounded-lg shadow-lg text-xs md:text-sm">
-            <p className="mb-1.5 md:mb-2 leading-tight">
+        {/* Opinión 2 - Superior derecha - SOLO visible en escritorio (lg) */}
+        <div className="hidden lg:block absolute top-[16%] right-[22%] w-auto max-w-[190px]">
+          <div className="bg-[#0E6F7E] text-white p-3 rounded-lg shadow-lg">
+            <p className="font-montserrat text-sm mb-2 leading-tight">
               "Finally a way to buy plugins that works. By paying a little at a
               time, producers can get legit access to the top VSTs."
             </p>
-            <div className="flex items-center space-x-1">
+            <div className="flex items-center">
               <div className="flex text-yellow-400 text-xs">★★★★★</div>
             </div>
           </div>
         </div>
 
-        {/* Opinión 3 - Inferior izquierda - Solo visible desde md */}
-        <div className="hidden md:block absolute bottom-[35%] left-[22%] w-[42%] max-w-[210px]">
-          <div className="bg-[#0E6F7E] text-white p-2 md:p-3 rounded-lg shadow-lg text-xs md:text-sm">
-            <p className="mb-1.5 md:mb-2 leading-tight">
+        {/* Opinión 3 - Inferior izquierda - SOLO visible en escritorio (lg) */}
+        <div className="hidden lg:block absolute bottom-[35%] left-[22%] w-auto max-w-[210px]">
+          <div className="bg-[#0E6F7E] text-white p-3 rounded-lg shadow-lg">
+            <p className="font-montserrat text-sm mb-2 leading-tight">
               "Its been fun to drive into Splices creator community and explore
               tools that support my own creative process."
             </p>
-            <div className="flex items-center space-x-1">
+            <div className="flex items-center">
               <div className="flex text-yellow-400 text-xs">★★★★★</div>
             </div>
           </div>
         </div>
 
-        {/* Opinión 4 - Inferior derecha */}
-        <div className="hidden md:block absolute bottom-[35%] right-[15%] w-[30%] sm:w-[35%] md:w-[40%] max-w-[140px] sm:max-w-[180px] md:max-w-[200px]">
-          <div className="bg-[#0E6F7E] text-white p-1.5 sm:p-2 md:p-3 rounded-md sm:rounded-lg shadow-lg text-[10px] sm:text-xs md:text-sm">
-            <p className="mb-1 sm:mb-1.5 md:mb-2 leading-tight">
-              "I can always find what I'm looking for on Splice, whether it's
-              the exact sound I want or just a bit of inspiration."
+        {/* Opinión 4 - Inferior derecha - Visible en tablet (md) y escritorio (lg) */}
+        <div className="hidden md:block absolute bottom-[25%] right-[10%] md:bottom-[20%] lg:bottom-[35%] lg:right-[15%] w-auto max-w-[130px] sm:max-w-[160px] lg:max-w-[200px]">
+          <div className="bg-[#0E6F7E] text-white p-2 lg:p-3 rounded-lg shadow-lg">
+            <p className="font-montserrat text-[10px] sm:text-xs lg:text-sm mb-1.5 leading-tight">
+              "Splice is a necessity for any producer. The value of the sounds
+              and inspiration is immeasurable."
             </p>
-            <div className="flex items-center space-x-1">
-              <div className="flex text-yellow-400 text-[8px] sm:text-xs">
+            <div className="flex items-center">
+              <div className="flex text-yellow-400 text-[9px] sm:text-[11px] lg:text-xs">
                 ★★★★★
               </div>
             </div>
@@ -230,7 +233,13 @@ const OpinionSection = () => {
         </h2>
 
         {/* Texto descriptivo */}
-        <p className="mt-2 text-white text-[10px] sm:text-sm md:text-lg lg:text-[28px] font-[Montserrat] text-center leading-snug px-2">
+        <p
+          className="font-[Montserrat] text-white text-center 
+  mt-2 
+  leading-relaxed 
+  px-6 sm:px-4 md:px-2 
+  text-sm sm:text-base md:text-lg lg:text-xl xl:text-[28px]"
+        >
           Tell us about your service experience, it helps us improve every day
           to provide you with the best quality in moving services.
         </p>
@@ -238,8 +247,8 @@ const OpinionSection = () => {
         {/* Caja de calificación */}
         <div
           className="
-    mt-4 sm:mt-6 bg-white/75 rounded-md px-3 sm:px-4 md:px-6 py-2 sm:py-3 mx-auto w-full
-    max-w-[55%] sm:max-w-sm md:max-w-md shadow"
+        mt-4 sm:mt-6 bg-white/75 rounded-md px-3 sm:px-4 md:px-6 py-2 sm:py-3 mx-auto w-full
+        max-w-[55%] sm:max-w-sm md:max-w-md shadow"
         >
           <div className="flex justify-between items-center mb-3 sm:mb-4">
             {[1, 2, 3, 4, 5].map((star) => (
