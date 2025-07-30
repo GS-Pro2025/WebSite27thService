@@ -1,5 +1,5 @@
 import React from "react";
-import QuoteForm from "./QuoteForm"; // Asegúrate que la ruta sea correcta
+import QuoteForm from "./QuoteForm";
 
 interface QuoteModalProps {
   isOpen: boolean;
@@ -12,7 +12,6 @@ const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose }) => {
   }
 
   return (
-    // Fondo oscuro semi-transparente
     <div 
       className="fixed inset-0 bg-[#68A2A6]/80 bg-opacity-70 flex items-center justify-center z-50 p-4"
       onClick={onClose}

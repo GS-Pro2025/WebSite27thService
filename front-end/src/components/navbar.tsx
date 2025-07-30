@@ -46,7 +46,7 @@ const Navbar: React.FC = () => {
     >
       <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex items-center h-20">
-          {/*CORRECCIÓN 2: El logo ahora se oculta en pantallas pequeña */}
+          {/*CORRECCIÓN: El logo ahora se oculta en pantallas pequeña */}
           <div className="hidden md:block flex-shrink-0">
             <img
               src="/assets/27_logo_white.svg"
