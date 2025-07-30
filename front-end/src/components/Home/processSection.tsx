@@ -20,13 +20,13 @@ const ProcessSection: React.FC = () => {
           <div className="w-full order-1 px-4 sm:px-6 md:px-8">
             <h2
               className="text-center text-white font-[Montserrat] font-black 
-              text-sm sm:text-2xl md:text-3xl lg:text-4xl leading-tight mb-2 sm:mb-8"
+               text-sm sm:text-2xl md:text-3xl lg:text-4xl leading-tight mb-2 sm:mb-8"
             >
               YOUR MOVE MADE EASY, JUST AS IT SHOULD BE!
             </h2>
           </div>
 
-          <div className="w-full my-2 sm:my-12 md:my-16 lg:my-20 order-2">
+          <div className="w-full my-2 sm:my-12 md:my-9 lg:my-20 order-2">
             <img
               src="/assets/procesoCompleto.svg"
               alt="Proceso completo"
@@ -47,7 +47,7 @@ const ProcessSection: React.FC = () => {
 
             {/* Lógica para mostrar botón o formulario */}
             <div className="w-full sm:w-1/2">
-              <div className="sm:hidden w-full flex justify-center mt-2">
+              <div className="lg:hidden w-full flex justify-center mt-2">
                 <button
                   onClick={() => setModalOpen(true)}
                   className="bg-[#FFE67B] text-black text-xs font-semibold py-2 px-6 rounded-full shadow-lg"
@@ -55,7 +55,7 @@ const ProcessSection: React.FC = () => {
                   GET A QUOTE NOW
                 </button>
               </div>
-              <div className="hidden sm:block relative">
+              <div className="hidden lg:block relative">
                 <div className="absolute -top-6 lg:-top-8 -translate-x-1/2 bg-[#FFE67B] w-12 h-12 lg:w-16 lg:h-16 rounded-full flex items-center justify-center text-2xl lg:text-3xl font-bold text-[#7ARACAE] shadow-lg z-10">
                   1
                 </div>
