@@ -7,7 +7,7 @@ const testimonialsData = [
     id: 1,
     text: "I can always find what I'm looking for on Splice, whether it's the exact sound I want or just a bit of inspiration.",
     containerClassName:
-      "absolute top-[16%] left-[10%] md:left-[15%] lg:left-[20%] w-auto max-w-[130px] sm:max-w-[160px] lg:max-w-[200px]",
+      "absolute top-[16%] left-[50%] md:left-[15%] lg:left-[20%] w-auto max-w-[130px] sm:max-w-[160px] lg:max-w-[200px]",
   },
   {
     id: 2,
