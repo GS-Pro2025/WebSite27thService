@@ -4,7 +4,7 @@ const ValuableObjects = () => {
   return (
     <div className="relative min-h-screen p-2 -mt-16 md:-mt-6">
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
           
           {/* Left side - Text content */}
           <div className="space-y-4 md:space-y-6">
