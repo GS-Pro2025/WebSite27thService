@@ -1,7 +1,42 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BiLike, BiShare } from 'react-icons/bi';
 
 const OpinionSection: React.FC = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [animateCards, setAnimateCards] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const timer1 = setTimeout(() => setIsVisible(true), 200);
+            const timer2 = setTimeout(() => setAnimateCards(true), 600);
+            
+            return () => {
+              clearTimeout(timer1);
+              clearTimeout(timer2);
+            };
+          }
+        });
+      },
+      {
+        threshold: 0.15,
+        rootMargin: "0px 0px -50px 0px"
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
 
   const testimonials = [
     {
@@ -37,12 +72,19 @@ const OpinionSection: React.FC = () => {
   ];
 
   return (
-    <div className="relative w-full py-6 px-2 sm:py-10 sm:px-4 md:px-8 overflow-hidden">
+    <div 
+      ref={sectionRef}
+      className="relative w-full py-6 px-2 sm:py-10 sm:px-4 md:px-8 overflow-hidden"
+    >
       {/* Header Section */}
-      <div className="max-w-7/8 mx-right mb-8 sm:mb-12">
+      <div className={`max-w-7/8 mx-right mb-8 sm:mb-12 transform transition-all duration-1000 ease-out ${
+        isVisible ? 'translate-y-0 opacity-100' : '-translate-y-10 opacity-0'
+      }`}>
         {/* Yellow badge */}
-        <div className="inline-block mb-4 sm:mb-8">
-          <div className="bg-[#FFE67B] rounded-full px-4 py-2 sm:px-6 sm:py-3">
+        <div className={`inline-block mb-4 sm:mb-8 transform transition-all duration-800 delay-200 ease-out ${
+          isVisible ? 'translate-x-0 opacity-100 scale-100' : '-translate-x-8 opacity-0 scale-95'
+        }`}>
+          <div className="bg-[#FFE67B] rounded-full px-4 py-2 sm:px-6 sm:py-3 shadow-lg hover:shadow-xl transition-shadow duration-300">
             <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white">
               Opinion of our clients
             </h2>
@@ -50,12 +92,18 @@ const OpinionSection: React.FC = () => {
         </div>
 
         {/* Description */}
-        <div className="bg-[#D9D9D9] backdrop-blur-sm rounded-2xl p-4 sm:p-6 md:p-8 max-w-3xl">
-          <p className="text-[#585858] text-base sm:text-lg md:text-xl leading-relaxed mb-3 sm:mb-4">
+        <div className={`bg-[#D9D9D9] backdrop-blur-sm rounded-2xl p-4 sm:p-6 md:p-8 max-w-3xl shadow-xl transform transition-all duration-1000 delay-400 ease-out ${
+          isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+        }`}>
+          <p className={`text-[#585858] text-base sm:text-lg md:text-xl leading-relaxed mb-3 sm:mb-4 transform transition-all duration-800 delay-600 ease-out ${
+            isVisible ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
+          }`}>
             Know what our clients think about us and our service.
             The opinions of our clients are very important to us.
           </p>
-          <p className="text-[#585858] text-base sm:text-lg md:text-xl font-medium">
+          <p className={`text-[#585858] text-base sm:text-lg md:text-xl font-medium transform transition-all duration-800 delay-800 ease-out ${
+            isVisible ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
+          }`}>
             Client feedback and satisfaction are our top priorities.
           </p>
         </div>
@@ -66,15 +114,30 @@ const OpinionSection: React.FC = () => {
         
         {/* Testimonials - Mobile optimized grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 max-w-7xl">
-          {testimonials.map((testimonial) => (
-            <div key={testimonial.id} className="relative">
+          {testimonials.map((testimonial, index) => (
+            <div 
+              key={testimonial.id} 
+              className={`relative transform transition-all duration-800 ease-out ${
+                animateCards 
+                  ? 'translate-y-0 opacity-100 scale-100' 
+                  : 'translate-y-12 opacity-0 scale-95'
+              }`}
+              style={{
+                transitionDelay: `${400 + index * 200}ms`
+              }}
+            >
               {/* Gray background - responsive padding */}
-              <div className="bg-[#D9D9D9] rounded-xl sm:rounded-2xl p-1.5 sm:p-2 pt-12 sm:pt-20 pb-8 sm:pb-15 h-full min-h-[350px] sm:min-h-[400px]">
+              <div className="bg-[#D9D9D9] rounded-xl sm:rounded-2xl p-1.5 sm:p-2 pt-12 sm:pt-20 pb-8 sm:pb-15 h-full min-h-[350px] sm:min-h-[400px] hover:shadow-lg transition-shadow duration-300">
                 {/* White card content */}
-                <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-lg h-full mx-auto relative">
+                <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-lg h-full mx-auto relative hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                   {/* User Info - Mobile optimized */}
                   <div className="flex items-start mb-3 sm:mb-4">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-400 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold text-xs sm:text-sm">
+                    <div className={`w-8 h-8 sm:w-10 sm:h-10 bg-orange-400 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold text-xs sm:text-sm transform transition-all duration-500 ${
+                      animateCards ? 'rotate-0 scale-100' : 'rotate-180 scale-0'
+                    }`}
+                    style={{
+                      transitionDelay: `${600 + index * 200}ms`
+                    }}>
                       {testimonial.avatar}
                     </div>
                     <div className="ml-2 sm:ml-3 flex-1">
@@ -99,7 +162,10 @@ const OpinionSection: React.FC = () => {
                         {[...Array(5)].map((_, i) => (
                           <svg
                             key={i}
-                            className={`w-2.5 h-2.5 sm:w-3 sm:h-3 ${i < testimonial.rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                            className={`w-2.5 h-2.5 sm:w-3 sm:h-3 ${i < testimonial.rating ? 'text-yellow-400' : 'text-gray-300'} transform transition-all duration-300`}
+                            style={{
+                              transitionDelay: `${800 + index * 200 + i * 100}ms`
+                            }}
                             fill="currentColor"
                             viewBox="0 0 20 20"
                           >
@@ -134,7 +200,9 @@ const OpinionSection: React.FC = () => {
         </div>
 
         {/* Absolute positioned Boxes Image - Mobile responsive */}
-        <div className="absolute -top-32 -right-20 sm:-top-55 sm:-right-45 z-50 pointer-events-none">
+        <div className={`absolute -top-32 -right-20 sm:-top-55 sm:-right-45 z-50 pointer-events-none transform transition-all duration-1200 ease-out ${
+          isVisible ? 'translate-x-0 translate-y-0 opacity-100 scale-100' : 'translate-x-20 -translate-y-10 opacity-0 scale-75'
+        }`}>
           <div className="relative">
             <img
               src="/assets/boxes_opinion.png"
