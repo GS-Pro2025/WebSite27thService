@@ -26,7 +26,7 @@ const Presentation: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#68A2A6] overflow-hidden">
+    <div className="relative min-h-screen overflow-hidden">
       {/* Right Section - Family Image (Fondo) */}
       <div className="absolute right-0 w-full md:w-2/3 lg:w-5/10 h-full">
         <img

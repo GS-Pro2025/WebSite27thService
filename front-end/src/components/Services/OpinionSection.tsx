@@ -37,7 +37,7 @@ const OpinionSection: React.FC = () => {
   ];
 
   return (
-    <div className="relative w-full bg-[#7AACAE] py-6 px-2 sm:py-10 sm:px-4 md:px-8 overflow-hidden">
+    <div className="relative w-full py-6 px-2 sm:py-10 sm:px-4 md:px-8 overflow-hidden">
       {/* Header Section */}
       <div className="max-w-7/8 mx-right mb-8 sm:mb-12">
         {/* Yellow badge */}

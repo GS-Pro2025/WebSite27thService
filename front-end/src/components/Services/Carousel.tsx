@@ -60,7 +60,7 @@ const Carousel: React.FC = () => {
   };
 
   return (
-    <div className="relative w-full bg-[#7DAEB5] py-8 md:py-12 px-4 overflow-visible">
+    <div className="relative w-full py-2 md:py-6 px-4 overflow-visible">
       {/* Animated background effects - simplified for mobile */}
       <div className="absolute inset-0">
         <div className="absolute top-5 left-5 md:top-10 md:left-10 w-10 h-10 md:w-20 md:h-20 bg-white/10 rounded-full animate-pulse"></div>

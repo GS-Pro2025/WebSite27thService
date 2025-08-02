@@ -2,7 +2,7 @@ import FormCobertura from "../FormCover";
 
 const ValuableObjects = () => {
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-[#77ABB1] to-[#0E6F7E]/60 p-4 md:p-8">
+    <div className="relative min-h-screen p-2">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
           
@@ -19,7 +19,6 @@ const ValuableObjects = () => {
 
             {/* Description box */}
             <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 md:p-6 lg:p-8 text-white">
-              {/**translate plis  */}
               <p className="text-sm md:text-lg lg:text-xl xl:text-2xl leading-relaxed mb-3 md:mb-6">
                 This category includes everything that holds significant value for you;
                 they are more than just fragile items—they are memories, dreams, and moments to cherish

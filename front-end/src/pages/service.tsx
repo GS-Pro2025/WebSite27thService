@@ -8,30 +8,41 @@ import OpinionSection from '../components/Services/OpinionSection';
 
 const Service: React.FC = () => {
   return (
-    <section id="services" className="relative w-full bg-[#68A2A6] overflow-visible">
+    <section id="services" className="relative w-full bg-gradient-to-b from-[#68A2A6] via-[#68A2A6] via-[#7AACAE] to-[#7AACAE] overflow-visible">
       {/* Presentation como bloque normal */}
       <div className="relative z-10 w-full">
         <Presentation/>
       </div>
       {/* SliderServices */}
-      <div className="relative z-10 ">
+      <div className="relative z-10">
         <SliderServices/>
       </div>
-      <div className="relative z-11 mb-[-200px]">
+      {/* Question - Sin background propio */}
+      <div className="relative z-11">
         <Question/>
       </div>
-      {/* ValuableObjects */}
-      <div className="relative z-12 ">
+      
+      {/* Línea curva punteada de transición */}
+      <div className="relative z-15 w-full h-auto -my-6 md:-my-8 md:mb-10">
+        <img
+          src="/assets/linea2.svg"
+          alt="Decorative curved transition line"
+          className="w-full h-auto object-contain opacity-60"
+        />
+      </div>
+      
+      {/* ValuableObjects - Sin background propio */}
+      <div className="relative z-12">
         <ValuableObjects/>
       </div>
       {/* Carousel objects */}
-      <div className="relative z-13 ">
+      <div className="relative z-13">
         <Carousel/>
       </div>
-      {/* OpinionSection */
+      {/* OpinionSection */}
       <div className="relative z-14">
         <OpinionSection/>
-      </div>}
+      </div>
     </section>
   );
 };
