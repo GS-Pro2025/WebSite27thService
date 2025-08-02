@@ -8,7 +8,7 @@ import OpinionSection from '../components/Services/OpinionSection';
 
 const Service: React.FC = () => {
   return (
-    <section id="services" className="relative w-full bg-gradient-to-b from-[#68A2A6] via-[#68A2A6] via-[#7AACAE] to-[#7AACAE] overflow-visible">
+    <section id="services" className="relative w-full bg-[#7AACAE] overflow-visible">
       {/* Presentation como bloque normal */}
       <div className="relative z-10 w-full">
         <Presentation/>
