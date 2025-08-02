@@ -51,42 +51,42 @@ const FAQComponent = () => {
       case "top-left":
         return `
           absolute left-0 top-1/4 -translate-x-1/2 -translate-y-1/2
-          sm:left-[-10px] sm:top-[20%]
-          md:left-[-20px] md:top-1/4
-          lg:left-0 lg:top-1/4 lg:-translate-x-1/2 lg:-translate-y-1/2
-          w-32 sm:w-40 md:w-48 lg:w-56
+          sm:left-[-20px] sm:top-[18%]
+          md:left-[-30px] md:top-1/4
+          lg:left-[-10px] lg:top-1/4 lg:-translate-x-1/2 lg:-translate-y-1/2
+          w-40 sm:w-48 md:w-56 lg:w-64
         `;
       case "top-right":
         return `
           absolute right-0 top-1/4 translate-x-1/2 -translate-y-1/2
-          sm:right-[-10px] sm:top-[20%]
-          md:right-[-20px] md:top-1/4
-          lg:right-0 lg:top-1/4 lg:translate-x-1/2 lg:-translate-y-1/2
-          w-32 sm:w-40 md:w-48 lg:w-56
+          sm:right-[-20px] sm:top-[18%]
+          md:right-[-30px] md:top-1/4
+          lg:right-[-10px] lg:top-1/4 lg:translate-x-1/2 lg:-translate-y-1/2
+          w-40 sm:w-48 md:w-56 lg:w-64
         `;
       case "bottom-left":
         return `
           absolute left-0 bottom-1/4 -translate-x-1/2 translate-y-1/2
-          sm:left-[-10px] sm:bottom-[20%]
-          md:left-[-20px] md:bottom-1/4
-          lg:left-0 lg:bottom-1/4 lg:-translate-x-1/2 lg:translate-y-1/2
-          w-32 sm:w-40 md:w-48 lg:w-56
+          sm:left-[-20px] sm:bottom-[18%]
+          md:left-[-30px] md:bottom-1/4
+          lg:left-[-10px] lg:bottom-1/4 lg:-translate-x-1/2 lg:translate-y-1/2
+          w-40 sm:w-48 md:w-56 lg:w-64
         `;
       case "bottom-center":
         return `
           absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2
-          sm:bottom-[-10px]
-          md:bottom-[-20px]
-          lg:left-1/2 lg:bottom-0 lg:-translate-x-1/2 lg:translate-y-1/2
-          w-32 sm:w-40 md:w-48 lg:w-56
+          sm:bottom-[-15px]
+          md:bottom-[-25px]
+          lg:left-1/2 lg:bottom-[-10px] lg:-translate-x-1/2 lg:translate-y-1/2
+          w-40 sm:w-48 md:w-56 lg:w-64
         `;
       case "bottom-right":
         return `
           absolute right-0 bottom-1/4 translate-x-1/2 translate-y-1/2
-          sm:right-[-10px] sm:bottom-[20%]
-          md:right-[-20px] md:bottom-1/4
-          lg:right-0 lg:bottom-1/4 lg:translate-x-1/2 lg:translate-y-1/2
-          w-32 sm:w-40 md:w-48 lg:w-56
+          sm:right-[-20px] sm:bottom-[18%]
+          md:right-[-30px] md:bottom-1/4
+          lg:right-[-10px] lg:bottom-1/4 lg:translate-x-1/2 lg:translate-y-1/2
+          w-40 sm:w-48 md:w-56 lg:w-64
         `;
       default:
         return "";
@@ -94,7 +94,7 @@ const FAQComponent = () => {
   };
 
   return (
-    <div className="relative min-h-screen md:min-h-[80vh] lg:min-h-screen p-4 md:p-8">
+    <div className="relative min-h-screen md:min-h-[80vh] lg:min-h-screen p-1 md:p-2">
       {/* Boxes Background - Posicionadas como en la imagen */}
       <div className="absolute bottom-0 left-0 w-1/3 h-1/2 z-10">
         <img
@@ -157,20 +157,20 @@ const FAQComponent = () => {
                 setSelectedFAQ(selectedFAQ === faq.id ? null : faq.id)
               }
             >
-              <div className="bg-white/90 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-5 shadow-lg border border-white/50 hover:bg-white transition-all duration-300">
-                <div className="flex items-start gap-2 md:gap-3">
+              <div className="bg-gradient-to-b from-[#C6D7CE] to-[#FFF7E6] backdrop-blur-sm rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6 shadow-lg border border-white/50 hover:shadow-xl transition-all duration-300">
+                <div className="flex items-start gap-3 md:gap-4">
                   <div className="flex-1 text-center">
-                    <h3 className="font-bold text-gray-800 text-xs sm:text-sm md:text-base leading-tight mb-2">
+                    <h3 className="font-bold text-gray-800 text-sm sm:text-base md:text-lg leading-tight mb-3">
                       {faq.question}
                     </h3>
                     <img
                       src={faq.icon}
                       alt=""
-                      className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 mx-auto mb-2"
+                      className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 mx-auto mb-3"
                     />
                     {selectedFAQ === faq.id && (
                       <div className="animate-in slide-in-from-top duration-300">
-                        <p className="text-xs md:text-sm text-gray-600 leading-relaxed border-t border-gray-200 pt-2">
+                        <p className="text-sm md:text-base text-gray-600 leading-relaxed border-t border-gray-200 pt-3">
                           {faq.answer}
                         </p>
                       </div>
