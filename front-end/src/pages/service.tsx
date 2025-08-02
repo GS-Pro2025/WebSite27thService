@@ -18,7 +18,7 @@ const Service: React.FC = () => {
         <SliderServices/>
       </div>
       {/* Question */}
-      <div className="relative z-11">
+      <div className="relative z-11 ">
         <Question/>
       </div>
       
@@ -32,11 +32,11 @@ const Service: React.FC = () => {
       </div>
       
       {/* ValuableObjects */}
-      <div className="relative z-12">
+      <div className="relative z-12 sm:-mt-0 -mt-50">
         <ValuableObjects/>
       </div>
       {/* Carousel objects */}
-      <div className="relative z-13 lg:-mt-60">
+      <div className="relative z-13 sm:-mt-60 -mt-50">
         <Carousel/>
       </div>
       {/* OpinionSection */}

@@ -94,14 +94,15 @@ const FAQComponent = () => {
   };
 
   return (
-    <div 
-      className="relative min-h-screen md:min-h-[80vh] lg:min-h-screen p-2 md:p-4 overflow-visible"
+    <div
+      className="relative min-h-screen md:min-h-[80vh] lg:min-h-screen p-2 md:p-4 pb-8 md:pb-4 overflow-visible"
       style={{
-        background: 'linear-gradient(to bottom, white 0%, white 15%, #B8CCC5 35%, #7AACAE 80%, #7AACAE 100%)'
+        background:
+          "linear-gradient(to bottom, white 0%, white 15%, #B8CCC5 35%, #7AACAE 80%, #7AACAE 100%)",
       }}
     >
-      {/* Boxes Background - Posicionadas como en la imagen */}
-      <div className="absolute bottom-0 left-0 w-1/3 h-1/2 z-10">
+      {/* Boxes Background - Reposicionadas para pantallas pequeñas */}
+      <div className="absolute bottom-60 left-4 w-70 h-70 sm:bottom-20 sm:left-6 sm:w-28 sm:h-24 md:bottom-0 md:left-0 md:w-1/3 md:h-1/2 z-10">
         <img
           src="/assets/Box.png"
           alt="Moving boxes"
