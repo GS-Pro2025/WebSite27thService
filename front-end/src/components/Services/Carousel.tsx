@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const Carousel: React.FC = () => {
   const [activeItem, setActiveItem] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [animateCards, setAnimateCards] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   // Detect mobile viewport
   useEffect(() => {
@@ -14,6 +17,39 @@ const Carousel: React.FC = () => {
     window.addEventListener('resize', checkMobile);
     
     return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Intersection Observer for scroll animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const timer1 = setTimeout(() => setIsVisible(true), 300);
+            const timer2 = setTimeout(() => setAnimateCards(true), 600);
+            
+            return () => {
+              clearTimeout(timer1);
+              clearTimeout(timer2);
+            };
+          }
+        });
+      },
+      {
+        threshold: 0.2,
+        rootMargin: "0px 0px -100px 0px"
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
   }, []);
 
   const carouselItems = [
@@ -59,16 +95,33 @@ const Carousel: React.FC = () => {
     }
   };
 
+  function getInitialCardPosition(index: number) {
+    const positions = [
+      'translate-x-20 translate-y-10',  // Card 1: from right-bottom
+      'translate-x-10 translate-y-20',  // Card 2: from right-down
+      '-translate-x-10 translate-y-20', // Card 3: from left-down
+      '-translate-x-20 translate-y-10'  // Card 4: from left-bottom
+    ];
+    return positions[index] || 'translate-y-20';
+  }
+
   return (
-    <div className="relative w-full bg-[#7DAEB5] py-8 md:py-12 px-4 overflow-visible">
-      {/* Animated background effects - simplified for mobile */}
-      <div className="absolute inset-0">
+    <div 
+      ref={sectionRef}
+      className="relative w-full py-1 md:py-3 px-4 overflow-visible"
+    >
+      {/* Animated background effects */}
+      <div className={`absolute inset-0 transform transition-all duration-1000 ease-out ${
+        isVisible ? 'opacity-100' : 'opacity-0'
+      }`}>
         <div className="absolute top-5 left-5 md:top-10 md:left-10 w-10 h-10 md:w-20 md:h-20 bg-white/10 rounded-full animate-pulse"></div>
         <div className="absolute top-20 right-10 md:top-32 md:right-20 w-6 h-6 md:w-12 md:h-12 bg-white/5 rounded-full animate-bounce delay-1000"></div>
         <div className="absolute bottom-10 left-20 md:bottom-20 md:left-32 w-8 h-8 md:w-16 md:h-16 bg-white/8 rounded-full animate-pulse delay-500"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto relative z-10 py-4 md:py-8">
+      <div className={`max-w-7xl mx-auto relative z-10 py-2 md:py-4 transform transition-all duration-1000 delay-200 ease-out ${
+        isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+      }`}>
         {/* Mobile: Grid layout, Desktop: Flex layout */}
         <div className={`
           ${isMobile 
@@ -103,10 +156,14 @@ const Carousel: React.FC = () => {
                 relative
                 overflow-visible
                 ${isMobile && activeItem === item.id ? 'ring-2 ring-white/50' : ''}
+                ${animateCards 
+                  ? 'translate-x-0 translate-y-0 opacity-100 scale-100' 
+                  : `${getInitialCardPosition(index)} opacity-0 scale-75`
+                }
               `}
               style={{
-                animationDelay: `${index * 150}ms`,
-                animation: 'fadeInScale 0.4s ease-out forwards'
+                transitionDelay: animateCards ? '0ms' : `${400 + index * 150}ms`,
+                transitionDuration: '800ms'
               }}
               onClick={() => handleItemClick(item.id)}
               onMouseEnter={() => handleItemHover(item.id)}
@@ -188,7 +245,9 @@ const Carousel: React.FC = () => {
 
         {/* Mobile hint text */}
         {isMobile && (
-          <div className="text-center mt-6">
+          <div className={`text-center mt-6 transform transition-all duration-800 delay-1000 ease-out ${
+            animateCards ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+          }`}>
             <p className="text-white/70 text-sm">
               Click the cards to see more information
             </p>
@@ -196,7 +255,7 @@ const Carousel: React.FC = () => {
         )}
       </div>
 
-      {/* Enhanced CSS for mobile animations */}
+      {/* Enhanced CSS for animations */}
       <style dangerouslySetInnerHTML={{
         __html: `
           @keyframes fadeInScale {

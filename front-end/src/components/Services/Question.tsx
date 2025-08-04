@@ -1,48 +1,46 @@
 import React, { useState } from "react";
-import bagroundImg from "/assets/FondoQuestion.svg";
-import box from "/assets/Box.png";
-import linea2 from "/assets/linea2.svg";
+
 const FAQComponent = () => {
   const [selectedFAQ, setSelectedFAQ] = useState<number | null>(null);
 
   const faqs = [
     {
       id: 1,
-      question: "What determines the cost of my move?",
+      question: "¿Qué determina el costo de mi mudanza?",
       answer:
-        "The cost depends on factors such as distance, item volume, additional services, and the time of year.",
+        "El costo depende de factores como la distancia, volumen de objetos, servicios adicionales y época del año.",
       position: "top-left",
       icon: "/assets/icon_1_circle.svg",
     },
     {
       id: 2,
-      question: "Can I request a personalized move?",
+      question: "¿Puedo hacer una mudanza personalizada?",
       answer:
-        "Yes, we offer personalized services tailored to your specific needs and budget.",
+        "Sí, ofrecemos servicios personalizados adaptados a tus necesidades específicas y presupuesto.",
       position: "top-right",
       icon: "/assets/icon_4_circle.svg",
     },
     {
       id: 3,
-      question: "Can I move just one item?",
+      question: "¿puedo mover un solo objeto?",
       answer:
-        "Absolutely — we handle everything from single-item moves to full relocations.",
+        "Absolutamente — manejamos desde mudanzas de un solo objeto hasta reubicaciones completas.",
       position: "bottom-left",
       icon: "/assets/icon_2_circle.svg",
     },
     {
       id: 4,
-      question: "Can I calculate how much weight I’m moving?",
+      question: "¿puedo calcular cuanto peso llevo?",
       answer:
-        "Yes, we’ll help you estimate the approximate weight and provide recommendations.",
+        "Sí, te ayudaremos a estimar el peso aproximado y te daremos recomendaciones.",
       position: "bottom-center",
       icon: "/assets/icon_5_circle.svg",
     },
     {
       id: 5,
-      question: "How do you protect my high-value items?",
+      question: "¿como cuidan mis objetos de alto valor?",
       answer:
-        "We use special materials, insurance, and trained staff to ensure the safety of valuable items.",
+        "Utilizamos materiales especiales, seguro y personal capacitado para garantizar la seguridad de objetos valiosos.",
       position: "bottom-right",
       icon: "/assets/icon_3_circle.svg",
     },
@@ -52,33 +50,43 @@ const FAQComponent = () => {
     switch (position) {
       case "top-left":
         return `
-          hidden md:block absolute left-0 top-1/4 -translate-x-1/2 -translate-y-1/2
-          md:left-0 md:top-1/4 md:-translate-x-1/2 md:-translate-y-1/2
-          w-48 md:w-56
+          absolute left-0 top-1/4 -translate-x-1/2 -translate-y-1/2
+          sm:left-[-20px] sm:top-[18%]
+          md:left-[-30px] md:top-1/4
+          lg:left-[-10px] lg:top-1/4 lg:-translate-x-1/2 lg:-translate-y-1/2
+          w-40 sm:w-48 md:w-56 lg:w-64
         `;
       case "top-right":
         return `
-          hidden md:block absolute right-0 top-1/4 translate-x-1/2 -translate-y-1/2
-          md:right-0 md:top-1/4 md:translate-x-1/2 md:-translate-y-1/2
-          w-48 md:w-56
+          absolute right-0 top-1/4 translate-x-1/2 -translate-y-1/2
+          sm:right-[-20px] sm:top-[18%]
+          md:right-[-30px] md:top-1/4
+          lg:right-[-10px] lg:top-1/4 lg:translate-x-1/2 lg:-translate-y-1/2
+          w-40 sm:w-48 md:w-56 lg:w-64
         `;
       case "bottom-left":
         return `
-          hidden md:block absolute left-0 bottom-1/4 -translate-x-1/2 translate-y-1/2
-          md:left-0 md:bottom-1/4 md:-translate-x-1/2 md:translate-y-1/2
-          w-48 md:w-56
+          absolute left-0 bottom-1/4 -translate-x-1/2 translate-y-1/2
+          sm:left-[-20px] sm:bottom-[18%]
+          md:left-[-30px] md:bottom-1/4
+          lg:left-[-10px] lg:bottom-1/4 lg:-translate-x-1/2 lg:translate-y-1/2
+          w-40 sm:w-48 md:w-56 lg:w-64
         `;
       case "bottom-center":
         return `
-          hidden md:block absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2
-          md:left-1/2 md:bottom-0 md:-translate-x-1/2 md:translate-y-1/2
-          w-48 md:w-56
+          absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-1/2
+          sm:bottom-[-15px]
+          md:bottom-[-25px]
+          lg:left-1/2 lg:bottom-[-10px] lg:-translate-x-1/2 lg:translate-y-1/2
+          w-40 sm:w-48 md:w-56 lg:w-64
         `;
       case "bottom-right":
         return `
-          hidden md:block absolute right-0 bottom-1/4 translate-x-1/2 translate-y-1/2
-          md:right-0 md:bottom-1/4 md:translate-x-1/2 md:translate-y-1/2
-          w-48 md:w-56
+          absolute right-0 bottom-1/4 translate-x-1/2 translate-y-1/2
+          sm:right-[-20px] sm:bottom-[18%]
+          md:right-[-30px] md:bottom-1/4
+          lg:right-[-10px] lg:bottom-1/4 lg:translate-x-1/2 lg:translate-y-1/2
+          w-40 sm:w-48 md:w-56 lg:w-64
         `;
       default:
         return "";
@@ -86,65 +94,58 @@ const FAQComponent = () => {
   };
 
   return (
-    <div className="relative h-lvw bg-gradient-to-b from-[#68A2A6] to-[#0E6F7E]/60">
-      {/* Background Image */}
-      <div className="absolute inset-0">
+    <div
+      className="relative min-h-screen md:min-h-[80vh] lg:min-h-screen p-2 md:p-4 pb-8 md:pb-4 overflow-visible"
+      style={{
+        background:
+          "linear-gradient(to bottom, white 0%, white 15%, #B8CCC5 35%, #7AACAE 80%, #7AACAE 100%)",
+      }}
+    >
+      {/* Boxes Background - Reposicionadas para pantallas pequeñas */}
+      <div className="absolute bottom-60 left-4 w-70 h-70 sm:bottom-20 sm:left-6 sm:w-28 sm:h-24 md:bottom-0 md:left-0 md:w-1/3 md:h-1/2 z-10">
         <img
-          src={bagroundImg}
-          alt="Background"
-          className="w-full h-full object-cover opacity-80"
+          src="/assets/Box.png"
+          alt="Moving boxes"
+          className="w-full h-full object-contain object-bottom"
         />
       </div>
 
-      {/* Boxes Background */}
-      <div className="absolute bottom-100 left-0 w-1/3 h-1/3">
-        <img
-          src={box}
-          alt="Moving boxes"
-          className="w-full h-full object-cover object-top"
-        />
-      </div>
-      <div className="absolute bottom-60 w-full h-auto">
-        <img
-          src={linea2}
-          alt="Lines"
-          className="w-full h-full object-cover object-top"
-        />
-      </div>
-      <div className="flex flex-col items-center justify-center relative z-30 overflow-visible pt-8">
-        <div className="bg-[#FFE67B] backdrop-blur-sm mx-4 md:mx-8 lg:mx-20 w-1/3 min-w-fit rounded-3xl p-6 shadow-2xl relative overflow-visible">
-          {/* Imagen alineada arriba a la derecha */}
+      {/* Título superior */}
+      <div className="flex flex-col items-center justify-center relative z-30 pt-8 mb-8">
+        <div className="bg-[#FFE67B] backdrop-blur-sm mx-4 md:mx-8 lg:mx-20 w-fit rounded-3xl px-8 py-4 shadow-2xl relative overflow-visible mb-4">
+          {/* Imagen FAQ alineada arriba a la derecha */}
           <img
             src="/assets/Recurso_question_faq.svg"
             alt="FAQ"
             className="w-12 md:w-16 lg:w-20 absolute -top-6 -right-2 md:-top-8 md:-right-4 z-50"
           />
-          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-2 text-center pr-8 md:pr-12">
-            <span className="text-white">We answer your questions</span>
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-white text-center pr-8 md:pr-12">
+            Resolvemos tus dudas
           </h1>
         </div>
-        <p className="text-lg md:text-3xl text-[#585858] text-center">
-          Because moving should be{" "}
+        <p className="text-lg md:text-2xl text-gray-700 text-center max-w-4xl">
+          Porque mudarse debe ser{" "}
           <span className="text-[#FFE67B] font-semibold drop-shadow">
-            easy, stress-free, and reliable
+            fácil, tranquilo y confiable
           </span>
         </p>
       </div>
+
       {/* Central Circle */}
-      <div className="relative z-10 flex items-center justify-center h-full -top-120">
+      <div className="relative z-20 flex items-center justify-center py-8 md:py-16">
         <div className="relative">
-          {/* Outer circle */}
-          <div className="w-[500px] h-[500px] md:w-[900px] md:h-[900px] rounded-full border-4 border-white/50 flex items-center justify-center">
-            {/* Inner circle */}
-            <div className="w-80 h-80 md:w-150 md:h-150 rounded-full border-2 border-white/50 flex items-center justify-center">
-              {/* Center circle */}
-              <div className="w-60 h-60 md:w-100 md:h-100 bg-teal-600 rounded-full flex items-center justify-center shadow-2xl">
-                <div className="text-center">
-                  <h2 className="text-white font-bold text-xl md:text-3xl mb-1">
-                    FREQUENTLY 
+          {/* Outer circle - Responsivo */}
+          <div className="w-[350px] h-[350px] sm:w-[450px] sm:h-[450px] md:w-[600px] md:h-[600px] lg:w-[800px] lg:h-[800px] rounded-full border-4 border-white/30 flex items-center justify-center">
+            {/* Inner circle - Responsivo */}
+            <div className="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-120 lg:h-120 rounded-full border-2 border-white/30 flex items-center justify-center">
+              {/* Center circle - Responsivo */}
+              <div className="w-32 h-32 sm:w-44 sm:h-44 md:w-60 md:h-60 lg:w-80 lg:h-80 bg-[#0E6F7E] rounded-full flex items-center justify-center shadow-2xl">
+                <div className="text-center px-2">
+                  <h2 className="text-white font-bold text-sm sm:text-base md:text-lg lg:text-xl mb-1">
+                    PREGUNTAS
                   </h2>
-                  <h2 className="text-white font-bold text-xl md:text-3xl">
-                    ASKED QUESTIONS
+                  <h2 className="text-white font-bold text-sm sm:text-base md:text-lg lg:text-xl">
+                    FRECUENTES
                   </h2>
                 </div>
               </div>
@@ -157,110 +158,34 @@ const FAQComponent = () => {
               key={faq.id}
               className={`${getPositionClasses(
                 faq.position
-              )} w-48 md:w-56 group cursor-pointer transform transition-all duration-300 hover:scale-105`}
+              )} group cursor-pointer transform transition-all duration-300 hover:scale-105`}
               onClick={() =>
                 setSelectedFAQ(selectedFAQ === faq.id ? null : faq.id)
               }
             >
-              <div className="bg-gradient-to-b from-[#C6D7CE] to-[#FFF7E6] backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/50 hover:bg-white/90 transition-all duration-300">
-                <div className="flex items-start gap-3">
+              <div className="bg-gradient-to-b from-[#C6D7CE] to-[#FFF7E6] backdrop-blur-sm rounded-xl md:rounded-2xl p-4 sm:p-5 md:p-6 shadow-lg border border-white/50 hover:shadow-xl transition-all duration-300">
+                <div className="flex items-start gap-3 md:gap-4">
                   <div className="flex-1 text-center">
-                    <h3 className="font-bold text-gray-800 text-lg leading-tight mb-2">
+                    <h3 className="font-bold text-gray-800 text-sm sm:text-base md:text-lg leading-tight mb-3">
                       {faq.question}
                     </h3>
                     <img
                       src={faq.icon}
                       alt=""
-                      className="w-10 h-10 mx-auto mb-2"
+                      className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 mx-auto mb-3"
                     />
                     {selectedFAQ === faq.id && (
                       <div className="animate-in slide-in-from-top duration-300">
-                        <p className="text-xs text-gray-600 leading-relaxed border-t border-gray-200 pt-2">
+                        <p className="text-sm md:text-base text-gray-600 leading-relaxed border-t border-gray-200 pt-3">
                           {faq.answer}
                         </p>
                       </div>
                     )}
                   </div>
                 </div>
-
-                {/* Connector line to center */}
-                <div className="absolute inset-0 pointer-events-none">
-                  <div className="w-px h-8 bg-gradient-to-b from-teal-400 to-transparent absolute top-full left-1/2 transform -translate-x-1/2 opacity-30"></div>
-                </div>
               </div>
             </div>
           ))}
-
-          {/* Connection lines */}
-          <svg
-            className="absolute inset-0 w-full h-full pointer-events-none"
-            style={{
-              width: "600px",
-              height: "600px",
-              left: "-100px",
-              top: "-100px",
-            }}
-          >
-            <defs>
-              <pattern
-                id="dots"
-                x="0"
-                y="0"
-                width="20"
-                height="20"
-                patternUnits="userSpaceOnUse"
-              >
-                <circle cx="10" cy="10" r="1" fill="white" opacity="0.3" />
-              </pattern>
-            </defs>
-
-            {/* Dotted connection lines */}
-            <line
-              x1="100"
-              y1="100"
-              x2="300"
-              y2="300"
-              stroke="url(#dots)"
-              strokeWidth="2"
-              opacity="0.5"
-            />
-            <line
-              x1="500"
-              y1="100"
-              x2="300"
-              y2="300"
-              stroke="url(#dots)"
-              strokeWidth="2"
-              opacity="0.5"
-            />
-            <line
-              x1="100"
-              y1="500"
-              x2="300"
-              y2="300"
-              stroke="url(#dots)"
-              strokeWidth="2"
-              opacity="0.5"
-            />
-            <line
-              x1="300"
-              y1="550"
-              x2="300"
-              y2="300"
-              stroke="url(#dots)"
-              strokeWidth="2"
-              opacity="0.5"
-            />
-            <line
-              x1="500"
-              y1="500"
-              x2="300"
-              y2="300"
-              stroke="url(#dots)"
-              strokeWidth="2"
-              opacity="0.5"
-            />
-          </svg>
         </div>
       </div>
 
