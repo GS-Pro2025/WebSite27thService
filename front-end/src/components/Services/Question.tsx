@@ -6,41 +6,41 @@ const FAQComponent = () => {
   const faqs = [
     {
       id: 1,
-      question: "¿Qué determina el costo de mi mudanza?",
+      question: "What determines the cost of my move?",
       answer:
-        "El costo depende de factores como la distancia, volumen de objetos, servicios adicionales y época del año.",
+        "The cost depends on factors such as distance, volume of items, additional services, and the time of year.",
       position: "top-left",
       icon: "/assets/icon_1_circle.svg",
     },
     {
       id: 2,
-      question: "¿Puedo hacer una mudanza personalizada?",
+      question: "Can I make a custom move?",
       answer:
-        "Sí, ofrecemos servicios personalizados adaptados a tus necesidades específicas y presupuesto.",
+        "Yes, we offer personalized services tailored to your specific needs and budget.",
       position: "top-right",
       icon: "/assets/icon_4_circle.svg",
     },
     {
       id: 3,
-      question: "¿puedo mover un solo objeto?",
+      question: "Can I move a single item?",
       answer:
-        "Absolutamente — manejamos desde mudanzas de un solo objeto hasta reubicaciones completas.",
+        "Absolutely — we handle everything from single item moves to full relocations.",
       position: "bottom-left",
       icon: "/assets/icon_2_circle.svg",
     },
     {
       id: 4,
-      question: "¿puedo calcular cuanto peso llevo?",
+      question: "Can I calculate how much weight I have?",
       answer:
-        "Sí, te ayudaremos a estimar el peso aproximado y te daremos recomendaciones.",
+        "Yes, we will help you estimate the approximate weight and provide recommendations.",
       position: "bottom-center",
       icon: "/assets/icon_5_circle.svg",
     },
     {
       id: 5,
-      question: "¿como cuidan mis objetos de alto valor?",
+      question: "How do you protect my high-value items?",
       answer:
-        "Utilizamos materiales especiales, seguro y personal capacitado para garantizar la seguridad de objetos valiosos.",
+        "We use special materials, insurance, and trained personnel to ensure the safety of valuable items.",
       position: "bottom-right",
       icon: "/assets/icon_3_circle.svg",
     },
@@ -142,10 +142,10 @@ const FAQComponent = () => {
               <div className="w-32 h-32 sm:w-44 sm:h-44 md:w-60 md:h-60 lg:w-80 lg:h-80 bg-[#0E6F7E] rounded-full flex items-center justify-center shadow-2xl">
                 <div className="text-center px-2">
                   <h2 className="text-white font-bold text-sm sm:text-base md:text-lg lg:text-xl mb-1">
-                    PREGUNTAS
+                    Questions
                   </h2>
                   <h2 className="text-white font-bold text-sm sm:text-base md:text-lg lg:text-xl">
-                    FRECUENTES
+                    frequent
                   </h2>
                 </div>
               </div>
