@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db";
 import { setupAssociations } from "./config/associations";
@@ -9,11 +10,17 @@ import paymentRoutes from "./routes/PaymentRoutes";
 import moveItemRoutes from "./routes/MoveItemRoutes";
 import calendarEventRoutes from "./routes/CalendarEventRoutes";
 import moveServiceRoutes from "./routes/MoveServiceRoutes";
+import authRoutes from "./routes/AuthRoutes";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(cors({
+  origin: "http://localhost:5173",
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
 connectDB();
 setupAssociations();
 app.use("/api/users", userRoutes);
@@ -23,6 +30,7 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/move-items", moveItemRoutes);
 app.use("/api/events", calendarEventRoutes);
 app.use("/api/move-services", moveServiceRoutes);
+app.use("/api/auth", authRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Servidor funcionando");
