@@ -11,18 +11,24 @@ import moveItemRoutes from "./routes/MoveItemRoutes";
 import calendarEventRoutes from "./routes/CalendarEventRoutes";
 import moveServiceRoutes from "./routes/MoveServiceRoutes";
 import authRoutes from "./routes/AuthRoutes";
+import { authenticateJWT } from "./config/securityConfig";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cors({
-  origin: "http://localhost:5173",
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
 connectDB();
 setupAssociations();
+app.use(authenticateJWT);
+
 app.use("/api/users", userRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/moves", moveRoutes);
