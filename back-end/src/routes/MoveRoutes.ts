@@ -6,8 +6,11 @@ import {
   handleUpdateMove,
   handleDeleteMove,
 } from "../controllers/MoveController";
+import { authenticateJWT } from "../config/securityConfig";
 
 const router = Router();
+
+router.use(authenticateJWT);
 
 /**
  * @route   POST /api/moves

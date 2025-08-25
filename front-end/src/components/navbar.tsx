@@ -8,8 +8,15 @@ const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsAuthenticated(!!token);
+  }, [location]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,6 +47,14 @@ const Navbar: React.FC = () => {
     );
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    setIsAuthenticated(false);
+    setIsMobileMenuOpen(false);
+    navigate("/");
+  };
+
   return (
     <>
       <nav
@@ -50,9 +65,9 @@ const Navbar: React.FC = () => {
         }`}
       >
         <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center h-20">
+          <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <div className="hidden md:block flex-shrink-0">
+            <div className="flex-shrink-0">
               <img
                 src="/assets/27_logo_white.svg"
                 alt="Twenty Seventh"
@@ -95,20 +110,31 @@ const Navbar: React.FC = () => {
               </button>
             </div>
 
-            {/* Botones Login / Sign Up */}
+            {/* Botones Login / Sign Up / Logout */}
             <div className="hidden md:flex items-center space-x-4 ml-auto">
-              <button
-                onClick={() => setIsLoginOpen(true)}
-                className="bg-white text-black font-semibold px-5 py-2 rounded-full transition-colors duration-300 hover:bg-gray-200"
-              >
-                Login
-              </button>
-              <button
-                onClick={() => setIsSignUpOpen(true)}
-                className="bg-[#FFE67B] text-black font-semibold px-5 py-2 rounded-full transition-colors duration-300 hover:bg-[#FFD84D]"
-              >
-                Sign Up
-              </button>
+              {isAuthenticated ? (
+                <button
+                  onClick={handleLogout}
+                  className="bg-white text-black font-semibold px-5 py-2 rounded-full transition-colors duration-300 hover:bg-gray-200"
+                >
+                  Logout
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={() => setIsLoginOpen(true)}
+                    className="bg-white text-black font-semibold px-5 py-2 rounded-full transition-colors duration-300 hover:bg-gray-200"
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={() => setIsSignUpOpen(true)}
+                    className="bg-[#FFE67B] text-black font-semibold px-5 py-2 rounded-full transition-colors duration-300 hover:bg-[#FFD84D]"
+                  >
+                    Sign Up
+                  </button>
+                </>
+              )}
             </div>
 
             {/* Botón menú móvil */}
@@ -150,36 +176,7 @@ const Navbar: React.FC = () => {
                 >
                   SERVICES
                 </span>
-                <span
-                  onClick={() => navigateToPage("your-move")}
-                  className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium cursor-pointer ${
-                    isActivePage("your-move")
-                      ? "text-[#FFE67B] bg-white/10"
-                      : "text-white hover:text-[#FFE67B] hover:bg-white/10"
-                  }`}
-                >
-                  YOUR MOVE
-                </span>
-                <span
-                  onClick={() => navigateToPage("about-us")}
-                  className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium cursor-pointer ${
-                    isActivePage("about-us")
-                      ? "text-[#FFE67B] bg-white/10"
-                      : "text-white hover:text-[#FFE67B] hover:bg-white/10"
-                  }`}
-                >
-                  ABOUT US
-                </span>
-                <span
-                  onClick={() => navigateToPage("coverage")}
-                  className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium cursor-pointer ${
-                    isActivePage("coverage")
-                      ? "text-[#FFE67B] bg-white/10"
-                      : "text-white hover:text-[#FFE67B] hover:bg-white/10"
-                  }`}
-                >
-                  COVERAGE
-                </span>
+                {/* ... otros links ... */}
                 <button
                   onClick={() => navigateToPage("contact")}
                   className="block w-full text-center px-3 py-3 mt-4 bg-[#FFE67B] hover:bg-amber-400 text-black font-semibold rounded-md transition-colors"
@@ -187,20 +184,37 @@ const Navbar: React.FC = () => {
                   CONTACT US
                 </button>
 
-                {/* Botones Login y Sign Up en móvil */}
-                <div className="flex flex-col space-y-3 mt-4">
-                  <button
-                    onClick={() => setIsLoginOpen(true)}
-                    className="bg-white text-black font-semibold px-5 py-2 rounded-full transition-colors duration-300 hover:bg-gray-200"
-                  >
-                    Login
-                  </button>
-                  <button
-                    onClick={() => setIsSignUpOpen(true)}
-                    className="bg-[#FFE67B] text-black font-semibold px-5 py-2 rounded-full hover:bg-[#FFD84D]"
-                  >
-                    Sign Up
-                  </button>
+                {/* Botones Login / Sign Up / Logout en móvil */}
+                <div className="flex flex-col space-y-3 pt-4 border-t border-white/20 mt-4">
+                  {isAuthenticated ? (
+                    <button
+                      onClick={handleLogout}
+                      className="bg-white text-black font-semibold px-5 py-2 rounded-full transition-colors duration-300 hover:bg-gray-200"
+                    >
+                      Logout
+                    </button>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => {
+                          setIsLoginOpen(true);
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="bg-white text-black font-semibold px-5 py-2 rounded-full transition-colors duration-300 hover:bg-gray-200"
+                      >
+                        Sign In
+                      </button>
+                      <button
+                        onClick={() => {
+                          setIsSignUpOpen(true);
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="bg-[#FFE67B] text-black font-semibold px-5 py-2 rounded-full hover:bg-[#FFD84D]"
+                      >
+                        Sign Up
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -211,10 +225,7 @@ const Navbar: React.FC = () => {
         isOpen={isSignUpOpen}
         onClose={() => setIsSignUpOpen(false)}
       />
-      <LoginModal
-        isOpen={isLoginOpen}
-        onClose={() => setIsLoginOpen(false)}
-      />
+      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
     </>
   );
 };

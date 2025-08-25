@@ -5,6 +5,7 @@ import "./App.css";
 import Home from "./pages/home";
 import Service from "./pages/service";
 import Footer from "./components/Footer";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/services" element={<Service />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
 
         <Footer />
