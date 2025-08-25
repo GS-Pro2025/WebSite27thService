@@ -12,37 +12,37 @@ const router = Router();
 
 /**
  * @route   POST /api/events
- * @desc    Crear un nuevo evento de calendario
+ * @desc    Create a new calendar event
  */
 router.post("/", handleCreateEvent);
 
 /**
  * @route   GET /api/events
- * @desc    Obtener todos los eventos de calendario
+ * @desc    Get all calendar events
  */
 router.get("/", handleGetAllEvents);
 
 /**
  * @route   GET /api/events/move/:moveId
- * @desc    Obtener todos los eventos de una mudanza específica
+ * @desc    Get all events for a specific move
  */
 router.get("/move/:moveId", handleGetEventsForMove);
 
 /**
  * @route   GET /api/events/:id
- * @desc    Obtener un evento por su ID
+ * @desc    Get an event by its ID
  */
 router.get("/:id", handleGetEventById);
 
 /**
  * @route   PUT /api/events/:id
- * @desc    Actualizar un evento por su ID
+ * @desc    Update an event by its ID
  */
 router.put("/:id", handleUpdateEvent);
 
 /**
  * @route   DELETE /api/events/:id
- * @desc    Eliminar un evento por su ID
+ * @desc    Delete an event by its ID
  */
 router.delete("/:id", handleDeleteEvent);
 

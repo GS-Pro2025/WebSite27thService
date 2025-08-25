@@ -10,10 +10,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      full_name: {
-        type: Sequelize.STRING(100),
-        allowNull: false
-      },
       email: {
         type: Sequelize.STRING(100),
         allowNull: false,
@@ -32,10 +28,6 @@ module.exports = {
         type: Sequelize.ENUM('user', 'admin'),
         allowNull: false,
         defaultValue: 'user'
-      },
-      phone_number: {
-        type: Sequelize.STRING(20),
-        allowNull: true
       },
       created_at: {
         allowNull: false,

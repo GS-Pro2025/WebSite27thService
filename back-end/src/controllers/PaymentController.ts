@@ -23,11 +23,11 @@ export const handleGetPaymentById = async (req: Request, res: Response) => {
   try {
     const paymentId = parseInt(req.params.id);
     if (isNaN(paymentId))
-      return res.status(400).json({ message: "ID de pago inválido." });
+      return res.status(400).json({ message: "Invalid payment ID." });
 
     const payment = await paymentService.getPaymentById(paymentId);
     if (!payment)
-      return res.status(404).json({ message: "Pago no encontrado." });
+      return res.status(404).json({ message: "Payment not found." });
 
     res.status(200).json(payment);
   } catch (error: any) {
@@ -39,14 +39,14 @@ export const handleUpdatePayment = async (req: Request, res: Response) => {
   try {
     const paymentId = parseInt(req.params.id);
     if (isNaN(paymentId))
-      return res.status(400).json({ message: "ID de pago inválido." });
+      return res.status(400).json({ message: "Invalid payment ID." });
 
     const updatedPayment = await paymentService.updatePayment(
       paymentId,
       req.body
     );
     if (!updatedPayment)
-      return res.status(404).json({ message: "Pago no encontrado." });
+      return res.status(404).json({ message: "Payment not found." });
 
     res.status(200).json(updatedPayment);
   } catch (error: any) {
@@ -58,11 +58,11 @@ export const handleDeletePayment = async (req: Request, res: Response) => {
   try {
     const paymentId = parseInt(req.params.id);
     if (isNaN(paymentId))
-      return res.status(400).json({ message: "ID de pago inválido." });
+      return res.status(400).json({ message: "Invalid payment ID." });
 
     const success = await paymentService.deletePayment(paymentId);
     if (!success)
-      return res.status(404).json({ message: "Pago no encontrado." });
+      return res.status(404).json({ message: "Payment not found." });
 
     res.status(204).send();
   } catch (error: any) {

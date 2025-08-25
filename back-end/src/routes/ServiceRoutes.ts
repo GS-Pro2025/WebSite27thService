@@ -11,31 +11,31 @@ const router = Router();
 
 /**
  * @route   GET /api/services
- * @desc    Obtener todos los servicios
+ * @desc    Get all services
  */
 router.get("/", handleGetAllServices);
 
 /**
  * @route   POST /api/services
- * @desc    Crear un nuevo servicio
+ * @desc    Create a new service
  */
 router.post("/", handleCreateService);
 
 /**
  * @route   GET /api/services/:id
- * @desc    Obtener un servicio por su ID
+ * @desc    Get a service by its ID
  */
 router.get("/:id", handleGetServiceById);
 
 /**
  * @route   PUT /api/services/:id
- * @desc    Actualizar un servicio por su ID
+ * @desc    Update a service by its ID
  */
 router.put("/:id", handleUpdateService);
 
 /**
  * @route   DELETE /api/services/:id
- * @desc    Eliminar un servicio por su ID
+ * @desc    Delete a service by its ID
  */
 router.delete("/:id", handleDeleteService);
 

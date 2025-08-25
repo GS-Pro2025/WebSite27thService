@@ -10,35 +10,35 @@ import { authenticateJWT } from "../config/securityConfig";
 
 const router = Router();
 
-router.use(authenticateJWT);
+// router.use(authenticateJWT);
 
 /**
  * @route   POST /api/moves
- * @desc    Crear una nueva mudanza
+ * @desc    Create a new move
  */
 router.post("/", handleCreateMove);
 
 /**
  * @route   GET /api/moves
- * @desc    Obtener todas las mudanzas
+ * @desc    Get all moves
  */
 router.get("/", handleGetAllMoves);
 
 /**
  * @route   GET /api/moves/:id
- * @desc    Obtener una mudanza por su ID
+ * @desc    Get a move by its ID
  */
 router.get("/:id", handleGetMoveById);
 
 /**
  * @route   PUT /api/moves/:id
- * @desc    Actualizar una mudanza por su ID
+ * @desc    Update a move by its ID
  */
 router.put("/:id", handleUpdateMove);
 
 /**
  * @route   DELETE /api/moves/:id
- * @desc    Eliminar una mudanza por su ID
+ * @desc    Delete a move by its ID
  */
 router.delete("/:id", handleDeleteMove);
 

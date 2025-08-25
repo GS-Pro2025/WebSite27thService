@@ -5,4 +5,5 @@ export const permissions: { [key: string]: UserRole[] } = {
   "POST /api/moves": [UserRole.ADMIN, UserRole.USER],
   "PUT /api/moves/:id": [UserRole.ADMIN],
   "DELETE /api/moves/:id": [UserRole.ADMIN],
+  "POST /api/persons": [UserRole.ADMIN, UserRole.USER]
 };

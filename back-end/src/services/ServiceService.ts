@@ -1,9 +1,9 @@
 import Service, { ServiceAttributes } from "../models/Services";
 
 /**
- * Crea un nuevo servicio.
- * @param serviceData - Los datos del servicio a crear.
- * @returns El servicio creado.
+ * Creates a new service.
+ * @param serviceData - The service data to create.
+ * @returns The created service.
  */
 export const createService = async (
   serviceData: ServiceAttributes
@@ -12,29 +12,29 @@ export const createService = async (
     const newService = await Service.create(serviceData);
     return newService;
   } catch (error) {
-    console.error("Error al crear el servicio:", error);
-    throw new Error("No se pudo crear el servicio.");
+  console.error("Error creating service:", error);
+  throw new Error("Could not create service.");
   }
 };
 
 /**
- * Obtiene todos los servicios.
- * @returns Un arreglo de servicios.
+ * Gets all services.
+ * @returns An array of services.
  */
 export const getAllServices = async (): Promise<Service[]> => {
   try {
     const services = await Service.findAll();
     return services;
   } catch (error) {
-    console.error("Error al obtener los servicios:", error);
-    throw new Error("No se pudieron obtener los servicios.");
+  console.error("Error getting services:", error);
+  throw new Error("Could not get services.");
   }
 };
 
 /**
- * Obtiene un servicio por su ID.
- * @param serviceId - El ID del servicio.
- * @returns El servicio encontrado o null.
+ * Gets a service by its ID.
+ * @param serviceId - The service ID.
+ * @returns The found service or null.
  */
 export const getServiceById = async (
   serviceId: number
@@ -43,16 +43,16 @@ export const getServiceById = async (
     const service = await Service.findByPk(serviceId);
     return service;
   } catch (error) {
-    console.error("Error al obtener el servicio por ID:", error);
-    throw new Error("No se pudo obtener el servicio.");
+  console.error("Error getting service by ID:", error);
+  throw new Error("Could not get service.");
   }
 };
 
 /**
- * Actualiza los datos de un servicio.
- * @param serviceId - El ID del servicio a actualizar.
- * @param updatedData - Los nuevos datos para el servicio.
- * @returns El servicio actualizado o null si no se encontró.
+ * Updates a service's data.
+ * @param serviceId - The service ID to update.
+ * @param updatedData - The new data for the service.
+ * @returns The updated service or null if not found.
  */
 export const updateService = async (
   serviceId: number,
@@ -66,15 +66,15 @@ export const updateService = async (
     await service.update(updatedData);
     return service;
   } catch (error) {
-    console.error("Error al actualizar el servicio:", error);
-    throw new Error("No se pudo actualizar el servicio.");
+  console.error("Error updating service:", error);
+  throw new Error("Could not update service.");
   }
 };
 
 /**
- * Elimina un servicio por su ID.
- * @param serviceId - El ID del servicio a eliminar.
- * @returns Un booleano indicando si la eliminación fue exitosa.
+ * Deletes a service by its ID.
+ * @param serviceId - The service ID to delete.
+ * @returns A boolean indicating if the deletion was successful.
  */
 export const deleteService = async (serviceId: number): Promise<boolean> => {
   try {
@@ -83,7 +83,7 @@ export const deleteService = async (serviceId: number): Promise<boolean> => {
     });
     return deletedRows > 0;
   } catch (error) {
-    console.error("Error al eliminar el servicio:", error);
-    throw new Error("No se pudo eliminar el servicio.");
+  console.error("Error deleting service:", error);
+  throw new Error("Could not delete service.");
   }
 };

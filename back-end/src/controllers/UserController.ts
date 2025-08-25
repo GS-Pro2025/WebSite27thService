@@ -29,13 +29,13 @@ export const handleGetUserById = async (req: Request, res: Response) => {
   try {
     const userId = parseInt(req.params.id);
     if (isNaN(userId)) {
-      return res.status(400).json({ message: "ID de usuario inválido." });
+      return res.status(400).json({ message: "Invalid user ID." });
     }
 
     const user = await getUserById(userId);
 
     if (!user) {
-      return res.status(404).json({ message: "Usuario no encontrado." });
+      return res.status(404).json({ message: "User not found." });
     }
 
     res.status(200).json(user);
@@ -48,13 +48,13 @@ export const handleUpdateUser = async (req: Request, res: Response) => {
   try {
     const userId = parseInt(req.params.id);
     if (isNaN(userId)) {
-      return res.status(400).json({ message: "ID de usuario inválido." });
+      return res.status(400).json({ message: "Invalid user ID." });
     }
 
     const updatedUser = await updateUser(userId, req.body);
 
     if (!updatedUser) {
-      return res.status(404).json({ message: "Usuario no encontrado." });
+      return res.status(404).json({ message: "User not found." });
     }
 
     res.status(200).json(updatedUser);
@@ -67,13 +67,13 @@ export const handleDeleteUser = async (req: Request, res: Response) => {
   try {
     const userId = parseInt(req.params.id);
     if (isNaN(userId)) {
-      return res.status(400).json({ message: "ID de usuario inválido." });
+      return res.status(400).json({ message: "Invalid user ID." });
     }
 
     const success = await deleteUser(userId);
 
     if (!success) {
-      return res.status(404).json({ message: "Usuario no encontrado." });
+      return res.status(404).json({ message: "User not found." });
     }
 
     res.status(204).send();

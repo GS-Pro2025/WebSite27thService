@@ -30,7 +30,7 @@ export const handleGetMoveServiceByIds = async (
       parseInt(serviceId)
     );
     if (!relation) {
-      return res.status(404).json({ message: "Relación no encontrada." });
+      return res.status(404).json({ message: "Relation not found." });
     }
     res.status(200).json(relation);
   } catch (error: any) {
@@ -47,7 +47,7 @@ export const handleUpdateMoveService = async (req: Request, res: Response) => {
       req.body
     );
     if (!updatedRelation) {
-      return res.status(404).json({ message: "Relación no encontrada." });
+      return res.status(404).json({ message: "Relation not found." });
     }
     res.status(200).json(updatedRelation);
   } catch (error: any) {
@@ -63,7 +63,7 @@ export const handleDeleteMoveService = async (req: Request, res: Response) => {
       parseInt(serviceId)
     );
     if (!success) {
-      return res.status(404).json({ message: "Relación no encontrada." });
+      return res.status(404).json({ message: "Relation not found." });
     }
     res.status(204).send();
   } catch (error: any) {

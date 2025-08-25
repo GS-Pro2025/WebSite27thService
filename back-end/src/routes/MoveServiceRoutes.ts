@@ -11,31 +11,31 @@ const router = Router();
 
 /**
  * @route   POST /api/move-services
- * @desc    Crear o actualizar una relación move-service
+ * @desc    Create or update a move-service relation
  */
 router.post("/", handleCreateMoveService);
 
 /**
  * @route   GET /api/move-services
- * @desc    Obtener todas las relaciones move-service
+ * @desc    Get all move-service relations
  */
 router.get("/", handleGetAllMoveServices);
 
 /**
  * @route   GET /api/move-services/:moveId/:serviceId
- * @desc    Obtener una relación específica
+ * @desc    Get a specific relation
  */
 router.get("/:moveId/:serviceId", handleGetMoveServiceByIds);
 
 /**
  * @route   PUT /api/move-services/:moveId/:serviceId
- * @desc    Actualizar una relación específica
+ * @desc    Update a specific relation
  */
 router.put("/:moveId/:serviceId", handleUpdateMoveService);
 
 /**
  * @route   DELETE /api/move-services/:moveId/:serviceId
- * @desc    Eliminar una relación específica
+ * @desc    Delete a specific relation
  */
 router.delete("/:moveId/:serviceId", handleDeleteMoveService);
 

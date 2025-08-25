@@ -17,8 +17,8 @@ export const sequelize = new Sequelize(
 export const connectDB = async () => {
   try {
     await sequelize.authenticate();
-    console.log('Conexión a MySQL establecida con éxito.');
+    console.log('Connection established successfully.');
   } catch (error) {
-    console.error('Error al conectar a MySQL:', error);
+    console.error('Error connecting to MySQL:', error);
   }
 };

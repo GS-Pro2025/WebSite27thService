@@ -11,6 +11,7 @@ import moveItemRoutes from "./routes/MoveItemRoutes";
 import calendarEventRoutes from "./routes/CalendarEventRoutes";
 import moveServiceRoutes from "./routes/MoveServiceRoutes";
 import authRoutes from "./routes/AuthRoutes";
+import personRoutes from "./routes/PersonRoutes";
 import { authenticateJWT } from "./config/securityConfig";
 
 dotenv.config();
@@ -27,7 +28,7 @@ app.use(
 
 connectDB();
 setupAssociations();
-app.use(authenticateJWT);
+// app.use(authenticateJWT);
 
 app.use("/api/users", userRoutes);
 app.use("/api/services", serviceRoutes);
@@ -36,6 +37,7 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/move-items", moveItemRoutes);
 app.use("/api/events", calendarEventRoutes);
 app.use("/api/move-services", moveServiceRoutes);
+app.use("/api/persons", personRoutes);
 app.use("/api/auth", authRoutes);
 
 app.get("/", (req: Request, res: Response) => {

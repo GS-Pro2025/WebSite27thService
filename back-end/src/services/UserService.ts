@@ -1,30 +1,51 @@
 import bcrypt from "bcrypt";
 import User, { UserAttributes } from "../models/User";
+import Person from "../models/Person";
 
 /**
- * Crea un nuevo usuario.
- * Hashea la contraseña antes de guardarla.
- * @param userData - Los datos del usuario a crear.
- * @returns El usuario creado.
+ * Creates a new user.
+ * Hashes the password before saving.
+ * If there is no person with the same email, creates one associated with the user.
+ * @param userData - The user data to create.
+ * @returns The created user.
  */
-export const createUser = async (userData: UserAttributes): Promise<User> => {
+export const createUser = async (
+  userData: UserAttributes & { full_name?: string; phone?: string }
+): Promise<User> => {
   try {
     if (userData.password_hash) {
       const salt = await bcrypt.genSalt(10);
       userData.password_hash = await bcrypt.hash(userData.password_hash, salt);
     }
+
     const newUser = await User.create(userData);
+
+    const existingPerson = await Person.findOne({
+      where: { email: newUser.email },
+    });
+
+    if (existingPerson) {
+      await existingPerson.update({ user_id: newUser.user_id });
+    } else {
+      await Person.create({
+        full_name: userData.full_name || newUser.email.split("@")[0],
+        phone_number: userData.phone || null,
+        email: newUser.email,
+        user_id: newUser.user_id,
+      });
+    }
+
     return newUser;
   } catch (error) {
-    console.error("Error al crear el usuario:", error);
-    throw new Error("No se pudo crear el usuario.");
+  console.error("Error creating user:", error);
+  throw new Error("Could not create user.");
   }
 };
 
 /**
- * Obtiene todos los usuarios de la base de datos.
- * Excluye la contraseña por seguridad.
- * @returns Un arreglo de usuarios.
+ * Gets all users from the database.
+ * Excludes the password for security.
+ * @returns An array of users.
  */
 export const getAllUsers = async (): Promise<User[]> => {
   try {
@@ -33,15 +54,15 @@ export const getAllUsers = async (): Promise<User[]> => {
     });
     return users;
   } catch (error) {
-    console.error("Error al obtener los usuarios:", error);
-    throw new Error("No se pudieron obtener los usuarios.");
+  console.error("Error getting users:", error);
+  throw new Error("Could not get users.");
   }
 };
 
 /**
- * Obtiene un usuario por su ID.
- * @param userId - El ID del usuario.
- * @returns El usuario encontrado o null.
+ * Gets a user by their ID.
+ * @param userId - The user ID.
+ * @returns The found user or null.
  */
 export const getUserById = async (userId: number): Promise<User | null> => {
   try {
@@ -50,16 +71,16 @@ export const getUserById = async (userId: number): Promise<User | null> => {
     });
     return user;
   } catch (error) {
-    console.error("Error al obtener el usuario por ID:", error);
-    throw new Error("No se pudo obtener el usuario.");
+  console.error("Error getting user by ID:", error);
+  throw new Error("Could not get user.");
   }
 };
 
 /**
- * Actualiza los datos de un usuario por su ID.
- * @param userId - El ID del usuario a actualizar.
- * @param updatedData - Los nuevos datos para el usuario.
- * @returns El usuario actualizado o null si no se encontró.
+ * Updates a user's data by their ID.
+ * @param userId - The user ID to update.
+ * @param updatedData - The new data for the user.
+ * @returns The updated user or null if not found.
  */
 export const updateUser = async (
   userId: number,
@@ -82,15 +103,15 @@ export const updateUser = async (
     await user.update(updatedData);
     return user;
   } catch (error) {
-    console.error("Error al actualizar el usuario:", error);
-    throw new Error("No se pudo actualizar el usuario.");
+  console.error("Error updating user:", error);
+  throw new Error("Could not update user.");
   }
 };
 
 /**
- * Elimina un usuario por su ID.
- * @param userId - El ID del usuario a eliminar.
- * @returns Un booleano indicando si la eliminación fue exitosa.
+ * Deletes a user by their ID.
+ * @param userId - The user ID to delete.
+ * @returns A boolean indicating if the deletion was successful.
  */
 export const deleteUser = async (userId: number): Promise<boolean> => {
   try {
@@ -99,7 +120,7 @@ export const deleteUser = async (userId: number): Promise<boolean> => {
     });
     return deletedRows > 0;
   } catch (error) {
-    console.error("Error al eliminar el usuario:", error);
-    throw new Error("No se pudo eliminar el usuario.");
+  console.error("Error deleting user:", error);
+  throw new Error("Could not delete user.");
   }
 };

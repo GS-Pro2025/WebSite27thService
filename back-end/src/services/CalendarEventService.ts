@@ -3,9 +3,9 @@ import CalendarEvent, {
 } from "../models/CalendarEvent";
 
 /**
- * Crea un nuevo evento de calendario.
- * @param data - Los datos del evento a crear.
- * @returns El evento de calendario creado.
+ * Creates a new calendar event.
+ * @param data - The event data to create.
+ * @returns The created calendar event.
  */
 export const createCalendarEvent = async (
   data: CalendarEventAttributes
@@ -14,15 +14,15 @@ export const createCalendarEvent = async (
     const newEvent = await CalendarEvent.create(data);
     return newEvent;
   } catch (error) {
-    console.error("Error al crear el evento:", error);
-    throw new Error("No se pudo crear el evento.");
+  console.error("Error creating event:", error);
+  throw new Error("Could not create event.");
   }
 };
 
 /**
- * Obtiene todos los eventos de una mudanza específica.
- * @param moveId - El ID de la mudanza.
- * @returns Una lista de eventos de calendario.
+ * Gets all events for a specific move.
+ * @param moveId - The move ID.
+ * @returns A list of calendar events.
  */
 export const getEventsForMove = async (
   moveId: string
@@ -31,28 +31,28 @@ export const getEventsForMove = async (
     const events = await CalendarEvent.findAll({ where: { move_id: moveId } });
     return events;
   } catch (error) {
-    console.error("Error al obtener los eventos:", error);
-    throw new Error("No se pudieron obtener los eventos.");
+  console.error("Error getting events:", error);
+  throw new Error("Could not get events.");
   }
 };
 
 /**
- * Obtiene todos los eventos.
- * @returns Una lista de eventos de calendario.
+ * Gets all events.
+ * @returns A list of calendar events.
  */
 export const getAllCalendarEvents = async (): Promise<CalendarEvent[]> => {
   try {
     return await CalendarEvent.findAll();
   } catch (error) {
-    console.error("Error al obtener todos los eventos:", error);
-    throw new Error("No se pudieron obtener todos los eventos.");
+  console.error("Error getting all events:", error);
+  throw new Error("Could not get all events.");
   }
 };
 
 /**
- * Obtiene un evento por su ID.
- * @param eventId - El ID del evento.
- * @returns El evento de calendario encontrado o null.
+ * Gets an event by its ID.
+ * @param eventId - The event ID.
+ * @returns The found calendar event or null.
  */
 export const getCalendarEventById = async (
   eventId: number
@@ -60,16 +60,16 @@ export const getCalendarEventById = async (
   try {
     return await CalendarEvent.findByPk(eventId);
   } catch (error) {
-    console.error("Error al obtener el evento por ID:", error);
-    throw new Error("No se pudo obtener el evento.");
+  console.error("Error getting event by ID:", error);
+  throw new Error("Could not get event.");
   }
 };
 
 /**
- * Actualiza un evento.
- * @param eventId - El ID del evento a actualizar.
- * @param data - Los nuevos datos del evento.
- * @returns El evento de calendario actualizado o null.
+ * Updates an event.
+ * @param eventId - The event ID to update.
+ * @param data - The new event data.
+ * @returns The updated calendar event or null.
  */
 export const updateCalendarEvent = async (
   eventId: number,
@@ -81,15 +81,15 @@ export const updateCalendarEvent = async (
     await event.update(data);
     return event;
   } catch (error) {
-    console.error("Error al actualizar el evento:", error);
-    throw new Error("No se pudo actualizar el evento.");
+  console.error("Error updating event:", error);
+  throw new Error("Could not update event.");
   }
 };
 
 /**
- * Elimina un evento.
- * @param eventId - El ID del evento a eliminar.
- * @returns true si se eliminó el evento, false en caso contrario.
+ * Deletes an event.
+ * @param eventId - The event ID to delete.
+ * @returns true if the event was deleted, false otherwise.
  */
 export const deleteCalendarEvent = async (
   eventId: number
@@ -100,7 +100,7 @@ export const deleteCalendarEvent = async (
     });
     return deletedRows > 0;
   } catch (error) {
-    console.error("Error al eliminar el evento:", error);
-    throw new Error("No se pudo eliminar el evento.");
+  console.error("Error deleting event:", error);
+  throw new Error("Could not delete event.");
   }
 };

@@ -1,11 +1,11 @@
 import { nanoid } from "nanoid";
 import Move, { MoveAttributes } from "../models/Move";
-import User from "../models/User";
+import Person from "../models/Person";
 
 /**
- * Crea una nueva mudanza, generando un ID único.
- * @param moveData - Los datos de la mudanza.
- * @returns La mudanza creada.
+ * Creates a new move, generating a unique ID.
+ * @param moveData - The move data.
+ * @returns The created move.
  */
 export const createMove = async (moveData: MoveAttributes): Promise<Move> => {
   try {
@@ -14,61 +14,61 @@ export const createMove = async (moveData: MoveAttributes): Promise<Move> => {
     const newMove = await Move.create(moveData);
     return newMove;
   } catch (error) {
-    console.error("Error al crear la mudanza:", error);
-    throw new Error("No se pudo crear la mudanza.");
+  console.error("Error creating move:", error);
+  throw new Error("Could not create move.");
   }
 };
 
 /**
- * Obtiene todas las mudanzas, incluyendo los datos del cliente asociado.
- * @returns Un arreglo de mudanzas con la información del cliente.
+ * Gets all moves, including the associated person's data.
+ * @returns An array of moves with person information.
  */
 export const getAllMoves = async (): Promise<Move[]> => {
   try {
     const moves = await Move.findAll({
       include: [
         {
-          model: User,
+          model: Person,
           as: "client",
-          attributes: ["user_id", "full_name", "email"],
+          attributes: ["person_id", "full_name", "email"],
         },
       ],
     });
     return moves;
   } catch (error) {
-    console.error("Error al obtener las mudanzas:", error);
-    throw new Error("No se pudieron obtener las mudanzas.");
+  console.error("Error getting moves:", error);
+  throw new Error("Could not get moves.");
   }
 };
 
 /**
- * Obtiene una mudanza por su ID, incluyendo los datos del cliente.
- * @param moveId - El ID de la mudanza (string).
- * @returns La mudanza encontrada o null.
+ * Gets a move by its ID, including the person's data.
+ * @param moveId - The move ID (string).
+ * @returns The found move or null.
  */
 export const getMoveById = async (moveId: string): Promise<Move | null> => {
   try {
     const move = await Move.findByPk(moveId, {
       include: [
         {
-          model: User,
-          as: "client",
-          attributes: ["user_id", "full_name", "email"],
+          model: Person,
+          as: "person",
+          attributes: ["person_id", "full_name", "email"],
         },
       ],
     });
     return move;
   } catch (error) {
-    console.error("Error al obtener la mudanza por ID:", error);
-    throw new Error("No se pudo obtener la mudanza.");
+  console.error("Error getting move by ID:", error);
+  throw new Error("Could not get move.");
   }
 };
 
 /**
- * Actualiza los datos de una mudanza.
- * @param moveId - El ID de la mudanza.
- * @param updatedData - Los nuevos datos.
- * @returns La mudanza actualizada o null.
+ * Updates a move's data.
+ * @param moveId - The move ID.
+ * @param updatedData - The new data.
+ * @returns The updated move or null.
  */
 export const updateMove = async (
   moveId: string,
@@ -82,15 +82,15 @@ export const updateMove = async (
     await move.update(updatedData);
     return move;
   } catch (error) {
-    console.error("Error al actualizar la mudanza:", error);
-    throw new Error("No se pudo actualizar la mudanza.");
+  console.error("Error updating move:", error);
+  throw new Error("Could not update move.");
   }
 };
 
 /**
- * Elimina una mudanza por su ID.
- * @param moveId - El ID de la mudanza.
- * @returns Un booleano indicando si la eliminación fue exitosa.
+ * Deletes a move by its ID.
+ * @param moveId - The move ID.
+ * @returns A boolean indicating if the deletion was successful.
  */
 export const deleteMove = async (moveId: string): Promise<boolean> => {
   try {
@@ -99,7 +99,7 @@ export const deleteMove = async (moveId: string): Promise<boolean> => {
     });
     return deletedRows > 0;
   } catch (error) {
-    console.error("Error al eliminar la mudanza:", error);
-    throw new Error("No se pudo eliminar la mudanza.");
+  console.error("Error deleting move:", error);
+  throw new Error("Could not delete move.");
   }
 };

@@ -1,9 +1,9 @@
 import MoveService, { MoveServiceAttributes } from "../models/MoveService";
 
 /**
- * Crea una relación entre una mudanza y un servicio (o actualiza cantidad si ya existe).
- * @param data - Los datos de la relación move-service.
- * @returns La relación move-service creada o actualizada.
+ * Creates a relation between a move and a service (or updates quantity if it already exists).
+ * @param data - The move-service relation data.
+ * @returns The created or updated move-service relation.
  */
 export const createMoveService = async (
   data: MoveServiceAttributes
@@ -21,29 +21,29 @@ export const createMoveService = async (
     const newRelation = await MoveService.create(data);
     return newRelation;
   } catch (error) {
-    console.error("Error al crear MoveService:", error);
-    throw new Error("No se pudo crear la relación.");
+  console.error("Error creating MoveService:", error);
+  throw new Error("Could not create relation.");
   }
 };
 
 /**
- * Obtiene todas las relaciones move-services.
- * @return Un arreglo de relaciones move-services.
+ * Gets all move-service relations.
+ * @return An array of move-service relations.
  */
 export const getAllMoveServices = async (): Promise<MoveService[]> => {
   try {
     return await MoveService.findAll();
   } catch (error) {
-    console.error("Error al obtener MoveServices:", error);
-    throw new Error("No se pudieron obtener las relaciones.");
+  console.error("Error getting MoveServices:", error);
+  throw new Error("Could not get relations.");
   }
 };
 
 /**
- * Obtiene una relación específica por move_id y service_id.
- * @param moveId - El ID de la mudanza.
- * @param serviceId - El ID del servicio.
- * @return La relación move-service encontrada o null.
+ * Gets a specific relation by move_id and service_id.
+ * @param moveId - The move ID.
+ * @param serviceId - The service ID.
+ * @return The found move-service relation or null.
  */
 export const getMoveServiceByIds = async (
   moveId: string,
@@ -54,17 +54,17 @@ export const getMoveServiceByIds = async (
       where: { move_id: moveId, service_id: serviceId },
     });
   } catch (error) {
-    console.error("Error al obtener MoveService:", error);
-    throw new Error("No se pudo obtener la relación.");
+  console.error("Error getting MoveService:", error);
+  throw new Error("Could not get relation.");
   }
 };
 
 /**
- * Actualiza una relación existente.
- * @param moveId - El ID de la mudanza.
- * @param serviceId - El ID del servicio.
- * @param updatedData - Los datos actualizados de la relación move-service.
- * @returns La relación move-service actualizada o null.
+ * Updates an existing relation.
+ * @param moveId - The move ID.
+ * @param serviceId - The service ID.
+ * @param updatedData - The updated move-service relation data.
+ * @returns The updated move-service relation or null.
  */
 export const updateMoveService = async (
   moveId: string,
@@ -80,16 +80,16 @@ export const updateMoveService = async (
     await relation.update(updatedData);
     return relation;
   } catch (error) {
-    console.error("Error al actualizar MoveService:", error);
-    throw new Error("No se pudo actualizar la relación.");
+  console.error("Error updating MoveService:", error);
+  throw new Error("Could not update relation.");
   }
 };
 
 /**
- * Elimina una relación.
- * @param moveId - El ID de la mudanza.
- * @param serviceId - El ID del servicio.
- * @returns Verdadero si se eliminó, falso si no se encontró.
+ * Deletes a relation.
+ * @param moveId - The move ID.
+ * @param serviceId - The service ID.
+ * @returns True if deleted, false if not found.
  */
 export const deleteMoveService = async (
   moveId: string,
@@ -101,7 +101,7 @@ export const deleteMoveService = async (
     });
     return deletedRows > 0;
   } catch (error) {
-    console.error("Error al eliminar MoveService:", error);
-    throw new Error("No se pudo eliminar la relación.");
+  console.error("Error deleting MoveService:", error);
+  throw new Error("Could not delete relation.");
   }
 };
