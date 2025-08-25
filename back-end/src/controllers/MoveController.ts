@@ -24,7 +24,7 @@ export const handleGetMoveById = async (req: Request, res: Response) => {
     const { id } = req.params;
     const move = await moveService.getMoveById(id);
     if (!move) {
-      return res.status(404).json({ message: "Mudanza no encontrada." });
+      return res.status(404).json({ message: "Move not found." });
     }
     res.status(200).json(move);
   } catch (error: any) {
@@ -37,7 +37,7 @@ export const handleUpdateMove = async (req: Request, res: Response) => {
     const { id } = req.params;
     const updatedMove = await moveService.updateMove(id, req.body);
     if (!updatedMove) {
-      return res.status(404).json({ message: "Mudanza no encontrada." });
+      return res.status(404).json({ message: "Move not found." });
     }
     res.status(200).json(updatedMove);
   } catch (error: any) {
@@ -50,7 +50,7 @@ export const handleDeleteMove = async (req: Request, res: Response) => {
     const { id } = req.params;
     const success = await moveService.deleteMove(id);
     if (!success) {
-      return res.status(404).json({ message: "Mudanza no encontrada." });
+      return res.status(404).json({ message: "Move not found." });
     }
     res.status(204).send();
   } catch (error: any) {

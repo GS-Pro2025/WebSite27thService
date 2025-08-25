@@ -8,16 +8,15 @@ export const handleLogin = async (req: Request, res: Response) => {
     if (!email || !password_hash) {
       return res
         .status(400)
-        .json({ message: "Email y contraseña son requeridos." });
+        .json({ message: "Email and password are required." });
     }
 
     const { user, token } = await loginUser(email, password_hash);
     res.status(200).json({
-      message: "Login exitoso",
+      message: "Login successful",
       token,
       user: {
         user_id: user.user_id,
-        full_name: user.full_name,
         email: user.email,
         role: user.role,
       },
@@ -30,13 +29,13 @@ export const handleGoogleLogin = async (req: Request, res: Response) => {
   try {
     const { token: googleToken } = req.body;
     if (!googleToken) {
-      return res.status(400).json({ message: "Token de Google es requerido." });
+      return res.status(400).json({ message: "Google token is required." });
     }
 
     const { user, token } = await loginWithGoogle(googleToken);
 
     res.status(200).json({
-      message: "Login con Google exitoso",
+      message: "Login with Google successful",
       token,
       user: {},
     });

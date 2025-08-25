@@ -2,9 +2,9 @@ import Payment, { PaymentAttributes } from "../models/Payment";
 import Move from "../models/Move";
 
 /**
- * Crea un nuevo pago.
- * @param data - Los datos del pago a crear.
- * @returns El pago creado.
+ * Creates a new payment.
+ * @param data - The payment data to create.
+ * @returns The created payment.
  */
 export const createPayment = async (
   data: PaymentAttributes
@@ -13,14 +13,14 @@ export const createPayment = async (
     const newPayment = await Payment.create(data);
     return newPayment;
   } catch (error) {
-    console.error("Error al crear el pago:", error);
-    throw new Error("No se pudo crear el pago.");
+  console.error("Error creating payment:", error);
+  throw new Error("Could not create payment.");
   }
 };
 
 /**
- * Obtiene todos los pagos, incluyendo la información de la mudanza asociada.
- * @returns Un arreglo de pagos.
+ * Gets all payments, including the associated move information.
+ * @returns An array of payments.
  */
 export const getAllPayments = async (): Promise<Payment[]> => {
   try {
@@ -35,15 +35,15 @@ export const getAllPayments = async (): Promise<Payment[]> => {
     });
     return payments;
   } catch (error) {
-    console.error("Error al obtener los pagos:", error);
-    throw new Error("No se pudieron obtener los pagos.");
+  console.error("Error getting payments:", error);
+  throw new Error("Could not get payments.");
   }
 };
 
 /**
- * Obtiene un pago por su ID.
- * @param paymentId - El ID del pago a obtener.
- * @returns El pago encontrado o null.
+ * Gets a payment by its ID.
+ * @param paymentId - The payment ID to get.
+ * @returns The found payment or null.
  */
 export const getPaymentById = async (
   paymentId: number
@@ -54,16 +54,16 @@ export const getPaymentById = async (
     });
     return payment;
   } catch (error) {
-    console.error("Error al obtener el pago por ID:", error);
-    throw new Error("No se pudo obtener el pago.");
+  console.error("Error getting payment by ID:", error);
+  throw new Error("Could not get payment.");
   }
 };
 
 /**
- * Actualiza los datos de un pago.
- * @param paymentId - El ID del pago a actualizar.
- * @param updatedData - Los nuevos datos para el pago.
- * @returns El pago actualizado o null si no se encontró.
+ * Updates a payment's data.
+ * @param paymentId - The payment ID to update.
+ * @param updatedData - The new data for the payment.
+ * @returns The updated payment or null if not found.
  */
 export const updatePayment = async (
   paymentId: number,
@@ -75,15 +75,15 @@ export const updatePayment = async (
     await payment.update(updatedData);
     return payment;
   } catch (error) {
-    console.error("Error al actualizar el pago:", error);
-    throw new Error("No se pudo actualizar el pago.");
+  console.error("Error updating payment:", error);
+  throw new Error("Could not update payment.");
   }
 };
 
 /**
- * Elimina un pago por su ID.
- * @param paymentId - El ID del pago a eliminar.
- * @returns Verdadero si se eliminó el pago, falso en caso contrario.
+ * Deletes a payment by its ID.
+ * @param paymentId - The payment ID to delete.
+ * @returns True if the payment was deleted, false otherwise.
  */
 export const deletePayment = async (paymentId: number): Promise<boolean> => {
   try {
@@ -92,7 +92,7 @@ export const deletePayment = async (paymentId: number): Promise<boolean> => {
     });
     return deletedRows > 0;
   } catch (error) {
-    console.error("Error al eliminar el pago:", error);
-    throw new Error("No se pudo eliminar el pago.");
+  console.error("Error deleting payment:", error);
+  throw new Error("Could not delete payment.");
   }
 };

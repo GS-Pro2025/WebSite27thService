@@ -16,3 +16,6 @@ npx sequelize-cli db:migrate:undo
 ```bash
 npm run dev
 ```
+```bash
+npx sequelize-cli migration:generate --name create-users-table
+```

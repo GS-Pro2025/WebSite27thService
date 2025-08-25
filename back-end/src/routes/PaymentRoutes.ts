@@ -11,31 +11,31 @@ const router = Router();
 
 /**
  * @route   GET /api/payments
- * @desc    Obtener todos los pagos
+ * @desc    Get all payments
  */
 router.get("/", handleGetAllPayments);
 
 /**
  * @route   POST /api/payments
- * @desc    Crear un nuevo pago
+ * @desc    Create a new payment
  */
 router.post("/", handleCreatePayment);
 
 /**
  * @route   GET /api/payments/:id
- * @desc    Obtener un pago por su ID
+ * @desc    Get a payment by its ID
  */
 router.get("/:id", handleGetPaymentById);
 
 /**
  * @route   PUT /api/payments/:id
- * @desc    Actualizar un pago por su ID
+ * @desc    Update a payment by its ID
  */
 router.put("/:id", handleUpdatePayment);
 
 /**
  * @route   DELETE /api/payments/:id
- * @desc    Eliminar un pago por su ID
+ * @desc    Delete a payment by its ID
  */
 router.delete("/:id", handleDeletePayment);
 

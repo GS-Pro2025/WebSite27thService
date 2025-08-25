@@ -9,7 +9,7 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 export const loginUser = async (email: string, password_hash: string) => {
   const user = await User.findOne({ where: { email } });
   if (!user) {
-    throw new Error("Credenciales inválidas");
+    throw new Error("Invalid credentials");
   }
 
   const isPasswordCorrect = await bcrypt.compare(
@@ -17,7 +17,7 @@ export const loginUser = async (email: string, password_hash: string) => {
     user.password_hash!
   );
   if (!isPasswordCorrect) {
-    throw new Error("Credenciales inválidas");
+    throw new Error("Invalid credentials");
   }
 
   const payload = {
@@ -39,7 +39,7 @@ export const loginWithGoogle = async (googleToken: string) => {
   });
   const payload = ticket.getPayload();
   if (!payload || !payload.email) {
-    throw new Error("Token de Google inválido");
+    throw new Error("Invalid Google token");
   }
 
   const { email, name, sub: google_id } = payload;
@@ -50,7 +50,6 @@ export const loginWithGoogle = async (googleToken: string) => {
     [user] = await User.findOrCreate({
       where: { email },
       defaults: {
-        full_name: name!,
         google_id: google_id,
         email: email,
         role: UserRole.USER,

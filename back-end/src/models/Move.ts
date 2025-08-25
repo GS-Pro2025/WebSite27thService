@@ -4,7 +4,7 @@ import { MoveStatus } from "../enums/enums";
 
 export interface MoveAttributes {
   move_id?: string;
-  client_id: number;
+  person_id: number;
   status: MoveStatus;
   tentative_date: Date;
   confirmed_date: Date;
@@ -15,7 +15,7 @@ export interface MoveAttributes {
 
 class Move extends Model<MoveAttributes> implements MoveAttributes {
   public move_id?: string;
-  public client_id!: number;
+  public person_id!: number;
   public status!: MoveStatus;
   public tentative_date!: Date;
   public confirmed_date!: Date;
@@ -34,12 +34,12 @@ Move.init(
       primaryKey: true,
       allowNull: false,
     },
-    client_id: {
+    person_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "users",
-        key: "user_id",
+        model: "persons",
+        key: "person_id",
       },
     },
     status: {

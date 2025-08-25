@@ -11,31 +11,31 @@ const router = Router();
 
 /**
  * @route   POST /api/move-items
- * @desc    Crear un nuevo artículo
+ * @desc    Create a new item
  */
 router.post("/", handleCreateMoveItem);
 
 /**
  * @route   GET /api/move-items/:id
- * @desc    Obtener un artículo específico por su ID
+ * @desc    Get a specific item by its ID
  */
 router.get("/:id", handleGetMoveItemById);
 
 /**
  * @route   GET /api/move-items/move/:moveId
- * @desc    Obtener TODOS los artículos de una mudanza específica
+ * @desc    Get ALL items for a specific move
  */
 router.get("/move/:moveId", handleGetAllItemsForMove);
 
 /**
  * @route   PUT /api/move-items/:id
- * @desc    Actualizar un artículo específico
+ * @desc    Update a specific item
  */
 router.put("/:id", handleUpdateMoveItem);
 
 /**
  * @route   DELETE /api/move-items/:id
- * @desc    Eliminar un artículo específico
+ * @desc    Delete a specific item
  */
 router.delete("/:id", handleDeleteMoveItem);
 

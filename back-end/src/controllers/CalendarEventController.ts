@@ -33,11 +33,11 @@ export const handleGetEventById = async (req: Request, res: Response) => {
   try {
     const eventId = parseInt(req.params.id);
     if (isNaN(eventId))
-      return res.status(400).json({ message: "ID de evento inválido." });
+      return res.status(400).json({ message: "Invalid event ID." });
 
     const event = await eventService.getCalendarEventById(eventId);
     if (!event)
-      return res.status(404).json({ message: "Evento no encontrado." });
+      return res.status(404).json({ message: "Event not found." });
 
     res.status(200).json(event);
   } catch (error: any) {
@@ -49,14 +49,14 @@ export const handleUpdateEvent = async (req: Request, res: Response) => {
   try {
     const eventId = parseInt(req.params.id);
     if (isNaN(eventId))
-      return res.status(400).json({ message: "ID de evento inválido." });
+      return res.status(400).json({ message: "Invalid event ID." });
 
     const updatedEvent = await eventService.updateCalendarEvent(
       eventId,
       req.body
     );
     if (!updatedEvent)
-      return res.status(404).json({ message: "Evento no encontrado." });
+      return res.status(404).json({ message: "Event not found." });
 
     res.status(200).json(updatedEvent);
   } catch (error: any) {
@@ -68,11 +68,11 @@ export const handleDeleteEvent = async (req: Request, res: Response) => {
   try {
     const eventId = parseInt(req.params.id);
     if (isNaN(eventId))
-      return res.status(400).json({ message: "ID de evento inválido." });
+      return res.status(400).json({ message: "Invalid event ID." });
 
     const success = await eventService.deleteCalendarEvent(eventId);
     if (!success)
-      return res.status(404).json({ message: "Evento no encontrado." });
+      return res.status(404).json({ message: "Event not found." });
 
     res.status(204).send();
   } catch (error: any) {

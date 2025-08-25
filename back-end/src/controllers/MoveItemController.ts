@@ -24,11 +24,11 @@ export const handleGetMoveItemById = async (req: Request, res: Response) => {
   try {
     const itemId = parseInt(req.params.id);
     if (isNaN(itemId))
-      return res.status(400).json({ message: "ID de artículo inválido." });
+      return res.status(400).json({ message: "Invalid item ID." });
 
     const item = await moveItemService.getMoveItemById(itemId);
     if (!item)
-      return res.status(404).json({ message: "Artículo no encontrado." });
+      return res.status(404).json({ message: "Item not found." });
 
     res.status(200).json(item);
   } catch (error: any) {
@@ -40,11 +40,11 @@ export const handleUpdateMoveItem = async (req: Request, res: Response) => {
   try {
     const itemId = parseInt(req.params.id);
     if (isNaN(itemId))
-      return res.status(400).json({ message: "ID de artículo inválido." });
+      return res.status(400).json({ message: "Invalid item ID." });
 
     const updatedItem = await moveItemService.updateMoveItem(itemId, req.body);
     if (!updatedItem)
-      return res.status(404).json({ message: "Artículo no encontrado." });
+      return res.status(404).json({ message: "Item not found." });
 
     res.status(200).json(updatedItem);
   } catch (error: any) {
@@ -56,11 +56,11 @@ export const handleDeleteMoveItem = async (req: Request, res: Response) => {
   try {
     const itemId = parseInt(req.params.id);
     if (isNaN(itemId))
-      return res.status(400).json({ message: "ID de artículo inválido." });
+      return res.status(400).json({ message: "Invalid item ID." });
 
     const success = await moveItemService.deleteMoveItem(itemId);
     if (!success)
-      return res.status(404).json({ message: "Artículo no encontrado." });
+      return res.status(404).json({ message: "Item not found." });
 
     res.status(204).send();
   } catch (error: any) {
