@@ -125,7 +125,7 @@ const Navbar: React.FC = () => {
                     onClick={() => setIsLoginOpen(true)}
                     className="bg-white text-black font-semibold px-5 py-2 rounded-full transition-colors duration-300 hover:bg-gray-200"
                   >
-                    Login
+                    Sign In
                   </button>
                   <button
                     onClick={() => setIsSignUpOpen(true)}
