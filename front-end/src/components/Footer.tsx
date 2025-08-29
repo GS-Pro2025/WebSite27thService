@@ -5,7 +5,7 @@ import { FaFacebook, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 
 const Footer2: React.FC = () => {
   return (
-    <footer className="relative -mt-32 z-10">
+    <footer className="relative -mt-36 z-10">
       <div className="relative w-full">
         <img src={banner12} alt="banner" className="w-full" />
 

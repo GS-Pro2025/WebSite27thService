@@ -1,18 +1,32 @@
 import React, { useEffect, useState } from "react";
 import api from "../api/axiosInstance";
+import MoveDetailsModal from "../components/MoveDetailsModal";
+import emailjs from "@emailjs/browser";
 
 interface Client {
-  user_id: number;
   full_name: string;
   email: string;
+  phone_number: string;
 }
-
+interface Item {
+  description: string;
+  quantity: number;
+}
+interface Payment {
+  payment_id: number;
+  amount: string;
+  payment_status: string;
+}
 interface Move {
   move_id: string;
   status: string;
-  total_cost: string;
+  origin_address: string;
+  destination_address: string;
+  tentative_date: string | null;
+  total_cost: number | null;
   client: Client;
-  tentative_date: Date;
+  items?: Item[];
+  payment?: Payment[];
 }
 
 const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
@@ -20,7 +34,7 @@ const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
   let specificClasses = "";
 
   switch (status.toLowerCase()) {
-    case "completed":
+    case "confirmed":
       specificClasses = "bg-green-100 text-green-800";
       break;
     case "pending":
@@ -28,6 +42,12 @@ const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
       break;
     case "cancelled":
       specificClasses = "bg-red-100 text-red-800";
+      break;
+    case "in_progress":
+      specificClasses = "bg-blue-100 text-blue-800";
+      break;
+    case "completed":
+      specificClasses = "bg-purple-100 text-purple-800";
       break;
     default:
       specificClasses = "bg-gray-100 text-gray-800";
@@ -39,71 +59,79 @@ const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
 const Dashboard: React.FC = () => {
   const [moves, setMoves] = useState<Move[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 5;
+  const [selectedMove, setSelectedMove] = useState<Move | null>(null);
+  const rowsPerPage = 4;
+
+  const fetchMoves = async () => {
+    try {
+      const response = await api.get("/moves");
+      setMoves(response.data);
+    } catch (error) {
+      console.error("Error fetching moves:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchMoves = async () => {
-      try {
-        const response = await api.get("/moves");
-        if (response.data.length === 0) {
-          setMoves([
-            {
-              move_id: "1",
-              status: "Completed",
-              total_cost: "1200",
-              client: {
-                user_id: 101,
-                full_name: "Ana García",
-                email: "ana.garcia@email.com",
-              },
-              tentative_date: new Date("2025-09-15"),
-            },
-            {
-              move_id: "2",
-              status: "Pending",
-              total_cost: "850",
-              client: {
-                user_id: 102,
-                full_name: "Carlos Rodriguez",
-                email: "carlos.r@email.com",
-              },
-              tentative_date: new Date("2025-09-22"),
-            },
-            {
-              move_id: "3",
-              status: "Cancelled",
-              total_cost: "2100",
-              client: {
-                user_id: 103,
-                full_name: "Sofia Martinez",
-                email: "sofia.m@email.com",
-              },
-              tentative_date: new Date("2025-09-18"),
-            },
-            {
-              move_id: "4",
-              status: "Pending",
-              total_cost: "950",
-              client: {
-                user_id: 104,
-                full_name: "Luis Hernandez",
-                email: "luis.h@email.com",
-              },
-              tentative_date: new Date("2025-10-05"),
-            },
-          ]);
-        } else {
-          setMoves(response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching moves:", error);
-      }
-    };
     fetchMoves();
   }, []);
 
   const handleSendPaymentLink = (moveId: string) => {
-    alert(`Sending payment link for move: ${moveId}`);
+    const move = moves.find((m) => m.move_id === moveId);
+    if (!move) return;
+
+    const itemsHtml =
+      move.items && move.items.length > 0
+        ? `<ul>${move.items
+            .map(
+              (item) =>
+                `<li>${item.description} (Cantidad: ${item.quantity})</li>`
+            )
+            .join("")}</ul>`
+        : "<p>No hay items detallados.</p>";
+    const reservationPayment = move.payment?.[0];
+    const reservationAmount = reservationPayment?.amount ?? "0.00";
+    const reservationStatus = reservationPayment?.payment_status ?? "N/A";
+    const templateParams = {
+      client_name: move.client.full_name,
+      client_email: move.client.email,
+      client_phone: move.client.phone_number,
+      tentative_date: move.tentative_date
+        ? new Date(move.tentative_date).toLocaleDateString("es-ES")
+        : "No definida",
+      origin_address: move.origin_address,
+      destination_address: move.destination_address,
+      total_cost: move.total_cost ?? 0,
+      items_html: itemsHtml,
+      reservation_amount: reservationAmount,
+      reservation_status: reservationStatus,
+
+      register_link: `https://tusitio.com/register?email=${move.client.email}`,
+    };
+
+    const serviceID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+    if (!serviceID || !templateID || !publicKey) {
+      alert("Error: Configura las variables de entorno de EmailJS");
+      return;
+    }
+
+    emailjs.send(serviceID, templateID, templateParams, publicKey).then(
+      (result) => {
+        console.log("✅ Correo enviado:", result.text);
+        alert("Correo enviado al cliente con éxito 🚀");
+      },
+      (error) => {
+        console.error("❌ Error enviando correo:", error.text); //Cambiar
+        alert("Ocurrió un error al enviar el correo.");
+      }
+    );
+  };
+
+  const handleViewDetails = (moveId: string) => {
+    const move = moves.find((m) => m.move_id === moveId) || null;
+    setSelectedMove(move);
   };
 
   const indexOfLastRow = currentPage * rowsPerPage;
@@ -137,7 +165,7 @@ const Dashboard: React.FC = () => {
                     Client
                   </th>
                   <th scope="col" className="px-6 py-4">
-                    Estimated Cost
+                    Origin and Destination
                   </th>
                   <th scope="col" className="px-6 py-4">
                     Tentative Date
@@ -163,7 +191,7 @@ const Dashboard: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 font-medium text-gray-800">
-                      ${move.total_cost}
+                      {move.origin_address} to {move.destination_address}
                     </td>
                     <td className="px-6 py-4">
                       {move.tentative_date
@@ -178,12 +206,21 @@ const Dashboard: React.FC = () => {
                         : "N/A"}
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <button
-                        onClick={() => handleSendPaymentLink(move.move_id)}
-                        className="font-bold py-2 px-4 rounded-lg bg-[#FFE67B] text-[#0F6F7C] hover:bg-yellow-400 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50"
-                      >
-                        Send Payment Link
-                      </button>
+                      <div className="flex justify-center gap-3">
+                        <button
+                          onClick={() => handleSendPaymentLink(move.move_id)}
+                          className="font-bold py-2 px-4 rounded-lg bg-[#FFE67B] text-[#0F6F7C] hover:bg-yellow-400 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50"
+                        >
+                          Send Payment Link
+                        </button>
+
+                        <button
+                          onClick={() => handleViewDetails(move.move_id)}
+                          className="font-bold py-2 px-4 rounded-lg bg-[#0F6F7C] text-white hover:bg-teal-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#0F6F7C] focus:ring-opacity-50"
+                        >
+                          View Details
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -216,6 +253,14 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       </main>
+
+      {selectedMove && (
+        <MoveDetailsModal
+          move={selectedMove}
+          onClose={() => setSelectedMove(null)}
+          onUpdate={fetchMoves}
+        />
+      )}
     </div>
   );
 };

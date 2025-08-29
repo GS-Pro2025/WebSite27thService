@@ -2,7 +2,7 @@ import React from "react";
 
 const ProfessionalMovingSection: React.FC = () => {
   return (
-    <section className="bg-[#7AACAE] py-28 px-4 sm:px-6 lg:px-8 relative overflow-hidden text-left mt-20 z-10">
+    <section className="bg-[#7AACAE] py-28 px-4 sm:px-6 lg:px-8 relative overflow-hidden text-left z-10">
       <div className="relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-center mb-4">
           <h2

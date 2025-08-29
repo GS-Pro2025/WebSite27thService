@@ -1,7 +1,95 @@
-import React from "react";
-import { FaUser, FaPhoneAlt, FaSearch } from "react-icons/fa";
+import React, { useState } from "react";
+import FirstForm from "../FirstForm";
+import SecondForm from "../SecondForm";
+import SuccessModal from "../SuccessModal";
+import api from "../../api/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 const CoverageSection: React.FC = () => {
+  const [step, setStep] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+
+  const [personData, setPersonData] = useState({
+    full_name: "",
+    phone_number: "",
+    destination_address: "",
+    origin_address: "",
+  });
+
+  const [extraData, setExtraData] = useState({
+    email: "",
+    address: "",
+    additional_info: "",
+    tentative_date: "",
+    type_of_move: "",
+    size_of_move: "",
+  });
+
+  const handleFinalSubmit = async () => {
+    try {
+      const personRes = await api.post("/persons", {
+        full_name: personData.full_name,
+        email: extraData.email,
+        phone_number: personData.phone_number,
+        address: extraData.address,
+        additional_info: extraData.additional_info,
+      });
+
+      const createdPerson = personRes.data;
+
+      const moveRes = await api.post("/moves", {
+        person_id: createdPerson.person_id,
+        status: "pending",
+        tentative_date: extraData.tentative_date,
+        origin_address: personData.origin_address,
+        destination_address: personData.destination_address,
+      });
+
+      const createdMove = moveRes.data;
+
+      let bedrooms = 0;
+      switch (extraData.size_of_move) {
+        case "1_bedroom":
+          bedrooms = 1;
+          break;
+        case "2_bedrooms":
+          bedrooms = 2;
+          break;
+        case "3_bedrooms":
+          bedrooms = 3;
+          break;
+        case "4+_bedrooms":
+          bedrooms = 4;
+          break;
+        default:
+          bedrooms = 0;
+      }
+
+      await Promise.all([
+        api.post("/move-items", {
+          move_id: createdMove.move_id,
+          description: extraData.type_of_move,
+          quantity: 1,
+        }),
+        bedrooms > 0 &&
+          api.post("/move-items", {
+            move_id: createdMove.move_id,
+            description: "bedroom",
+            quantity: bedrooms,
+          }),
+      ]);
+
+      setShowModal(true);
+    } catch (error) {
+      console.error("Error al guardar datos:", error);
+    }
+  };
+  const handleCloseModal = () => {
+    setShowModal(false);
+    navigate("/");
+  };
+
   return (
     <section className="relative py-16 md:py-28 px-4 sm:px-6 lg:px-8 text-white bg-cover bg-center z-20 -mt-15 md:-mt-35">
       <div className="absolute inset-0 z-0">
@@ -37,78 +125,39 @@ const CoverageSection: React.FC = () => {
 
         <div className="flex flex-col lg:flex-row items-start justify-between gap-12 lg:gap-8">
           <div className="w-full lg:w-4/12 bg-white/38 px-8 py-20 rounded-4xl space-y-10 mt-10">
-            <div>
-              <h3 className="text-black text-xl font-bold mb-2">
-                1. Does your move originate in Virginia?
-              </h3>
-              <p className="text-black text-base font-light">
-                If you are here, our moving service can go with you to any state
-                in the country. We take care of the professional logistics to
-                make your move safe.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-black text-xl font-bold mb-2">
-                2. Does your move start in another state?
-              </h3>
-              <p className="text-black text-base font-light">
-                We have a coverage perimeter for states near Virginia. Use our
-                assistant and check if you are within our range.
-              </p>
-            </div>
+            <h3 className="text-black text-xl font-bold">
+              1. Does your move originate in Virginia?
+            </h3>
+            <p className="text-black text-base font-light">
+              If you are here, our moving service can go with you to any state
+              in the country.
+            </p>
+            <h3 className="text-black text-xl font-bold mt-6">
+              2. Does your move start in another state?
+            </h3>
+            <p className="text-black text-base font-light">
+              We have a coverage perimeter for states near Virginia.
+            </p>
           </div>
 
           <div className="w-full lg:w-7/12 lg:-mt-5">
-            <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="relative">
-                <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="name"
-                  className="w-full bg-white text-gray-800 py-3 pl-12 pr-4 rounded-full focus:outline-none focus:ring-2 focus:ring-[#FFE67B]"
-                />
-              </div>
-
-              <div className="relative">
-                <FaPhoneAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="number"
-                  className="w-full bg-white text-gray-800 py-3 pl-12 pr-4 rounded-full focus:outline-none focus:ring-2 focus:ring-[#FFE67B]"
-                />
-              </div>
-
-              <div className="relative">
-                <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="destination"
-                  className="w-full bg-white text-gray-800 py-3 pl-12 pr-4 rounded-full focus:outline-none focus:ring-2 focus:ring-[#FFE67B]"
-                />
-              </div>
-
-              <div className="relative">
-                <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="origin"
-                  className="w-full bg-white text-gray-800 py-3 pl-12 pr-4 rounded-full focus:outline-none focus:ring-2 focus:ring-[#FFE67B]"
-                />
-              </div>
-
-              <div className="md:col-span-2">
-                <button
-                  type="submit"
-                  className="w-full bg-[#FFE67B] text-white font-bold py-3 px-6 rounded-full hover:bg-yellow-300 transition-colors duration-300 text-lg"
-                  style={{ fontFamily: "'Montserrat', sans-serif" }}
-                >
-                  CHECK HERE
-                </button>
-              </div>
-            </form>
+            {step === 1 ? (
+              <FirstForm
+                personData={personData}
+                setPersonData={setPersonData}
+                goNext={() => setStep(2)}
+              />
+            ) : (
+              <SecondForm
+                extraData={extraData}
+                setExtraData={setExtraData}
+                onSubmit={handleFinalSubmit}
+              />
+            )}
           </div>
         </div>
       </div>
+      <SuccessModal show={showModal} onClose={handleCloseModal} />
     </section>
   );
 };

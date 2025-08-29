@@ -31,21 +31,7 @@ body {
   font-family: inherit;
 }
 
-.arrow {
-  position: relative;
-  width: 96%;
-  height: 100px;
-  background: #0f6f7c;
+html, body {
+  overflow-x: hidden;
 }
 
-.arrow::after {
-  content: "";
-  position: absolute;
-  top: -40px;
-  right: -60px;
-  width: 0;
-  height: 0;
-  border-top: 90px solid transparent;
-  border-bottom: 90px solid transparent;
-  border-left: 60px solid #0f6f7c;
-}
