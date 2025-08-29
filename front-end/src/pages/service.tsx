@@ -5,6 +5,7 @@ import Question from '../components/Services/Question';
 import ValuableObjects from '../components/Services/ValuableObjects';
 import Carousel from '../components/Services/Carousel';
 import OpinionSection from '../components/Services/OpinionSection';
+import CallToActionBanner from '../components/CallToActionBanner';
 
 const Service: React.FC = () => {
   return (
@@ -43,6 +44,11 @@ const Service: React.FC = () => {
       <div className="relative z-14">
         <OpinionSection/>
       </div>
+      {/* CallToActionBanner */}
+      <div className="relative z-15">
+        <CallToActionBanner/>
+      </div>
+
     </section>
   );
 };

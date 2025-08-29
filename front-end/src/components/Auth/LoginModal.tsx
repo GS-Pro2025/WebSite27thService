@@ -52,7 +52,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-[#0F6F7C]/80 z-50">
       <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Login</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Sign In</h2>
 
         {/* ---- FORM LOGIN NORMAL ---- */}
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -79,7 +79,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             type="submit"
             className="w-full bg-[#FFE67B] text-black font-semibold py-2 rounded-lg hover:bg-[#FFD84D] transition"
           >
-            Login
+            Sign In
           </button>
         </form>
 
