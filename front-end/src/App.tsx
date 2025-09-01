@@ -4,12 +4,12 @@ import "./App.css";
 import Home from "./pages/home";
 import Service from "./pages/service";
 import Footer from "./components/Footer";
-import Dashboard from "./pages/Dashboard";
+import AdminDashboard from "./pages/AdminDashboard";
+import UserDashboard from "./pages/UserDashboard";
 import YourMove from "./pages/yourMove";
 
 function App() {
   return (
-    
     <Router>
       <div className="w-full overflow-visible">
         <Navbar />
@@ -17,7 +17,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/services" element={<Service />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/user-dashboard" element={<UserDashboard />} />
           <Route path="/your-move" element={<YourMove />} />
         </Routes>
         {/* <Footer /> */}

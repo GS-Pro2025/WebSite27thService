@@ -57,3 +57,18 @@ export const handleDeleteMove = async (req: Request, res: Response) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const handleGetUserMoves = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user?.userId;
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const moves = await moveService.getMovesByUserId(userId);
+    res.status(200).json(moves);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+

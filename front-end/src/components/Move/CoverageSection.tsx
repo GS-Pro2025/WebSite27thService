@@ -1,14 +1,10 @@
 import React, { useState } from "react";
 import FirstForm from "../FirstForm";
 import SecondForm from "../SecondForm";
-import SuccessModal from "../SuccessModal";
 import api from "../../api/axiosInstance";
-import { useNavigate } from "react-router-dom";
 
 const CoverageSection: React.FC = () => {
   const [step, setStep] = useState(1);
-  const [showModal, setShowModal] = useState(false);
-  const navigate = useNavigate();
 
   const [personData, setPersonData] = useState({
     full_name: "",
@@ -80,16 +76,11 @@ const CoverageSection: React.FC = () => {
           }),
       ]);
 
-      setShowModal(true);
     } catch (error) {
       console.error("Error al guardar datos:", error);
     }
   };
-  const handleCloseModal = () => {
-    setShowModal(false);
-    navigate("/");
-  };
-
+  
   return (
     <section className="relative py-16 md:py-28 px-4 sm:px-6 lg:px-8 text-white bg-cover bg-center z-20 -mt-15 md:-mt-35">
       <div className="absolute inset-0 z-0">
@@ -157,7 +148,6 @@ const CoverageSection: React.FC = () => {
           </div>
         </div>
       </div>
-      <SuccessModal show={showModal} onClose={handleCloseModal} />
     </section>
   );
 };
