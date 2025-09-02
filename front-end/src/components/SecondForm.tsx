@@ -130,7 +130,9 @@ const SecondForm: React.FC<SecondFormProps> = ({
           }
           className="w-full bg-white text-gray-800 py-3 px-4 rounded-full focus:outline-none focus:ring-2 focus:ring-[#FFE67B]"
         >
-          <option value="">Type of Move</option>
+          <option value="" disabled>
+            type of move
+          </option>
           <option value="home">Home move</option>
           <option value="apartment">Apartment move</option>
           <option value="commercial">Commercial move</option>

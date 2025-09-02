@@ -1,38 +1,155 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import QuoteForm from "../QuoteForm";
-import QuoteModal from "../QuoteModal";
+import api from "../../api/axiosInstance";
+
+interface FormData {
+  name: string;
+  phone: string;
+  origin: string;
+  destination: string;
+  email: string;
+  typeOfMove: string;
+  address: string;
+  additional_info: string;
+  tentative_date: string;
+  size_of_move: string;
+}
+
+const ANIMATION_CONFIG = {
+  threshold: 0.1,
+  rootMargin: "50px 0px -50px 0px",
+  baseClass: "transform transition-all duration-1000 ease-out",
+  delays: {
+    title: "",
+    process: "delay-300",
+    content: "delay-500",
+    form: "delay-700",
+  },
+} as const;
+
+const MOVE_SIZE_TO_BEDROOMS: Record<string, number> = {
+  xsmall: 1,
+  small: 1,
+  medium: 2,
+  large: 3,
+  xlarge: 4,
+} as const;
+
+const INITIAL_FORM_DATA: FormData = {
+  name: "",
+  phone: "",
+  origin: "",
+  destination: "",
+  email: "",
+  typeOfMove: "",
+  address: "",
+  additional_info: "",
+  tentative_date: "",
+  size_of_move: "",
+};
 
 const ProcessSection: React.FC = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    const currentSection = sectionRef.current;
+    if (!currentSection) return;
+
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        // Anima tanto cuando entra como cuando sale de la vista
-        setIsVisible(entry.isIntersecting);
-      },
-      { 
-        threshold: 0.1,
-        rootMargin: '50px 0px -50px 0px' // Añade margen para activar antes/después
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      {
+        threshold: ANIMATION_CONFIG.threshold,
+        rootMargin: ANIMATION_CONFIG.rootMargin,
       }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
+    observer.observe(currentSection);
+    return () => observer.disconnect();
   }, []);
+
+  const createMoveItems = useCallback(
+    async (moveId: number, data: FormData) => {
+      const bedrooms = MOVE_SIZE_TO_BEDROOMS[data.size_of_move] || 0;
+
+      const promises = [
+        api.post("/move-items", {
+          move_id: moveId,
+          description: data.typeOfMove,
+          quantity: 1,
+        }),
+      ];
+
+      if (bedrooms > 0) {
+        promises.push(
+          api.post("/move-items", {
+            move_id: moveId,
+            description: "bedroom",
+            quantity: bedrooms,
+          })
+        );
+      }
+
+      return Promise.all(promises);
+    },
+    []
+  );
+
+  const handleFinalSubmit = useCallback(
+    async (data: FormData) => {
+      if (isSubmitting) return;
+
+      setIsSubmitting(true);
+
+      try {
+        setFormData(data);
+
+        const personRes = await api.post("/persons", {
+          full_name: data.name,
+          email: data.email,
+          phone_number: data.phone,
+          address: data.address,
+          additional_info: data.additional_info,
+        });
+
+        const moveRes = await api.post("/moves", {
+          person_id: personRes.data.person_id,
+          status: "pending",
+          tentative_date: data.tentative_date,
+          origin_address: data.origin,
+          destination_address: data.destination,
+        });
+        await createMoveItems(moveRes.data.move_id, data);
+      } catch (error) {
+        console.error("Error al guardar datos:", error);
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [isSubmitting, createMoveItems]
+  );
+
+  const getAnimationClass = (delay: keyof typeof ANIMATION_CONFIG.delays) =>
+    `${ANIMATION_CONFIG.baseClass} ${ANIMATION_CONFIG.delays[delay]} ${
+      isVisible
+        ? "opacity-100 scale-100 translate-y-0"
+        : "opacity-0 scale-95 translate-y-4"
+    }`;
+
+  const getScaleAnimationClass = (
+    delay: keyof typeof ANIMATION_CONFIG.delays
+  ) =>
+    `${ANIMATION_CONFIG.baseClass} ${ANIMATION_CONFIG.delays[delay]} ${
+      isVisible ? "opacity-100 scale-100" : "opacity-0 scale-90"
+    }`;
 
   return (
     <>
-      <section 
+      <section
         ref={sectionRef}
         className="w-full relative overflow-hidden -mt-[70px] sm:-mt-[150px] md:-mt-[140px] lg:-mt-[250px] xl:-mt-[260px]"
       >
@@ -41,48 +158,41 @@ const ProcessSection: React.FC = () => {
           src="/assets/banner2-inicio.svg"
           alt="Proceso"
           className="w-full h-auto block"
+          loading="lazy"
         />
 
-        {/* Contenedor*/}
+        {/* Contenedor principal */}
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-start pt-[8%] sm:pt-[10%] md:pt-[12%] lg:pt-[8%] xl:pt-[10%]">
           {/* Título animado */}
-          <div 
-            className={`w-full order-1 px-4 sm:px-6 md:px-8 transform transition-all duration-1000 ease-out ${
-              isVisible 
-                ? 'opacity-100 scale-100 translate-y-0' 
-                : 'opacity-0 scale-95 translate-y-4'
-            }`}
+          <div
+            className={`w-full order-1 px-4 sm:px-6 md:px-8 ${getAnimationClass(
+              "title"
+            )}`}
           >
-            <h2
-              className="text-center text-white font-[Montserrat] font-black
-                text-sm sm:text-2xl md:text-3xl lg:text-4xl leading-tight mb-2 sm:mb-8"
-            >
+            <h2 className="text-center text-white font-[Montserrat] font-black text-sm sm:text-2xl md:text-3xl lg:text-4xl leading-tight mb-2 sm:mb-8">
               YOUR MOVE MADE EASY, JUST AS IT SHOULD BE!
             </h2>
           </div>
 
-          {/* Imagen del proceso animada */}
-          <div 
-            className={`w-full my-2 sm:my-12 md:my-9 lg:my-20 order-2 transform transition-all duration-1000 ease-out delay-300 ${
-              isVisible 
-                ? 'opacity-100 scale-100' 
-                : 'opacity-0 scale-90'
-            }`}
+          {/* Imagen del proceso */}
+          <div
+            className={`w-full my-2 sm:my-12 md:my-9 lg:my-20 order-2 ${getScaleAnimationClass(
+              "process"
+            )}`}
           >
             <img
               src="/assets/procesoCompleto.svg"
               alt="Proceso completo"
               className="w-full h-auto block"
+              loading="lazy"
             />
           </div>
 
-          {/* Contenido inferior animado */}
-          <div 
-            className={`w-full max-w-7xl mx-auto flex flex-col sm:flex-row gap-3 lg:gap-8 items-start px-4 sm:px-6 md:px-8 order-3 transform transition-all duration-1000 ease-out delay-500 ${
-              isVisible 
-                ? 'opacity-100 scale-100 translate-y-0' 
-                : 'opacity-0 scale-95 translate-y-6'
-            }`}
+          {/* Contenido inferior */}
+          <div
+            className={`w-full max-w-7xl mx-auto flex flex-col sm:flex-row gap-3 lg:gap-8 items-start px-4 sm:px-6 md:px-8 order-3 ${getAnimationClass(
+              "content"
+            )}`}
           >
             {/* Texto descriptivo */}
             <div className="w-full sm:w-1/2 font-[Montserrat] text-left mb-1 sm:mb-0">
@@ -95,50 +205,40 @@ const ProcessSection: React.FC = () => {
               </p>
             </div>
 
-            {/* Lógica para mostrar botón o formulario */}
+            {/* Sección del formulario */}
             <div className="w-full sm:w-1/2">
-              {/* Botón para móviles */}
+              {/* Botón móvil */}
               <div className="lg:hidden w-full flex justify-center mt-2">
                 <button
                   onClick={() => setModalOpen(true)}
-                  className={`bg-[#FFE67B] text-black text-xs font-semibold py-2 px-6 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 active:scale-95 ${
-                    isVisible 
-                      ? 'opacity-100 scale-100' 
-                      : 'opacity-0 scale-90'
-                  }`}
+                  disabled={isSubmitting}
+                  className={`bg-[#FFE67B] text-black text-xs font-semibold py-2 px-6 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${getScaleAnimationClass(
+                    "content"
+                  )}`}
                 >
-                  GET A QUOTE NOW
+                  {isSubmitting ? "PROCESSING..." : "GET A QUOTE NOW"}
                 </button>
               </div>
-              
-              {/* Formulario para desktop */}
-              <div 
-                className={`hidden lg:block relative transform transition-all duration-1000 ease-out delay-700 ${
-                  isVisible 
-                    ? 'opacity-100 scale-100' 
-                    : 'opacity-0 scale-90'
-                }`}
+
+              {/* Formulario desktop */}
+              <div
+                className={`hidden lg:block relative ${getScaleAnimationClass(
+                  "form"
+                )}`}
               >
                 <div className="absolute -top-6 lg:-top-8 -translate-x-1/2 bg-[#FFE67B] w-12 h-12 lg:w-16 lg:h-16 rounded-full flex items-center justify-center text-2xl lg:text-3xl font-bold text-[#7ARACAE] shadow-lg z-10 transform transition-all duration-300 hover:scale-110 group cursor-help">
                   1
-                  {/* Tooltip */}
                   <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-[#0F6F7C] text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 whitespace-nowrap z-20">
                     Step 1: Fill out the form
-                    {/* Flecha del tooltip */}
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
                   </div>
                 </div>
-                <QuoteForm />
+                <QuoteForm onSubmit={handleFinalSubmit} />
               </div>
             </div>
           </div>
         </div>
       </section>
-
-      <QuoteModal 
-        isOpen={isModalOpen} 
-        onClose={() => setModalOpen(false)} 
-      />
+      {/* <QuoteModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} /> */}
     </>
   );
 };

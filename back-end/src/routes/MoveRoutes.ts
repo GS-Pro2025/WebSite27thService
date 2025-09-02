@@ -12,7 +12,7 @@ import { authenticateJWT } from "../config/securityConfig";
 const router = Router();
 
 // todas las rutas de moves requieren autenticación
-router.use(authenticateJWT);
+// router.use(authenticateJWT);
 
 /**
  * @route   POST /api/moves
