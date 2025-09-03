@@ -5,13 +5,33 @@ import Person, { PersonAttributes } from "../models/Person";
  * @param data - The data of the person to create
  * @returns The created person
  */
-export const createPerson = async (data: PersonAttributes): Promise<Person> => {
+/**
+ * Create or find a person by email
+ * @param data - The data of the person to create or update
+ * @returns The existing or newly created person
+ */
+export const createOrFindPerson = async (
+  data: PersonAttributes
+): Promise<Person> => {
   try {
+    let person = await Person.findOne({ where: { email: data.email } });
+
+    if (person) {
+      await person.update({
+        full_name: data.full_name,
+        phone_number: data.phone_number,
+        additional_info: data.additional_info,
+        address: data.address,
+      });
+      return person;
+    }
+
+    // Si no existe, la creamos
     const newPerson = await Person.create(data);
     return newPerson;
   } catch (error) {
-  console.error("Error creating person:", error);
-  throw new Error("Could not create person.");
+    console.error("Error creating or finding person:", error);
+    throw new Error("Could not create or find person.");
   }
 };
 
@@ -23,8 +43,8 @@ export const getAllPersons = async (): Promise<Person[]> => {
   try {
     return await Person.findAll({ include: ["userAccount"] });
   } catch (error) {
-  console.error("Error getting persons:", error);
-  throw new Error("Could not get persons.");
+    console.error("Error getting persons:", error);
+    throw new Error("Could not get persons.");
   }
 };
 
@@ -37,8 +57,8 @@ export const getPersonById = async (id: number): Promise<Person | null> => {
   try {
     return await Person.findByPk(id, { include: ["userAccount"] });
   } catch (error) {
-  console.error("Error getting person:", error);
-  throw new Error("Could not get person.");
+    console.error("Error getting person:", error);
+    throw new Error("Could not get person.");
   }
 };
 
@@ -58,8 +78,8 @@ export const updatePerson = async (
     await person.update(updatedData);
     return person;
   } catch (error) {
-  console.error("Error updating person:", error);
-  throw new Error("Could not update person.");
+    console.error("Error updating person:", error);
+    throw new Error("Could not update person.");
   }
 };
 
@@ -73,7 +93,7 @@ export const deletePerson = async (id: number): Promise<boolean> => {
     const deletedRows = await Person.destroy({ where: { person_id: id } });
     return deletedRows > 0;
   } catch (error) {
-  console.error("Error deleting person:", error);
-  throw new Error("Could not delete person.");
+    console.error("Error deleting person:", error);
+    throw new Error("Could not delete person.");
   }
 };

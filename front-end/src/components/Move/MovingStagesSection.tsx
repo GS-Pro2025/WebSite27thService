@@ -34,7 +34,14 @@ const MovingStagesSection: React.FC = () => {
                        sm:grid sm:grid-cols-3 sm:gap-y-16 sm:gap-x-8 sm:relative sm:text-left sm:-translate-y-20"
         >
           <div className="flex flex-col items-center sm:col-start-2">
-            <img src="assets/number1.svg" alt="Step 1" className="mb-2" />
+            <div className="relative mb-2">
+              <div className="bg-[#FFE67B] w-24 h-20 lg:w-16 lg:w-24 h-24 rounded-full flex items-center justify-center text-2xl lg:text-7xl font-bold text-[#7AACAE] shadow-lg z-10 transform transition-all duration-300 hover:scale-110 group cursor-help">
+                1
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-[#0F6F7C] text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 whitespace-nowrap z-20">
+                  Step 1: Packing
+                </div>
+              </div>
+            </div>
             <h3
               className="text-[#FFE67B] text-2xl font-semibold"
               style={{ fontFamily: "'Montserrat', sans-serif" }}
@@ -53,7 +60,14 @@ const MovingStagesSection: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-center sm:col-start-3 sm:-translate-y-10">
-            <img src="assets/number2.svg" alt="Step 2" className="mb-2" />
+            <div className="relative mb-2">
+              <div className="bg-[#FFE67B] w-24 h-20 lg:w-16 lg:w-24 h-24 rounded-full flex items-center justify-center text-2xl lg:text-7xl font-bold text-[#7AACAE] shadow-lg z-10 transform transition-all duration-300 hover:scale-110 group cursor-help">
+                2
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-[#0F6F7C] text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 whitespace-nowrap z-20">
+                  Step 2: Loading
+                </div>
+              </div>
+            </div>
             <h3
               className="text-[#FFE67B] text-2xl font-semibold"
               style={{ fontFamily: "'Montserrat', sans-serif" }}
@@ -63,7 +77,14 @@ const MovingStagesSection: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-center sm:col-start-1 sm:row-start-3 sm:translate-y-2 sm:translate-x-15">
-            <img src="assets/number3.svg" alt="Step 3" className="mb-2" />
+            <div className="relative mb-2">
+              <div className="bg-[#FFE67B] w-24 h-20 lg:w-16 lg:w-24 h-24 rounded-full flex items-center justify-center text-2xl lg:text-7xl font-bold text-[#7AACAE] shadow-lg z-10 transform transition-all duration-300 hover:scale-110 group cursor-help">
+                3
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-[#0F6F7C] text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 whitespace-nowrap z-20">
+                  Step 3: Delivery
+                </div>
+              </div>
+            </div>
             <h3
               className="text-[#FFE67B] text-2xl font-semibold"
               style={{ fontFamily: "'Montserrat', sans-serif" }}
@@ -82,7 +103,14 @@ const MovingStagesSection: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-center sm:col-start-2 sm:row-start-5 sm:-translate-x-45 sm:-translate-y-12">
-            <img src="assets/number2.svg" alt="Step 4" className="mb-2" />
+            <div className="relative mb-2">
+              <div className="bg-[#FFE67B] w-24 h-20 lg:w-16 lg:w-24 h-24 rounded-full flex items-center justify-center text-2xl lg:text-7xl font-bold text-[#7AACAE] shadow-lg z-10 transform transition-all duration-300 hover:scale-110 group cursor-help">
+                4
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-[#0F6F7C] text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 whitespace-nowrap z-20">
+                  Step 4: Unpacking
+                </div>
+              </div>
+            </div>
             <h3
               className="text-[#FFE67B] text-2xl font-semibold"
               style={{ fontFamily: "'Montserrat', sans-serif" }}
@@ -92,7 +120,14 @@ const MovingStagesSection: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-center sm:col-start-3 sm:row-start-5 sm:-translate-x-40 sm:-translate-y-12">
-            <img src="assets/number2.svg" alt="Step 5" className="mb-2" />
+            <div className="relative mb-2">
+              <div className="bg-[#FFE67B] w-24 h-20 lg:w-16 lg:w-24 h-24 rounded-full flex items-center justify-center text-2xl lg:text-7xl font-bold text-[#7AACAE] shadow-lg z-10 transform transition-all duration-300 hover:scale-110 group cursor-help">
+                5
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-[#0F6F7C] text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 whitespace-nowrap z-20">
+                  Step 5: Organization
+                </div>
+              </div>
+            </div>
             <h3
               className="text-[#FFE67B] text-2xl font-semibold"
               style={{ fontFamily: "'Montserrat', sans-serif" }}

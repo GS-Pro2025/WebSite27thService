@@ -3,13 +3,13 @@ import banner12 from "/assets/banner12.svg";
 import logoFooter2 from "/assets/logoFooter2.svg";
 import { FaFacebook, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 
-const Footer2: React.FC = () => {
+const Footer: React.FC = () => {
   return (
-    <footer className="relative -mt-36 z-10">
+    <footer className="relative -mt-30 z-10 overflow-hidden">
       <div className="relative w-full">
         <img src={banner12} alt="banner" className="w-full" />
 
-        <div className="absolute top-0 left-0 w-full h-full flex justify-between items-center px-10 md:px-20 py-10">
+        <div className="absolute top-0 left-0 w-full h-full flex justify-between items-center px-10 md:px-20 py-10 mt-15">
           <div className="text-black space-y-3 max-w-md">
             <h3 className="font-bold">LOCATION & CONTACT</h3>
             <p>
@@ -60,11 +60,11 @@ const Footer2: React.FC = () => {
             </div>
           </div>
 
-          <div className="hidden md:flex justify-end items-end">
+          <div className="hidden md:flex justify-end items-end -mt-20">
             <img
               src={logoFooter2}
               alt="Logo Texto"
-              className="w-[60vw] max-w-3xl h-auto"
+              className="w-[64vw] max-w-6xl h-auto"
             />
           </div>
         </div>
@@ -73,4 +73,4 @@ const Footer2: React.FC = () => {
   );
 };
 
-export default Footer2;
+export default Footer;

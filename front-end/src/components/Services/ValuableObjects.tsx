@@ -37,7 +37,7 @@ const ValuableObjects = () => {
       }
     };
   }, []);
-
+ 
   return (
     <div 
       ref={sectionRef}

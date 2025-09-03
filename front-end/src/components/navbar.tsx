@@ -66,8 +66,7 @@ const Navbar: React.FC = () => {
       >
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <div className="flex-shrink-0">
+            <div className="hidden md:block flex-shrink-0">
               <img
                 src="/assets/27_logo_white.svg"
                 alt="Twenty Seventh"
@@ -76,7 +75,6 @@ const Navbar: React.FC = () => {
               />
             </div>
 
-            {/* Links principales */}
             <div className="hidden md:flex items-center space-x-8 md:ml-10">
               <button
                 onClick={() => navigateToPage("services")}
@@ -109,8 +107,6 @@ const Navbar: React.FC = () => {
                 CONTACT US
               </button>
             </div>
-
-            {/* Botones Login / Sign Up / Logout */}
             <div className="hidden md:flex items-center space-x-4 ml-auto">
               {isAuthenticated ? (
                 <button
@@ -136,12 +132,11 @@ const Navbar: React.FC = () => {
                 </>
               )}
             </div>
-
-            {/* Botón menú móvil */}
             <div className="ml-auto md:hidden">
               <button
                 onClick={toggleMobileMenu}
                 className="p-2 rounded-md text-white"
+                aria-label="Abrir menú"
               >
                 <svg
                   className="w-6 h-6"
@@ -162,29 +157,31 @@ const Navbar: React.FC = () => {
             </div>
           </div>
 
-          {/* Mobile Menu */}
+          {/* Menú Móvil */}
           {isMobileMenuOpen && (
             <div className="md:hidden bg-[#0F6F7C]/80 backdrop-blur-md pb-4">
               <div className="px-2 pt-2 pb-3 space-y-1">
-                <span
-                  onClick={() => navigateToPage("services")}
-                  className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium cursor-pointer ${
-                    isActivePage("services")
-                      ? "text-[#FFE67B] bg-white/10"
-                      : "text-white hover:text-[#FFE67B] hover:bg-white/10"
-                  }`}
-                >
-                  SERVICES
-                </span>
-                {/* ... otros links ... */}
-                <button
-                  onClick={() => navigateToPage("contact")}
-                  className="block w-full text-center px-3 py-3 mt-4 bg-[#FFE67B] hover:bg-amber-400 text-black font-semibold rounded-md transition-colors"
-                >
-                  CONTACT US
-                </button>
+                {[
+                  { page: "", label: "HOME" },
+                  { page: "services", label: "SERVICES" },
+                  { page: "your-move", label: "YOUR MOVE" },
+                  { page: "about-us", label: "ABOUT US" },
+                  { page: "coverage", label: "COVERAGE" },
+                  { page: "contact", label: "CONTACT US" },
+                ].map((item) => (
+                  <button
+                    key={item.page}
+                    onClick={() => navigateToPage(item.page)}
+                    className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium ${
+                      isActivePage(item.page)
+                        ? "text-[#FFE67B] bg-white/10"
+                        : "text-white hover:text-[#FFE67B] hover:bg-white/10"
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
 
-                {/* Botones Login / Sign Up / Logout en móvil */}
                 <div className="flex flex-col space-y-3 pt-4 border-t border-white/20 mt-4">
                   {isAuthenticated ? (
                     <button
@@ -212,6 +209,12 @@ const Navbar: React.FC = () => {
                         className="bg-[#FFE67B] text-black font-semibold px-5 py-2 rounded-full hover:bg-[#FFD84D]"
                       >
                         Sign Up
+                      </button>
+                      <button
+                        onClick={() => navigateToPage("contact")}
+                        className="bg-[#FFE67B] hover:bg-[#FFE67BCC] text-black font-semibold px-6 py-2 rounded-full transition-colors duration-300"
+                      >
+                        CONTACT US
                       </button>
                     </>
                   )}

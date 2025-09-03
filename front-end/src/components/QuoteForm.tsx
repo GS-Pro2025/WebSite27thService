@@ -15,7 +15,8 @@ interface FormData {
 }
 
 interface QuoteFormProps {
-  onSubmit: (data: FormData) => void;
+  onSubmit?: (data: FormData) => void;
+  onNextDesktop?: () => void;
 }
 
 interface ValidationErrors {
@@ -59,7 +60,7 @@ const MOVE_SIZE_OPTIONS = [
   { value: "xlarge", label: "4+ Bedrooms" },
 ] as const;
 
-const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit }) => {
+const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, onNextDesktop }) => {
   const [step, setStep] = useState(1);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
@@ -125,9 +126,12 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit }) => {
       e.preventDefault();
       if (validateStep1()) {
         setStep(2);
+        if (onNextDesktop) {
+          onNextDesktop();
+        }
       }
     },
-    [validateStep1]
+    [validateStep1, onNextDesktop]
   );
 
   const handleBack = useCallback(() => {
@@ -144,8 +148,10 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit }) => {
       setIsSubmitting(true);
 
       try {
-        console.log("✅ Datos completos del formulario:", formData);
-        await onSubmit(formData);
+        console.log("Datos completos del formulario:", formData);
+        if (onSubmit) {
+          await onSubmit(formData);
+        }
         setShowSuccessModal(true);
       } catch (error) {
         console.error("Error en el envío:", error);

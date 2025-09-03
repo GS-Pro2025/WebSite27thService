@@ -4,6 +4,7 @@ import MovingStagesSection from "../components/Move/MovingStagesSection";
 import CoverageSection from "../components/Move/CoverageSection";
 import WeightSection from "../components/Move/WeightSection";
 import PackingSection from "../components/PackingSection";
+import Footer from "../components/Footer";
 
 const YourMove: React.FC = () => {
   return (
@@ -13,6 +14,7 @@ const YourMove: React.FC = () => {
       <CoverageSection />
       <WeightSection />
       <PackingSection />
+      <Footer />
     </div>
   );
 };

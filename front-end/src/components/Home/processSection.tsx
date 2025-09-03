@@ -132,6 +132,14 @@ const ProcessSection: React.FC = () => {
     },
     [isSubmitting, createMoveItems]
   );
+  const handleQuoteClick = () => {
+    if (window.innerWidth >= 1024) {
+      const form = document.querySelector("form");
+      if (form) form.requestSubmit();
+    } else {
+      setModalOpen(true);
+    }
+  };
 
   const getAnimationClass = (delay: keyof typeof ANIMATION_CONFIG.delays) =>
     `${ANIMATION_CONFIG.baseClass} ${ANIMATION_CONFIG.delays[delay]} ${
@@ -210,7 +218,7 @@ const ProcessSection: React.FC = () => {
               {/* Botón móvil */}
               <div className="lg:hidden w-full flex justify-center mt-2">
                 <button
-                  onClick={() => setModalOpen(true)}
+                  onClick={handleQuoteClick}
                   disabled={isSubmitting}
                   className={`bg-[#FFE67B] text-black text-xs font-semibold py-2 px-6 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${getScaleAnimationClass(
                     "content"
