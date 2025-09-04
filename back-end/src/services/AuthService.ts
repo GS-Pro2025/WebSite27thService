@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
+import Person from "../models/Person";
 import { OAuth2Client } from "google-auth-library";
 import { UserRole } from "../enums/enums";
 
@@ -42,19 +43,26 @@ export const loginWithGoogle = async (googleToken: string) => {
     throw new Error("Invalid Google token");
   }
 
-  const { email, name, sub: google_id } = payload;
+  const { email, sub: google_id } = payload;
 
-  let user = await User.findOne({ where: { google_id } });
+  let user = await User.findOne({ where: { email } });
 
   if (!user) {
-    [user] = await User.findOrCreate({
-      where: { email },
-      defaults: {
-        google_id: google_id,
-        email: email,
-        role: UserRole.USER,
-      },
+    user = await User.create({
+      google_id,
+      email,
+      role: UserRole.USER,
+      password_hash: null,
     });
+  } else if (!user.google_id) {
+    user.google_id = google_id;
+    await user.save();
+  }
+
+  const person = await Person.findOne({ where: { email } });
+  if (person && !person.user_id) {
+    person.user_id = user.user_id ?? null;
+    await person.save();
   }
 
   const appPayload = {

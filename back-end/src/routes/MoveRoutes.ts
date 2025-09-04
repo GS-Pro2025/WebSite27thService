@@ -5,11 +5,13 @@ import {
   handleGetMoveById,
   handleUpdateMove,
   handleDeleteMove,
+  handleGetUserMoves
 } from "../controllers/MoveController";
 import { authenticateJWT } from "../config/securityConfig";
 
 const router = Router();
 
+// todas las rutas de moves requieren autenticación
 // router.use(authenticateJWT);
 
 /**
@@ -23,6 +25,12 @@ router.post("/", handleCreateMove);
  * @desc    Get all moves
  */
 router.get("/", handleGetAllMoves);
+
+/**
+ * @route   GET /api/moves/my-moves
+ * @desc    Get moves for the logged in user
+ */
+router.get("/my-moves", handleGetUserMoves);
 
 /**
  * @route   GET /api/moves/:id

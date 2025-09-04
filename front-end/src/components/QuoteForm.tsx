@@ -1,48 +1,329 @@
-import React from "react";
+import React, { useState, useCallback, useMemo } from "react";
+import SuccessModal from "./SuccessModal";
 
-const QuoteForm: React.FC = () => {
+interface FormData {
+  name: string;
+  phone: string;
+  origin: string;
+  destination: string;
+  email: string;
+  typeOfMove: string;
+  address: string;
+  additional_info: string;
+  tentative_date: string;
+  size_of_move: string;
+}
+
+interface QuoteFormProps {
+  onSubmit?: (data: FormData) => void;
+  onNextDesktop?: () => void;
+}
+
+interface ValidationErrors {
+  [key: string]: string;
+}
+
+const VALIDATION_PATTERNS = {
+  phone: /^\(?([0-9]{3})\)?[-.● ]?([0-9]{3})[-.● ]?([0-9]{4})$/,
+  email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+} as const;
+
+const INITIAL_FORM_DATA: FormData = {
+  name: "",
+  phone: "",
+  origin: "",
+  destination: "",
+  email: "",
+  typeOfMove: "",
+  address: "",
+  additional_info: "",
+  tentative_date: "",
+  size_of_move: "",
+};
+
+const MOVE_TYPE_OPTIONS = [
+  { value: "", label: "type of move" },
+  { value: "home", label: "Home move" },
+  { value: "apartment", label: "Apartment move" },
+  { value: "commercial", label: "Commercial move" },
+  { value: "store", label: "Store move" },
+  { value: "warehouse", label: "Warehouse move" },
+  { value: "item", label: "Item move" },
+] as const;
+
+const MOVE_SIZE_OPTIONS = [
+  { value: "", label: "Size of Move" },
+  { value: "xsmall", label: "Studio" },
+  { value: "small", label: "1 Bedroom" },
+  { value: "medium", label: "2 Bedrooms" },
+  { value: "large", label: "3 Bedrooms" },
+  { value: "xlarge", label: "4+ Bedrooms" },
+] as const;
+
+const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, onNextDesktop }) => {
+  const [step, setStep] = useState(1);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
+  const [errors, setErrors] = useState<ValidationErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const validateStep1 = useCallback((): boolean => {
+    const newErrors: ValidationErrors = {};
+
+    if (!formData.origin.trim()) newErrors.origin = "Origin is required";
+    if (!formData.destination.trim())
+      newErrors.destination = "Destination is required";
+    if (!formData.typeOfMove) newErrors.typeOfMove = "Please select a type";
+    if (!formData.name.trim()) newErrors.name = "Name is required";
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Phone is required";
+    } else if (!VALIDATION_PATTERNS.phone.test(formData.phone)) {
+      newErrors.phone = "Enter a valid US phone number";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!VALIDATION_PATTERNS.email.test(formData.email)) {
+      newErrors.email = "Enter a valid email";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }, [formData]);
+
+  const validateStep2 = useCallback((): boolean => {
+    const newErrors: ValidationErrors = {};
+
+    if (!formData.address.trim()) newErrors.address = "Address is required";
+    if (!formData.tentative_date.trim())
+      newErrors.tentative_date = "Tentative date is required";
+    if (!formData.size_of_move.trim())
+      newErrors.size_of_move = "Size of move is required";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }, [formData]);
+
+  const handleChange = useCallback(
+    (
+      e: React.ChangeEvent<
+        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+      >
+    ) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({ ...prev, [name]: value }));
+
+      if (errors[name]) {
+        setErrors((prev) => ({ ...prev, [name]: "" }));
+      }
+    },
+    [errors]
+  );
+
+  const handleNext = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (validateStep1()) {
+        setStep(2);
+        if (onNextDesktop) {
+          onNextDesktop();
+        }
+      }
+    },
+    [validateStep1, onNextDesktop]
+  );
+
+  const handleBack = useCallback(() => {
+    setStep(1);
+    setErrors({});
+  }, []);
+
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+
+      if (!validateStep2() || isSubmitting) return;
+
+      setIsSubmitting(true);
+
+      try {
+        console.log("Datos completos del formulario:", formData);
+        if (onSubmit) {
+          await onSubmit(formData);
+        }
+        setShowSuccessModal(true);
+      } catch (error) {
+        console.error("Error en el envío:", error);
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [validateStep2, isSubmitting, formData, onSubmit]
+  );
+
+  const handleModalClose = useCallback(() => {
+    setShowSuccessModal(false);
+    setStep(1);
+    setFormData(INITIAL_FORM_DATA);
+    setErrors({});
+  }, []);
+
+  const renderField = useMemo(
+    () => ({
+      input: (
+        name: keyof FormData,
+        label: string,
+        type = "text",
+        placeholder?: string
+      ) => (
+        <div className="text-black flex flex-col">
+          <label className="text-xs lg:text-sm font-semibold">{label}</label>
+          <input
+            type={type}
+            name={name}
+            value={formData[name]}
+            onChange={handleChange}
+            placeholder={placeholder}
+            className="p-2 rounded-xl bg-white text-sm transition-colors focus:ring-2 focus:ring-[#FFE67B] focus:outline-none"
+            disabled={isSubmitting}
+          />
+          {errors[name] && (
+            <span className="text-red-500 text-xs mt-1">{errors[name]}</span>
+          )}
+        </div>
+      ),
+
+      select: (
+        name: keyof FormData,
+        label: string,
+        options: readonly { value: string; label: string }[]
+      ) => (
+        <div className="text-black flex flex-col">
+          <label className="text-xs lg:text-sm font-semibold">{label}</label>
+          <select
+            name={name}
+            value={formData[name]}
+            onChange={handleChange}
+            className="p-2 rounded-xl bg-white text-sm transition-colors focus:ring-2 focus:ring-[#FFE67B] focus:outline-none"
+            disabled={isSubmitting}
+          >
+            {options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          {errors[name] && (
+            <span className="text-red-500 text-xs mt-1">{errors[name]}</span>
+          )}
+        </div>
+      ),
+
+      textarea: (name: keyof FormData, label: string, rows = 3) => (
+        <div className="text-black flex flex-col">
+          <label className="text-xs lg:text-sm font-semibold">{label}</label>
+          <textarea
+            name={name}
+            value={formData[name]}
+            onChange={handleChange}
+            rows={rows}
+            className="p-2 rounded-xl bg-white text-sm resize-none transition-colors focus:ring-2 focus:ring-[#FFE67B] focus:outline-none"
+            disabled={isSubmitting}
+          />
+          {errors[name] && (
+            <span className="text-red-500 text-xs mt-1">{errors[name]}</span>
+          )}
+        </div>
+      ),
+    }),
+    [formData, handleChange, errors, isSubmitting]
+  );
+
+  if (showSuccessModal) {
+    return (
+      <SuccessModal
+        show={true}
+        title="Thank you for your quote!"
+        message="You will shortly receive the information in your email."
+        onClose={handleModalClose}
+      />
+    );
+  }
+
   return (
     <div className="bg-[#D9D9D9] rounded-2xl sm:rounded-3xl p-4 sm:p-4 lg:p-6 pt-8 sm:pt-8 lg:pt-12 font-[Montserrat] shadow-md w-full">
-      <form className="space-y-2 sm:space-y-4 lg:space-y-6">
-        {/* Fila 1 */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
-          <div className="flex flex-col">
-            <label className="text-xs lg:text-sm text-[#333] font-semibold mb-1">Origin</label>
-            <input type="text" className="p-2 rounded-xl bg-white text-[#333] text-sm" />
+      {/* Paso 1 */}
+      {step === 1 && (
+        <form onSubmit={handleNext} className="space-y-4">
+          {/* Fila 1 */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {renderField.input("origin", "Origin")}
+            {renderField.input("destination", "Destination")}
+            {renderField.select(
+              "typeOfMove",
+              "Type of move",
+              MOVE_TYPE_OPTIONS
+            )}
           </div>
-          <div className="flex flex-col">
-            <label className="text-xs lg:text-sm text-[#333] font-semibold mb-1">Destination</label>
-            <input type="text" className="p-2 rounded-xl bg-white text-[#333] text-sm" />
-          </div>
-          <div className="flex flex-col">
-            <label className="text-xs lg:text-sm text-[#333] font-semibold mb-1">Type of move</label>
-            <input type="text" className="p-2 rounded-xl bg-white text-[#333] text-sm" />
-          </div>
-        </div>
 
-        {/* Fila 2 */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
-          <div className="flex flex-col">
-            <label className="text-xs lg:text-sm text-[#333] font-semibold mb-1">Name</label>
-            <input type="text" className="p-2 rounded-xl bg-white text-[#333] text-sm" />
+          {/* Fila 2 */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {renderField.input("name", "Name")}
+            {renderField.input("phone", "Phone", "tel", "555-555-5555")}
+            {renderField.input("email", "Email", "email", "you@example.com")}
           </div>
-          <div className="flex flex-col">
-            <label className="text-xs lg:text-sm text-[#333] font-semibold mb-1">Phone</label>
-            <input type="tel" className="p-2 rounded-xl bg-white text-[#333] text-sm" />
-          </div>
-          <div className="flex flex-col">
-            <label className="text-xs lg:text-sm text-[#333] font-semibold mb-1">Email</label>
-            <input type="email" className="p-2 rounded-xl bg-white text-[#333] text-sm" />
-          </div>
-        </div>
 
-        {/* Botón */}
-        <div className="flex justify-center pt-2 sm:pt-4">
-          <button className="bg-[#FFE67B] text-black text-sm lg:text-[18px] font-semibold py-2 px-6 lg:px-10 rounded-full shadow hover:scale-105 transition-transform">
-            GET A QUOTE NOW
-          </button>
-        </div>
-      </form>
+          <div className="text-black flex justify-center pt-4">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="bg-[#FFE67B] px-6 py-2 rounded-full font-semibold transition-all duration-200 hover:bg-[#FFD700] disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
+            >
+              {isSubmitting ? "PROCESSING..." : "GET A QUOTE NOW"}
+            </button>
+          </div>
+        </form>
+      )}
+
+      {/* Paso 2 */}
+      {step === 2 && (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Fila 1 */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {renderField.input("address", "Address")}
+            {renderField.input("tentative_date", "Tentative date", "date")}
+          </div>
+
+          {/* Fila 2 */}
+          <div className="text-black grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {renderField.select(
+              "size_of_move",
+              "Size of move",
+              MOVE_SIZE_OPTIONS
+            )}
+            {renderField.textarea("additional_info", "Additional info")}
+          </div>
+
+          <div className="flex justify-between pt-4">
+            <button
+              type="button"
+              onClick={handleBack}
+              disabled={isSubmitting}
+              className="bg-gray-300 px-6 py-2 rounded-full font-semibold transition-all duration-200 hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
+            >
+              Back
+            </button>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="text-black bg-[#FFE67B] px-6 py-2 rounded-full font-semibold transition-all duration-200 hover:bg-[#FFD700] disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
+            >
+              {isSubmitting ? "SUBMITTING..." : "SUBMIT"}
+            </button>
+          </div>
+        </form>
+      )}
     </div>
   );
 };

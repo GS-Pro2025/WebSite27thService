@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { GoogleLogin } from "@react-oauth/google";
 import { useGoogleAuth } from "../../hooks/useGoogleAuth";
+import SuccessModal from "../SuccessModal";
 
 interface SignUpModalProps {
   isOpen: boolean;
@@ -16,6 +17,8 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose }) => {
     phone_number: "",
     role: "USER",
   });
+
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const { handleGoogleAuth } = useGoogleAuth(onClose);
 
@@ -32,7 +35,13 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose }) => {
     try {
       const res = await axios.post("http://localhost:3000/api/users", formData);
       console.log("User created successfully:", res.data);
+
+      if (res.data.token) {
+        localStorage.setItem("token", res.data.token);
+      }
+
       onClose();
+      setShowSuccess(true);
     } catch (error: any) {
       console.error(
         "Error creating user:",
@@ -42,83 +51,91 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-[#0F6F7C]/80 z-50">
-      <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Sign Up</h2>
+    <>
+      {/* ---- MODAL SIGN UP ---- */}
+      <div className="fixed inset-0 flex items-center justify-center bg-[#0F6F7C]/80 z-50">
+        <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Sign Up</h2>
 
-        {/* ---- FORM NORMAL ---- */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            name="full_name"
-            placeholder="Full Name"
-            value={formData.full_name}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg text-black"
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg text-black"
-            required
-          />
-          <input
-            type="password"
-            name="password_hash"
-            placeholder="Password"
-            value={formData.password_hash}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg text-black"
-            required
-          />
-          <input
-            type="text"
-            name="phone_number"
-            placeholder="Phone Number"
-            value={formData.phone_number}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg text-black"
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              type="text"
+              name="full_name"
+              placeholder="Full Name"
+              value={formData.full_name}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg text-black"
+              required
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg text-black"
+              required
+            />
+            <input
+              type="password"
+              name="password_hash"
+              placeholder="Password"
+              value={formData.password_hash}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg text-black"
+              required
+            />
+            <input
+              type="text"
+              name="phone_number"
+              placeholder="Phone Number"
+              value={formData.phone_number}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg text-black"
+            />
+
+            <button
+              type="submit"
+              className="w-full bg-[#FFE67B] text-black font-semibold py-2 rounded-lg hover:bg-[#FFD84D] transition"
+            >
+              Sign Up
+            </button>
+          </form>
+
+          <div className="flex items-center my-4">
+            <hr className="flex-grow border-gray-300" />
+            <span className="mx-2 text-gray-500 text-sm">OR</span>
+            <hr className="flex-grow border-gray-300" />
+          </div>
+
+          <GoogleLogin
+            onSuccess={(credentialResponse) => {
+              if (credentialResponse.credential) {
+                handleGoogleAuth(credentialResponse.credential);
+              }
+            }}
+            onError={() => {
+              console.log("Error in Google Auth");
+            }}
           />
 
           <button
-            type="submit"
-            className="w-full bg-[#FFE67B] text-black font-semibold py-2 rounded-lg hover:bg-[#FFD84D] transition"
+            onClick={onClose}
+            className="mt-4 w-full text-sm text-gray-500 hover:text-gray-700"
           >
-            Sign Up
+            Cancel
           </button>
-        </form>
-
-        {/* ---- SEPARADOR ---- */}
-        <div className="flex items-center my-4">
-          <hr className="flex-grow border-gray-300" />
-          <span className="mx-2 text-gray-500 text-sm">OR</span>
-          <hr className="flex-grow border-gray-300" />
         </div>
-
-        {/* ---- BOTÓN GOOGLE ---- */}
-        <GoogleLogin
-          onSuccess={(credentialResponse) => {
-            if (credentialResponse.credential) {
-              handleGoogleAuth(credentialResponse.credential);
-            }
-          }}
-          onError={() => {
-            console.log("Error in Google Auth");
-          }}
-        />
-
-        <button
-          onClick={onClose}
-          className="mt-4 w-full text-sm text-gray-500 hover:text-gray-700"
-        >
-          Cancel
-        </button>
       </div>
-    </div>
+
+      {/* ---- MODAL DE ÉXITO ---- */}
+      <SuccessModal
+        show={showSuccess}
+        title="Registration Successful"
+        message="Your account has been created successfully!"
+        onClose={() => setShowSuccess(false)}
+      />
+    </>
   );
 };
 

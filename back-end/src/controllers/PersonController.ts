@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import {
-  createPerson,
+  createOrFindPerson,
   getAllPersons,
   getPersonById,
   updatePerson,
@@ -9,7 +9,7 @@ import {
 
 export const handleCreatePerson = async (req: Request, res: Response) => {
   try {
-    const person = await createPerson(req.body);
+    const person = await createOrFindPerson(req.body);
     res.status(201).json(person);
   } catch (error: any) {
     res.status(500).json({ message: error.message });

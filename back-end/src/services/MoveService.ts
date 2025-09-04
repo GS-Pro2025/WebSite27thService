@@ -43,14 +43,26 @@ export const getAllMoves = async (): Promise<Move[]> => {
           model: Payment,
           as: "payment",
           attributes: ["payment_id", "amount", "payment_status"],
+        },
+        {
+          model: MoveItem,
+          as: "items",
+          attributes: ["description", "quantity"],
+        },
+        {
+          model: Payment,
+          as: "payment",
+          attributes: ["payment_id", "amount", "payment_status"],
         }
       ],
+      order: [["createdAt", "DESC"]],
     });
     return moves;
   } catch (error) {
     console.error("Error getting moves:", error);
     throw new Error("Could not get moves.");
   }
+  
 };
 
 /**
@@ -76,8 +88,20 @@ export const getMoveById = async (moveId: string): Promise<Move | null> => {
           model: Payment,
           as: "payment",
           attributes: ["payment_id", "amount", "payment_status"],
+
+        },
+        {
+          model: MoveItem,
+          as: "items",
+          attributes: ["description", "quantity"],
+        },
+        {
+          model: Payment,
+          as: "payment",
+          attributes: ["payment_id", "amount", "payment_status"],
         }
       ],
+      order: [["createdAt", "DESC"]],
     });
     return move;
   } catch (error) {
@@ -123,5 +147,47 @@ export const deleteMove = async (moveId: string): Promise<boolean> => {
   } catch (error) {
     console.error("Error deleting move:", error);
     throw new Error("Could not delete move.");
+
+  }
+};
+
+/**
+ * Gets all moves for a specific user.
+ * @param userId - The ID of the logged user.
+ * @returns An array of moves for that user.
+ */
+export const getMovesByUserId = async (userId: number): Promise<Move[]> => {
+  try {
+    const person = await Person.findOne({ where: { user_id: userId } });
+    if (!person) {
+      return [];
+    }
+
+    const moves = await Move.findAll({
+      where: { person_id: person.person_id },
+      include: [
+        {
+          model: Person,
+          as: "client",
+          attributes: ["person_id", "full_name", "email", "phone_number"],
+        },
+        {
+          model: MoveItem,
+          as: "items",
+          attributes: ["description", "quantity"],
+        },
+        {
+          model: Payment,
+          as: "payment",
+          attributes: ["payment_id", "amount", "payment_status"],
+        },
+      ],
+    });
+
+    return moves;
+  } catch (error) {
+    console.error("Error getting moves by user ID:", error);
+    throw new Error("Could not get user moves.");
+
   }
 };

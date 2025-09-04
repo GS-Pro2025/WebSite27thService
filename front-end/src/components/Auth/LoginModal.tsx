@@ -32,18 +32,17 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
       if (res.data.token) {
         localStorage.setItem("token", res.data.token);
-        localStorage.setItem("role", res.data.user.role); 
+        localStorage.setItem("role", res.data.user.role);
+
+        if (res.data.user.role === "admin") {
+          window.location.href = "/admin-dashboard";
+        } else {
+          window.location.href = "/user-dashboard";
+        }
       }
-      
+
       console.log("Login successfully:", res.data);
       onClose();
-
-      if (res.data.user.role === "admin") {
-        window.location.href = "/dashboard";
-      } else {
-        window.location.reload();
-      }
-
     } catch (error: any) {
       console.error("Login failed:", error.response?.data || error.message);
     }

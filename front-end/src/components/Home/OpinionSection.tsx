@@ -65,7 +65,7 @@ const OpinionSection = () => {
       </div>
 
       {/* Línea decorativa */}
-      <div className="absolute bottom-[35%] md:bottom-[35%] lg:bottom-[35%] left-0 w-full z-20">
+      <div className="absolute bottom-[35%] md:bottom-[35%] lg:bottom-[35%] left-0 w-full">
         <img
           src="/assets/Linea.svg"
           alt="Línea decorativa"
@@ -74,7 +74,7 @@ const OpinionSection = () => {
       </div>
 
       {/* Logo */}
-      <div className="absolute bottom-[14%] md:bottom-[13%] lg:bottom-[6%] left-[-1%] md:left-[-1%] lg:left-[-0.9%] z-20">
+      <div className="absolute bottom-[14%] md:bottom-[13%] lg:bottom-[6%] left-[-1%] md:left-[-1%] lg:left-[-0.9%]">
         <img
           src="/assets/logo_simple.png"
           alt="Logo"
@@ -83,7 +83,7 @@ const OpinionSection = () => {
       </div>
 
       {/* Sección de calificación (Componente) */}
-      <RatingSection className="absolute bottom-[3%] sm:bottom-[13%] md:bottom-[7%] lg:bottom-[6%] right-[-260px] transform -translate-x-1/2 z-30 w-[95%] sm:w-[85%] md:w-[65%] lg:w-[50%] max-w-2xl" />
+      <RatingSection className="absolute bottom-[3%] sm:bottom-[13%] md:bottom-[7%] lg:bottom-[6%] right-[-260px] transform -translate-x-1/2 z-50 w-[95%] sm:w-[85%] md:w-[65%] lg:w-[50%] max-w-2xl" />
     </section>
   );
 };

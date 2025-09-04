@@ -9,7 +9,11 @@ export const authenticateJWT = (
 ) => {
   if (
     req.path.startsWith("/api/auth/login") ||
-    req.path.startsWith("/api/auth/google")
+    req.path.startsWith("/api/auth/google") ||
+    (req.method === "POST" && req.path === "/api/moves")||
+    req.path.startsWith("/api/persons") ||
+    req.path.startsWith("/api/move-items") ||
+    req.path.startsWith("/api/users")
   ) {
     return next();
   }
