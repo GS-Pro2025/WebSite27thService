@@ -1,6 +1,8 @@
 import { nanoid } from "nanoid";
 import Move, { MoveAttributes } from "../models/Move";
 import Person from "../models/Person";
+import MoveItem from "../models/MoveItem";
+import Payment from "../models/Payment";
 
 /**
  * Creates a new move, generating a unique ID.
@@ -14,8 +16,8 @@ export const createMove = async (moveData: MoveAttributes): Promise<Move> => {
     const newMove = await Move.create(moveData);
     return newMove;
   } catch (error) {
-  console.error("Error creating move:", error);
-  throw new Error("Could not create move.");
+    console.error("Error creating move:", error);
+    throw new Error("Could not create move.");
   }
 };
 
@@ -30,14 +32,24 @@ export const getAllMoves = async (): Promise<Move[]> => {
         {
           model: Person,
           as: "client",
-          attributes: ["person_id", "full_name", "email"],
+          attributes: ["person_id", "full_name", "email", "phone_number"],
         },
+        {
+          model: MoveItem,
+          as: "items",
+          attributes: ["description", "quantity"],
+        },
+        {
+          model: Payment,
+          as: "payment",
+          attributes: ["payment_id", "amount", "payment_status"],
+        }
       ],
     });
     return moves;
   } catch (error) {
-  console.error("Error getting moves:", error);
-  throw new Error("Could not get moves.");
+    console.error("Error getting moves:", error);
+    throw new Error("Could not get moves.");
   }
 };
 
@@ -52,15 +64,25 @@ export const getMoveById = async (moveId: string): Promise<Move | null> => {
       include: [
         {
           model: Person,
-          as: "person",
-          attributes: ["person_id", "full_name", "email"],
+          as: "client",
+          attributes: ["person_id", "full_name", "email", "phone_number"],
         },
+        {
+          model: MoveItem,
+          as: "items",
+          attributes: ["description", "quantity"],
+        },
+        {
+          model: Payment,
+          as: "payment",
+          attributes: ["payment_id", "amount", "payment_status"],
+        }
       ],
     });
     return move;
   } catch (error) {
-  console.error("Error getting move by ID:", error);
-  throw new Error("Could not get move.");
+    console.error("Error getting move by ID:", error);
+    throw new Error("Could not get move.");
   }
 };
 
@@ -82,8 +104,8 @@ export const updateMove = async (
     await move.update(updatedData);
     return move;
   } catch (error) {
-  console.error("Error updating move:", error);
-  throw new Error("Could not update move.");
+    console.error("Error updating move:", error);
+    throw new Error("Could not update move.");
   }
 };
 
@@ -99,7 +121,7 @@ export const deleteMove = async (moveId: string): Promise<boolean> => {
     });
     return deletedRows > 0;
   } catch (error) {
-  console.error("Error deleting move:", error);
-  throw new Error("Could not delete move.");
+    console.error("Error deleting move:", error);
+    throw new Error("Could not delete move.");
   }
 };

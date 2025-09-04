@@ -27,6 +27,7 @@ export const setupAssociations = () => {
   });
   Move.hasMany(Payment, {
     foreignKey: "move_id",
+    as: "payment",
   });
 
   Payment.belongsTo(Move, {
@@ -35,6 +36,7 @@ export const setupAssociations = () => {
   });
   Move.hasMany(MoveItem, {
     foreignKey: "move_id",
+    as: "items",
   });
 
   MoveItem.belongsTo(Move, {
