@@ -52,7 +52,7 @@ const TabsCarousel: React.FC = () => {
   ];
 
   return (
-    <div className="w-full max-w-10/12 mx-auto overflow-hidden rounded-lg">
+    <div className="w-full overflow-hidden">
       {/* Tabs Container */}
       <div className="flex justify-center items-center py-2">
         {/* Desktop Version - Overlapping tabs */}
@@ -61,7 +61,7 @@ const TabsCarousel: React.FC = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(index)}
-              className={`min-w-30 px-11.5 relative transition-all duration-500 transform rounded-full border-2 border-black
+              className={`min-w-30 px-11.5 relative transition-all duration-500 transform rounded-full border-2 border-[#0F6F7C]/80 
                 ${activeTab === index
                   ? 'z-20 scale-110 bg-[#FFE67B]'
                   : 'z-10 hover:scale-105 bg-white'

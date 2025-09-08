@@ -55,14 +55,14 @@ const ValuableObjects = () => {
               isVisible ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-5 opacity-0 scale-95'
             }`}>
               <div className="bg-[#FFE67B] rounded-full px-4 py-2 md:px-8 md:py-4 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <h2 className="text-lg md:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-800">
-                  ¿valuable objects?
+                <h2 className="text-lg md:text-2xl lg:text-3xl xl:text-4xl font-bold text-white">
+                  Valuable objects?
                 </h2>
               </div>
             </div>
 
             {/* Description box */}
-            <div className={`bg-white/20 backdrop-blur-sm rounded-2xl p-4 md:p-6 lg:p-8 text-white shadow-xl transform transition-all duration-1000 delay-400 ease-out ${
+            <div className={`bg-white/50 backdrop-blur-sm rounded-2xl p-4 md:p-6 lg:p-8 text-[#0E6F7E] shadow-xl transform transition-all duration-1000 delay-400 ease-out ${
               isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
             }`}>
               <p className={`text-sm md:text-lg lg:text-xl xl:text-2xl leading-relaxed mb-3 md:mb-6 transform transition-all duration-800 delay-600 ease-out ${
@@ -81,7 +81,7 @@ const ValuableObjects = () => {
                 <span className="text-[#FFE67B] font-semibold">we take care of them for you</span>.
               </p>
 
-              <p className={`text-base md:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-300 transform transition-all duration-800 delay-1000 ease-out ${
+              <p className={`text-base md:text-xl lg:text-2xl xl:text-3xl font-bold text-[#585858] transform transition-all duration-800 delay-1000 ease-out ${
                 animateContent ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
               }`}>
                 What items do you need to move today?

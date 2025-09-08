@@ -56,28 +56,28 @@ const Carousel: React.FC = () => {
     {
       id: 1,
       title: 'Special Packaging',
-      image: '/assets/Carousel_item_1.svg',
+      image: '/assets/Carousel_item_5.svg',
       bgColor: 'bg-gray-100',
       description: 'Professional packaging for maximum protection'
     },
     {
       id: 2,
       title: 'Protection Guarantee',
-      image: '/assets/Carousel_item_2.svg',
+      image: '/assets/Carousel_item_6.svg',
       bgColor: 'bg-gray-100',
       description: 'Full coverage guarantee for your valuable items'
     },
     {
       id: 3,
       title: 'Premium Loading/Transport',
-      image: '/assets/Carousel_item_3.svg',
+      image: '/assets/Carousel_item_7.svg',
       bgColor: 'bg-gray-100',
       description: 'Careful handling and premium transport services'
     },
     {
       id: 4,
       title: 'Complete Installation at Destination',
-      image: '/assets/Carousel_item_4.svg',
+      image: '/assets/Carousel_item_8.svg',
       bgColor: 'bg-gray-100',
       description: 'Full installation service at your new location'
     }

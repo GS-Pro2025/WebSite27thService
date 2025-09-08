@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import FirstForm from "../FirstForm";
 import SecondForm from "../SecondForm";
 import api from "../../api/axiosInstance";
+import { ArrowRight } from "lucide-react";
 
 const CoverageSection: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -75,12 +76,11 @@ const CoverageSection: React.FC = () => {
             quantity: bedrooms,
           }),
       ]);
-
     } catch (error) {
       console.error("Error al guardar datos:", error);
     }
   };
-  
+
   return (
     <section className="relative py-16 md:py-28 px-4 sm:px-6 lg:px-8 text-white bg-cover bg-center z-20 -mt-15 md:-mt-35">
       <div className="absolute inset-0 z-0">
@@ -115,23 +115,29 @@ const CoverageSection: React.FC = () => {
         </div>
 
         <div className="flex flex-col lg:flex-row items-start justify-between gap-12 lg:gap-8">
-          <div className="w-full lg:w-4/12 bg-white/38 px-8 py-20 rounded-4xl space-y-10 mt-10">
-            <h3 className="text-black text-xl font-bold">
+          <div className="w-full lg:w-3/12 bg-white/30 px-6 py-28 rounded-3xl space-y-8 mt-10">
+            <h3 className="text-white text-xl font-bold">
               1. Does your move originate in Virginia?
             </h3>
-            <p className="text-black text-base font-light">
-              If you are here, our moving service can go with you to any state
-              in the country.
+            <p className="text-white text-base font-light">
+              If you're located here, our moving service can travel with you to
+              any state in the country. We take care of the professional
+              logistics to make your move safe.
             </p>
-            <h3 className="text-black text-xl font-bold mt-6">
+            <h3 className="text-white text-xl font-bold mt-6">
               2. Does your move start in another state?
             </h3>
-            <p className="text-black text-base font-light">
-              We have a coverage perimeter for states near Virginia.
+            <p className="text-white text-base font-light">
+              We have coverage for states near Virginia. Use our wizard to see
+              if you're within our coverage area.
             </p>
           </div>
 
           <div className="w-full lg:w-7/12 lg:-mt-5">
+            <div className="flex items-center justify-center text-3xl md:text-4xl font-bold text-white mb-8">
+              <ArrowRight className="text-[#FFE67B] w-15 h-15 mr-8" />
+              <h1>Check your coverage HERE</h1>
+            </div>
             {step === 1 ? (
               <FirstForm
                 personData={personData}
