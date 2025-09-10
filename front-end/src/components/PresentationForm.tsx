@@ -3,6 +3,8 @@ import { Autocomplete } from "@react-google-maps/api";
 import api from "../api/axiosInstance";
 import ServicesForm from "./ServicesForm";
 import SuccessModal from "./SuccessModal";
+import ReactDatePicker, { DatePicker } from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface PresentationFormProps {
   isLoaded: boolean;
@@ -11,7 +13,7 @@ interface PresentationFormProps {
 
 interface FormData {
   tipoMovimiento: string;
-  fecha: string;
+  fecha: Date | null;
   name: string;
   phone: string;
   email: string;
@@ -28,7 +30,7 @@ interface Errors {
 
 const INITIAL_FORM_DATA: FormData = {
   tipoMovimiento: "",
-  fecha: "",
+  fecha: null,
   name: "",
   phone: "",
   email: "",
@@ -124,9 +126,13 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
     const errors: Errors = {};
     if (!formData.tipoMovimiento)
       errors.tipoMovimiento = "Select a type of move";
-    if (!formData.fecha) errors.fecha = "Select a date";
-    if (formData.fecha && formData.fecha < today) {
-      errors.fecha = "Date cannot be in the past";
+    if (!formData.fecha) {
+      errors.fecha = "Select a date";
+    } else {
+      const todayDate = new Date();
+      if (formData.fecha < todayDate) {
+        errors.fecha = "Date cannot be in the past";
+      }
     }
     return errors;
   };
@@ -277,16 +283,22 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
         <label className="block text-gray-700 text-sm font-medium mb-2">
           Date:
         </label>
-        <input
-          type="date"
-          name="fecha"
-          value={formData.fecha}
-          onChange={handleInputChange}
-          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#68A2A6] focus:border-transparent bg-white text-gray-700 transition-all duration-300 hover:shadow-md focus:shadow-lg ${
+        <DatePicker
+          selected={formData.fecha}
+          onChange={(date: Date | null) => {
+            setFormData((prev) => ({ ...prev, fecha: date }));
+            if (errors.fecha) setErrors((prev) => ({ ...prev, fecha: "" }));
+          }}
+          minDate={new Date()}
+          dateFormat="yyyy-MM-dd"
+          className={`text-center w-full px-30 py-3 border rounded-lg focus:ring-2 focus:ring-[#68A2A6] focus:border-transparent bg-white text-gray-700 transition-all duration-300 hover:shadow-md focus:shadow-lg ${
             errors.fecha ? "border-red-500" : "border-gray-300"
           }`}
-          min={today}
         />
+
+        {errors.fecha && (
+          <p className="text-red-500 text-xs mt-1">{errors.fecha}</p>
+        )}
         {errors.fecha && (
           <p className="text-red-500 text-xs mt-1">{errors.fecha}</p>
         )}

@@ -177,9 +177,18 @@ const ProcessSection: React.FC = () => {
       setIsSubmitting(false);
     }
   }, [quoteData, isSubmitting, services, selectedServices, createMoveItems]);
-  const handleQuoteComplete = useCallback((data: FormData) => {
-    setFormData(data);
-    setQuoteData(data);
+  const handleQuoteComplete = useCallback((data: any) => {
+    const normalizedData: FormData = {
+      ...data,
+      tentative_date:
+        data.tentative_date instanceof Date
+          ? data.tentative_date.toISOString()
+          : data.tentative_date
+            ? String(data.tentative_date)
+            : "",
+    };
+    setFormData(normalizedData);
+    setQuoteData(normalizedData);
     setProcStep(2);
   }, []);
 

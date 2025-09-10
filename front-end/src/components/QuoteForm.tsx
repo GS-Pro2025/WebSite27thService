@@ -1,5 +1,7 @@
 import React, { useState, useCallback, useMemo, useRef } from "react";
 import { Autocomplete } from "@react-google-maps/api";
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface FormData {
   name: string;
@@ -10,7 +12,7 @@ interface FormData {
   typeOfMove: string;
   address: string;
   additional_info: string;
-  tentative_date: string;
+  tentative_date: Date | null;
   size_of_move: string;
 }
 
@@ -37,7 +39,7 @@ const INITIAL_FORM_DATA: FormData = {
   typeOfMove: "",
   address: "",
   additional_info: "",
-  tentative_date: "",
+  tentative_date: null,
   size_of_move: "",
 };
 
@@ -59,6 +61,8 @@ const MOVE_SIZE_OPTIONS = [
   { value: "large", label: "3 Bedrooms" },
   { value: "xlarge", label: "4+ Bedrooms" },
 ] as const;
+
+type StringKeys = Exclude<keyof FormData, "tentative_date">;
 
 const QuoteForm: React.FC<QuoteFormProps> = ({ onComplete, onNextDesktop }) => {
   const [step, setStep] = useState(1);
@@ -115,8 +119,17 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onComplete, onNextDesktop }) => {
     const newErrors: ValidationErrors = {};
 
     if (!formData.address.trim()) newErrors.address = "Postal code is required";
-    if (!formData.tentative_date.trim())
+    if (!formData.tentative_date) {
       newErrors.tentative_date = "Tentative date is required";
+    } else {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const chosen = new Date(formData.tentative_date);
+      chosen.setHours(0, 0, 0, 0);
+      if (chosen < today)
+        newErrors.tentative_date = "Date cannot be in the past";
+    }
+
     if (!formData.size_of_move.trim())
       newErrors.size_of_move = "Size of move is required";
 
@@ -130,7 +143,7 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onComplete, onNextDesktop }) => {
         HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
       >
     ) => {
-      const { name, value } = e.target;
+      const { name, value } = e.target as { name: StringKeys; value: string };
       setFormData((prev) => ({ ...prev, [name]: value }));
 
       if (errors[name]) {
@@ -188,7 +201,7 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onComplete, onNextDesktop }) => {
           <input
             type={type}
             name={name}
-            value={formData[name]}
+            value={formData[name] === null ? "" : typeof formData[name] === "object" && formData[name] instanceof Date ? formData[name].toISOString().slice(0, 10) : formData[name]}
             onChange={handleChange}
             placeholder={placeholder}
             className="p-2 rounded-xl bg-white text-sm transition-colors focus:ring-2 focus:ring-[#FFE67B] focus:outline-none"
@@ -209,7 +222,13 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onComplete, onNextDesktop }) => {
           <label className="text-xs lg:text-sm font-semibold">{label}</label>
           <select
             name={name}
-            value={formData[name]}
+            value={
+              formData[name] === null
+                ? ""
+                : typeof formData[name] === "object" && formData[name] instanceof Date
+                ? formData[name].toISOString().slice(0, 10)
+                : formData[name]
+            }
             onChange={handleChange}
             className="p-2 rounded-xl bg-white text-sm transition-colors focus:ring-2 focus:ring-[#FFE67B] focus:outline-none"
             disabled={isSubmitting}
@@ -231,7 +250,13 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onComplete, onNextDesktop }) => {
           <label className="text-xs lg:text-sm font-semibold">{label}</label>
           <textarea
             name={name}
-            value={formData[name]}
+            value={
+              formData[name] === null
+                ? ""
+                : typeof formData[name] === "object" && formData[name] instanceof Date
+                ? formData[name].toISOString()
+                : String(formData[name])
+            }
             onChange={handleChange}
             rows={rows}
             className="p-2 rounded-xl bg-white text-sm resize-none transition-colors focus:ring-2 focus:ring-[#FFE67B] focus:outline-none"
@@ -252,7 +277,7 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onComplete, onNextDesktop }) => {
       {step === 1 && (
         <form onSubmit={handleNext} className="space-y-4">
           {/* Fila 1 */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-12">
             <div className="text-black flex flex-col">
               <label className="text-xs lg:text-sm font-semibold">Origin</label>
               <Autocomplete
@@ -360,7 +385,34 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onComplete, onNextDesktop }) => {
           {/* Fila 1 */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {renderField.input("address", "Postal code")}
-            {renderField.input("tentative_date", "Tentative date", "date")}
+            <div className="text-black flex flex-col">
+              <label className="text-xs lg:text-sm font-semibold">
+                Tentative date
+              </label>
+              <ReactDatePicker
+                selected={formData.tentative_date}
+                onChange={(date) => {
+                  setFormData((prev) => ({ ...prev, tentative_date: date }));
+                  if (errors.tentative_date) {
+                    setErrors((prev) => ({ ...prev, tentative_date: "" }));
+                  }
+                }}
+                placeholderText="Select a date"
+                minDate={new Date()}
+                dateFormat="yyyy-MM-dd"
+                className={`p-2 rounded-xl bg-white text-sm transition-colors focus:ring-2 focus:ring-[#FFE67B] focus:outline-none ${
+                  errors.tentative_date ? "border border-red-500" : ""
+                }`}
+                disabled={isSubmitting}
+                isClearable
+                showPopperArrow
+              />
+              {errors.tentative_date && (
+                <span className="text-red-500 text-xs mt-1">
+                  {errors.tentative_date}
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Fila 2 */}

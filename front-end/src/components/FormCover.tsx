@@ -3,6 +3,8 @@ import { Autocomplete } from "@react-google-maps/api";
 import api from "../api/axiosInstance";
 import ServicesForm from "./ServicesForm";
 import SuccessModal from "./SuccessModal";
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface FormData {
   name: string;
@@ -12,7 +14,7 @@ interface FormData {
   email: string;
   address: string;
   additional_info: string;
-  tentative_date: string;
+  tentative_date: Date | null;
   typeOfMove: string;
   sizeMove: string;
 }
@@ -29,7 +31,7 @@ const INITIAL_FORM_DATA: FormData = {
   email: "",
   address: "",
   additional_info: "",
-  tentative_date: "",
+  tentative_date: null,
   typeOfMove: "",
   sizeMove: "",
 };
@@ -67,7 +69,18 @@ const SERVICE_NAME_BY_KEY = {
   home_org: "Home Organization",
 };
 
-const getTodayDate = () => new Date().toISOString().split("T")[0];
+const startOfDay = (d: Date) => {
+  const x = new Date(d);
+  x.setHours(0, 0, 0, 0);
+  return x;
+};
+
+const formatDateYYYYMMDD = (d: Date) => {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+};
 
 const isValidEmail = (email: string) => /\S+@\S+\.\S+/.test(email);
 
@@ -84,17 +97,21 @@ const useFormValidation = () => {
     return errors;
   };
 
-  const validateStep2 = (formData: FormData, today: string): Errors => {
+  const validateStep2 = (formData: FormData): Errors => {
     const errors: Errors = {};
-
     if (!formData.name.trim()) errors.name = "Name is required";
     if (!isValidEmail(formData.email)) errors.email = "Invalid email address";
-    if (formData.tentative_date && formData.tentative_date < today) {
-      errors.tentative_date = "Date cannot be in the past";
+
+    if (formData.tentative_date) {
+      const todayStart = startOfDay(new Date());
+      const chosen = startOfDay(formData.tentative_date);
+      if (chosen < todayStart) {
+        errors.tentative_date = "Date cannot be in the past";
+      }
     }
+
     if (!formData.typeOfMove) errors.typeOfMove = "Select a type of move";
     if (!formData.sizeMove) errors.sizeMove = "Select size of move";
-
     return errors;
   };
 
@@ -241,7 +258,6 @@ const FormCover: React.FC = () => {
     { service_id: number; name: string }[]
   >([]);
 
-  const today = getTodayDate();
   const { validateStep1, validateStep2 } = useFormValidation();
   const originAutoRef = useRef<google.maps.places.Autocomplete | null>(null);
   const destAutoRef = useRef<google.maps.places.Autocomplete | null>(null);
@@ -296,7 +312,7 @@ const FormCover: React.FC = () => {
 
   const handleStep2Continue = async (e: React.FormEvent) => {
     e.preventDefault();
-    const stepErrors = validateStep2(formData, today);
+    const stepErrors = validateStep2(formData);
     setErrors(stepErrors);
 
     if (Object.keys(stepErrors).length === 0) {
@@ -498,16 +514,32 @@ const FormCover: React.FC = () => {
         placeholder="Details about your move"
       />
 
-      <InputField
-        label="Tentative Date"
-        name="tentative_date"
-        value={formData.tentative_date}
-        onChange={handleChange}
-        placeholder=""
-        type="date"
-        min={today}
-        error={errors.tentative_date}
-      />
+      <div>
+        <label className="block text-[#606060] text-sm font-medium">
+          Tentative Date
+        </label>
+        <ReactDatePicker
+          selected={formData.tentative_date}
+          onChange={(date) => {
+            setFormData((prev) => ({ ...prev, tentative_date: date }));
+            if (errors.tentative_date) {
+              setErrors((prev) => ({ ...prev, tentative_date: "" }));
+            }
+          }}
+          placeholderText="Select a date"
+          minDate={new Date()}
+          dateFormat="yyyy-MM-dd"
+          className={`bg-white w-full border rounded px-3 md:px-60 py-1.5 md:py-2 text-black 
+      focus:outline-none focus:ring-2 focus:ring-[#FFE67B] ${
+        errors.tentative_date ? "border-red-500" : "border-gray-300"
+      }`}
+          isClearable
+          showPopperArrow
+        />
+        {errors.tentative_date && (
+          <p className="text-red-500 text-xs mt-1">{errors.tentative_date}</p>
+        )}
+      </div>
 
       <SelectField
         label="Type of Move"

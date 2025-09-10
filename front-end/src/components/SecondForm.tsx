@@ -1,11 +1,13 @@
 import React, { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface SecondFormProps {
   extraData: {
     email: string;
     address: string;
     additional_info: string;
-    tentative_date: string;
+    tentative_date: Date | null;
     type_of_move: string;
     size_of_move: string;
   };
@@ -14,12 +16,12 @@ interface SecondFormProps {
       email: string;
       address: string;
       additional_info: string;
-      tentative_date: string;
+      tentative_date: Date | null;
       type_of_move: string;
       size_of_move: string;
     }>
   >;
-  goNext: () => void; 
+  goNext: () => void;
 }
 
 const SecondForm: React.FC<SecondFormProps> = ({
@@ -43,16 +45,19 @@ const SecondForm: React.FC<SecondFormProps> = ({
       setError("Postal code is required.");
       return;
     }
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
     if (!extraData.tentative_date) {
       setError("Tentative date is required.");
       return;
     }
-    const today = new Date();
-    const selectedDate = new Date(extraData.tentative_date);
-    if (selectedDate <= today) {
+
+    if (extraData.tentative_date <= todayStart) {
       setError("Tentative date must be in the future.");
       return;
     }
+
     if (!extraData.type_of_move) {
       setError("Please select a type of move.");
       return;
@@ -96,14 +101,19 @@ const SecondForm: React.FC<SecondFormProps> = ({
         }
         className="w-full bg-white text-gray-800 py-3 px-4 rounded-full focus:outline-none focus:ring-2 focus:ring-[#FFE67B]"
       />
-      <input
-        type="date"
-        placeholder="Tentative Date"
-        value={extraData.tentative_date}
-        onChange={(e) =>
-          setExtraData({ ...extraData, tentative_date: e.target.value })
+      <DatePicker
+        selected={extraData.tentative_date}
+        onChange={(date) =>
+          setExtraData({ ...extraData, tentative_date: date })
         }
-        min={new Date().toISOString().split("T")[0]}
+        minDate={(() => {
+          const d = new Date();
+          d.setHours(0, 0, 0, 0);
+          d.setDate(d.getDate() + 1);
+          return d;
+        })()}
+        placeholderText="Tentative Date"
+        dateFormat="yyyy-MM-dd"
         className="w-full bg-white text-gray-800 py-3 px-4 rounded-full focus:outline-none focus:ring-2 focus:ring-[#FFE67B]"
       />
 
