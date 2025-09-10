@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useMemo } from "react";
-import SuccessModal from "./SuccessModal";
+import React, { useState, useCallback, useMemo, useRef } from "react";
+import { Autocomplete } from "@react-google-maps/api";
 
 interface FormData {
   name: string;
@@ -15,7 +15,7 @@ interface FormData {
 }
 
 interface QuoteFormProps {
-  onSubmit?: (data: FormData) => void;
+  onComplete?: (data: FormData) => void;
   onNextDesktop?: () => void;
 }
 
@@ -60,12 +60,31 @@ const MOVE_SIZE_OPTIONS = [
   { value: "xlarge", label: "4+ Bedrooms" },
 ] as const;
 
-const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, onNextDesktop }) => {
+const QuoteForm: React.FC<QuoteFormProps> = ({ onComplete, onNextDesktop }) => {
   const [step, setStep] = useState(1);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const originAutoRef = useRef<any>(null);
+  const destAutoRef = useRef<any>(null);
+
+  const handlePlaceChanged = (
+    ref: React.MutableRefObject<any>,
+    field: "origin" | "destination"
+  ) => {
+    const place = ref.current?.getPlace();
+    const value =
+      place?.formatted_address ||
+      place?.name ||
+      (typeof place === "string" ? place : "");
+
+    if (value) {
+      setFormData((prev) => ({ ...prev, [field]: value }));
+      if (errors[field]) {
+        setErrors((prev) => ({ ...prev, [field]: "" }));
+      }
+    }
+  };
 
   const validateStep1 = useCallback((): boolean => {
     const newErrors: ValidationErrors = {};
@@ -95,7 +114,7 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, onNextDesktop }) => {
   const validateStep2 = useCallback((): boolean => {
     const newErrors: ValidationErrors = {};
 
-    if (!formData.address.trim()) newErrors.address = "Address is required";
+    if (!formData.address.trim()) newErrors.address = "Postal code is required";
     if (!formData.tentative_date.trim())
       newErrors.tentative_date = "Tentative date is required";
     if (!formData.size_of_move.trim())
@@ -142,32 +161,19 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, onNextDesktop }) => {
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-
       if (!validateStep2() || isSubmitting) return;
 
       setIsSubmitting(true);
-
       try {
-        console.log("Datos completos del formulario:", formData);
-        if (onSubmit) {
-          await onSubmit(formData);
-        }
-        setShowSuccessModal(true);
+        if (onComplete) onComplete(formData);
       } catch (error) {
         console.error("Error en el envío:", error);
       } finally {
         setIsSubmitting(false);
       }
     },
-    [validateStep2, isSubmitting, formData, onSubmit]
+    [validateStep2, isSubmitting, formData, onComplete]
   );
-
-  const handleModalClose = useCallback(() => {
-    setShowSuccessModal(false);
-    setStep(1);
-    setFormData(INITIAL_FORM_DATA);
-    setErrors({});
-  }, []);
 
   const renderField = useMemo(
     () => ({
@@ -240,17 +246,6 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, onNextDesktop }) => {
     [formData, handleChange, errors, isSubmitting]
   );
 
-  if (showSuccessModal) {
-    return (
-      <SuccessModal
-        show={true}
-        title="Thank you for your quote!"
-        message="You will shortly receive the information in your email."
-        onClose={handleModalClose}
-      />
-    );
-  }
-
   return (
     <div className="bg-[#D9D9D9] rounded-2xl sm:rounded-3xl p-4 sm:p-4 lg:p-6 pt-8 sm:pt-8 lg:pt-12 font-[Montserrat] shadow-md w-full">
       {/* Paso 1 */}
@@ -258,8 +253,81 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, onNextDesktop }) => {
         <form onSubmit={handleNext} className="space-y-4">
           {/* Fila 1 */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {renderField.input("origin", "Origin")}
-            {renderField.input("destination", "Destination")}
+            <div className="text-black flex flex-col">
+              <label className="text-xs lg:text-sm font-semibold">Origin</label>
+              <Autocomplete
+                onLoad={(auto) => {
+                  originAutoRef.current = auto;
+
+                  const center = new google.maps.LatLng(37.4316, -78.6569);
+                  const circle = new google.maps.Circle({
+                    center,
+                    radius: 160_934,
+                  });
+
+                  auto.setBounds(circle.getBounds()!);
+                  auto.setOptions({
+                    componentRestrictions: { country: ["us"] },
+                    fields: ["formatted_address", "geometry", "name"],
+                    types: ["geocode"],
+                    strictBounds: true,
+                  });
+                }}
+                onPlaceChanged={() =>
+                  handlePlaceChanged(originAutoRef, "origin")
+                }
+              >
+                <input
+                  type="text"
+                  name="origin"
+                  value={formData.origin}
+                  onChange={handleChange}
+                  placeholder="Origin"
+                  className="p-2 rounded-xl bg-white text-sm transition-colors focus:ring-2 focus:ring-[#FFE67B] focus:outline-none"
+                  disabled={isSubmitting}
+                  autoComplete="off"
+                />
+              </Autocomplete>
+              {errors.origin && (
+                <span className="text-red-500 text-xs mt-1">
+                  {errors.origin}
+                </span>
+              )}
+            </div>
+
+            <div className="text-black flex flex-col">
+              <label className="text-xs lg:text-sm font-semibold">
+                Destination
+              </label>
+              <Autocomplete
+                options={{
+                  componentRestrictions: { country: ["us"] },
+                  fields: ["formatted_address", "geometry", "name"],
+                  types: ["geocode"],
+                }}
+                onLoad={(auto) => (destAutoRef.current = auto)}
+                onPlaceChanged={() =>
+                  handlePlaceChanged(destAutoRef, "destination")
+                }
+              >
+                <input
+                  type="text"
+                  name="destination"
+                  value={formData.destination}
+                  onChange={handleChange}
+                  placeholder="Destination"
+                  className="p-2 rounded-xl bg-white text-sm transition-colors focus:ring-2 focus:ring-[#FFE67B] focus:outline-none"
+                  disabled={isSubmitting}
+                  autoComplete="off"
+                />
+              </Autocomplete>
+              {errors.destination && (
+                <span className="text-red-500 text-xs mt-1">
+                  {errors.destination}
+                </span>
+              )}
+            </div>
+
             {renderField.select(
               "typeOfMove",
               "Type of move",
@@ -291,7 +359,7 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, onNextDesktop }) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Fila 1 */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {renderField.input("address", "Address")}
+            {renderField.input("address", "Postal code")}
             {renderField.input("tentative_date", "Tentative date", "date")}
           </div>
 
@@ -319,7 +387,7 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onSubmit, onNextDesktop }) => {
               disabled={isSubmitting}
               className="text-black bg-[#FFE67B] px-6 py-2 rounded-full font-semibold transition-all duration-200 hover:bg-[#FFD700] disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
             >
-              {isSubmitting ? "SUBMITTING..." : "SUBMIT"}
+              {isSubmitting ? "SUBMITTING..." : "CONTINUE"}
             </button>
           </div>
         </form>

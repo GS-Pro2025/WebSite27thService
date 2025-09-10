@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { Autocomplete } from "@react-google-maps/api";
 import api from "../api/axiosInstance";
+import ServicesForm from "./ServicesForm";
 import SuccessModal from "./SuccessModal";
 
 interface PresentationFormProps {
@@ -52,6 +54,23 @@ const BEDROOM_MAP = {
   xlarge: 4,
 } as const;
 
+const SERVICE_NAME_BY_KEY = {
+  pack: "Pack",
+  wrap: "Wrap",
+  load: "Load",
+  unload: "Unload",
+  unpack: "Unpack",
+  home_org: "Home Organization",
+} as const;
+const VA_CENTER = { lat: 37.4316, lng: -78.6569 };
+const RADIUS_M = 160_934;
+
+const US_AUTOCOMPLETE_OPTIONS: google.maps.places.AutocompleteOptions = {
+  componentRestrictions: { country: ["us"] },
+  fields: ["formatted_address", "geometry", "name"],
+  types: ["geocode"],
+};
+
 const getBedroomCount = (sizeMove: string): number => {
   return BEDROOM_MAP[sizeMove as keyof typeof BEDROOM_MAP] || 0;
 };
@@ -63,12 +82,33 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
   isLoaded,
   formTransform,
 }) => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<1 | 2 | 3>(1);
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
   const [errors, setErrors] = useState<Errors>({});
   const [showModal, setShowModal] = useState(false);
+  const [selectedServices, setSelectedServices] = useState<
+    ("pack" | "wrap" | "load" | "unload" | "unpack" | "home_org")[]
+  >([]);
+  const [services, setServices] = useState<
+    { service_id: number; name: string }[]
+  >([]);
 
   const today = getTodayDate();
+  const originAutoRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const destAutoRef = useRef<google.maps.places.Autocomplete | null>(null);
+
+  const handlePlaceChanged = (
+    ref: React.MutableRefObject<google.maps.places.Autocomplete | null>,
+    field: "origin" | "destination"
+  ) => {
+    const place = ref.current?.getPlace();
+    const value = place?.formatted_address || place?.name || "";
+
+    if (value) {
+      setFormData((prev) => ({ ...prev, [field]: value }));
+      if (errors[field]) setErrors((prev) => ({ ...prev, [field]: "" }));
+    }
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -82,7 +122,8 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
 
   const validateStep1 = (formData: FormData, today: string): Errors => {
     const errors: Errors = {};
-    if (!formData.tipoMovimiento) errors.tipoMovimiento = "Select a type of move";
+    if (!formData.tipoMovimiento)
+      errors.tipoMovimiento = "Select a type of move";
     if (!formData.fecha) errors.fecha = "Select a date";
     if (formData.fecha && formData.fecha < today) {
       errors.fecha = "Date cannot be in the past";
@@ -95,53 +136,21 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
     if (!formData.name.trim()) errors.name = "Name is required";
     if (!isValidEmail(formData.email)) errors.email = "Invalid email";
     if (!formData.origin.trim()) errors.origin = "Origin is required";
-    if (!formData.destination.trim()) errors.destination = "Destination is required";
+    if (!formData.destination.trim())
+      errors.destination = "Destination is required";
     if (!formData.sizeMove) errors.sizeMove = "Select size of move";
     return errors;
   };
-
-  const createPersonAndMove = async () => {
-    const personRes = await api.post("/persons", {
-      full_name: formData.name,
-      email: formData.email,
-      phone_number: formData.phone,
-      address: formData.address,
-      additional_info: formData.additional_info,
-    });
-
-    const createdPerson = personRes.data;
-
-    const moveRes = await api.post("/moves", {
-      person_id: createdPerson.person_id,
-      status: "pending",
-      tentative_date: formData.fecha,
-      origin_address: formData.origin,
-      destination_address: formData.destination,
-    });
-
-    const createdMove = moveRes.data;
-
-    const bedrooms = getBedroomCount(formData.sizeMove);
-    const moveItemPromises = [
-      api.post("/move-items", {
-        move_id: createdMove.move_id,
-        description: formData.tipoMovimiento,
-        quantity: 1,
-      }),
-    ];
-
-    if (bedrooms > 0) {
-      moveItemPromises.push(
-        api.post("/move-items", {
-          move_id: createdMove.move_id,
-          description: "bedroom",
-          quantity: bedrooms,
-        })
-      );
-    }
-
-    await Promise.all(moveItemPromises);
-  };
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await api.get("/services");
+        setServices(data || []);
+      } catch (e) {
+        console.error("Error loading services:", e);
+      }
+    })();
+  }, []);
 
   const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault();
@@ -152,18 +161,69 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
 
   const handlePrevStep = () => setStep(1);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleStep2Continue = async (e: React.FormEvent) => {
     e.preventDefault();
     const stepErrors = validateStep2(formData);
     setErrors(stepErrors);
     if (Object.keys(stepErrors).length === 0) {
-      try {
-        await createPersonAndMove();
-        setShowModal(true);
-      } catch (error) {
-        console.error("Error al guardar datos:", error);
-        alert("There was an error submitting your request.");
+      setStep(3);
+    }
+  };
+  const handleFinalSubmitServices = async () => {
+    try {
+      const personRes = await api.post("/persons", {
+        full_name: formData.name,
+        email: formData.email,
+        phone_number: formData.phone,
+        address: formData.address,
+        additional_info: formData.additional_info,
+      });
+
+      const moveRes = await api.post("/moves", {
+        person_id: personRes.data.person_id,
+        status: "pending",
+        tentative_date: formData.fecha,
+        origin_address: formData.origin,
+        destination_address: formData.destination,
+      });
+      const moveId = moveRes.data.move_id;
+
+      const bedrooms = getBedroomCount(formData.sizeMove);
+      const moveItemPromises = [
+        api.post("/move-items", {
+          move_id: moveId,
+          description: formData.tipoMovimiento,
+          quantity: 1,
+        }),
+      ];
+      if (bedrooms > 0) {
+        moveItemPromises.push(
+          api.post("/move-items", {
+            move_id: moveId,
+            description: "bedroom",
+            quantity: bedrooms,
+          })
+        );
       }
+      await Promise.all(moveItemPromises);
+
+      const idByName = new Map(services.map((s) => [s.name, s.service_id]));
+      const svcRequests = selectedServices
+        .map((k) => idByName.get(SERVICE_NAME_BY_KEY[k]))
+        .filter(Boolean)
+        .map((service_id) =>
+          api.post("/move-services", {
+            move_id: moveId,
+            service_id,
+            quantity: 1,
+          })
+        );
+      await Promise.all(svcRequests);
+
+      setShowModal(true);
+    } catch (error) {
+      console.error("Error al guardar datos:", error);
+      alert("There was an error submitting your request.");
     }
   };
 
@@ -281,7 +341,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
         name="address"
         value={formData.address}
         onChange={handleInputChange}
-        placeholder="Address"
+        placeholder="Postal code"
         className="text-black w-full px-4 py-3 border rounded-lg mb-2 border-gray-300"
       />
 
@@ -293,28 +353,60 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
         className="text-black w-full px-4 py-3 border rounded-lg mb-2 border-gray-300"
       />
 
-      <input
-        type="text"
-        name="origin"
-        value={formData.origin}
-        onChange={handleInputChange}
-        placeholder="Origin"
-        className={`text-black w-full px-4 py-3 border rounded-lg mb-2 ${
-          errors.origin ? "border-red-500" : "border-gray-300"
-        }`}
-      />
-      {errors.origin && <p className="text-red-500 text-xs">{errors.origin}</p>}
+      <div>
+        <Autocomplete
+          onLoad={(auto) => {
+            originAutoRef.current = auto;
+            const center = new google.maps.LatLng(VA_CENTER.lat, VA_CENTER.lng);
+            const circle = new google.maps.Circle({ center, radius: RADIUS_M });
+            auto.setBounds(circle.getBounds()!);
+            auto.setOptions({
+              ...US_AUTOCOMPLETE_OPTIONS,
+              strictBounds: true,
+            });
+          }}
+          onPlaceChanged={() => handlePlaceChanged(originAutoRef, "origin")}
+        >
+          <input
+            type="text"
+            name="origin"
+            value={formData.origin}
+            onChange={handleInputChange}
+            placeholder="Origin"
+            className={`text-black w-full px-4 py-3 border rounded-lg mb-2 ${
+              errors.origin ? "border-red-500" : "border-gray-300"
+            }`}
+            autoComplete="off"
+          />
+        </Autocomplete>
+        {errors.origin && (
+          <p className="text-red-500 text-xs">{errors.origin}</p>
+        )}
+      </div>
 
-      <input
-        type="text"
-        name="destination"
-        value={formData.destination}
-        onChange={handleInputChange}
-        placeholder="Destination"
-        className={`text-black w-full px-4 py-3 border rounded-lg mb-2 ${
-          errors.destination ? "border-red-500" : "border-gray-300"
-        }`}
-      />
+      <div>
+        <Autocomplete
+          onLoad={(auto) => (destAutoRef.current = auto)}
+          onPlaceChanged={() => handlePlaceChanged(destAutoRef, "destination")}
+          options={US_AUTOCOMPLETE_OPTIONS}
+        >
+          <input
+            type="text"
+            name="destination"
+            value={formData.destination}
+            onChange={handleInputChange}
+            placeholder="Destination"
+            className={`text-black w-full px-4 py-3 border rounded-lg mb-2 ${
+              errors.destination ? "border-red-500" : "border-gray-300"
+            }`}
+            autoComplete="off"
+          />
+        </Autocomplete>
+        {errors.destination && (
+          <p className="text-red-500 text-xs">{errors.destination}</p>
+        )}
+      </div>
+
       {errors.destination && (
         <p className="text-red-500 text-xs">{errors.destination}</p>
       )}
@@ -350,7 +442,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
           type="submit"
           className="w-1/2 bg-[#FFE67B] text-black font-bold py-3 px-6 rounded-lg hover:bg-yellow-300 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
         >
-          Submit
+          Continue
         </button>
       </div>
     </>
@@ -365,15 +457,25 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
             : "opacity-0 transform translate-y-12 scale-95"
         }`}
         style={{
-          transform: `translateY(${-formTransform}px) scale(${isLoaded ? 1 : 0.95})`,
+          transform: `translateY(${-formTransform}px) scale(${
+            isLoaded ? 1 : 0.95
+          })`,
         }}
       >
-        <form
-          onSubmit={step === 1 ? handleNextStep : handleSubmit}
-          className="space-y-6"
-        >
-          {step === 1 ? renderStep1() : renderStep2()}
-        </form>
+        {step <= 2 ? (
+          <form
+            onSubmit={step === 1 ? handleNextStep : handleStep2Continue}
+            className="space-y-6"
+          >
+            {step === 1 ? renderStep1() : renderStep2()}
+          </form>
+        ) : (
+          <ServicesForm
+            selected={selectedServices}
+            setSelected={setSelectedServices}
+            onSubmit={handleFinalSubmitServices}
+          />
+        )}
       </div>
 
       <SuccessModal

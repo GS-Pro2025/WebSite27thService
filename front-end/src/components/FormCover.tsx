@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { Autocomplete } from "@react-google-maps/api";
 import api from "../api/axiosInstance";
+import ServicesForm from "./ServicesForm";
 import SuccessModal from "./SuccessModal";
 
 interface FormData {
@@ -55,6 +57,15 @@ const SIZE_OPTIONS = [
   { value: "large", label: "3 Bedrooms" },
   { value: "xlarge", label: "4+ Bedrooms" },
 ];
+
+const SERVICE_NAME_BY_KEY = {
+  pack: "Pack",
+  wrap: "Wrap",
+  load: "Load",
+  unload: "Unload",
+  unpack: "Unpack",
+  home_org: "Home Organization",
+};
 
 const getTodayDate = () => new Date().toISOString().split("T")[0];
 
@@ -208,15 +219,45 @@ const Button: React.FC<{
     </button>
   );
 };
+const VA_CENTER = { lat: 37.4316, lng: -78.6569 };
+const RADIUS_M = 160_934;
+
+const US_AUTOCOMPLETE_OPTIONS: google.maps.places.AutocompleteOptions = {
+  componentRestrictions: { country: ["us"] },
+  fields: ["formatted_address", "geometry", "name"],
+  types: ["geocode"],
+};
 
 const FormCover: React.FC = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<1 | 2 | 3>(1);
   const [errors, setErrors] = useState<Errors>({});
   const [showModal, setShowModal] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
+  const [selectedServices, setSelectedServices] = useState<
+    ("pack" | "wrap" | "load" | "unload" | "unpack" | "home_org")[]
+  >([]);
+  const [services, setServices] = useState<
+    { service_id: number; name: string }[]
+  >([]);
 
   const today = getTodayDate();
   const { validateStep1, validateStep2 } = useFormValidation();
+  const originAutoRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const destAutoRef = useRef<google.maps.places.Autocomplete | null>(null);
+
+  const handlePlaceChanged = (
+    ref: React.MutableRefObject<google.maps.places.Autocomplete | null>,
+    field: "origin" | "destination"
+  ) => {
+    const place = ref.current?.getPlace();
+    const value = place?.formatted_address || place?.name || ("" as string);
+
+    if (value) {
+      setFormData((prev) => ({ ...prev, [field]: value }));
+      if (errors[field]) setErrors((prev) => ({ ...prev, [field]: "" }));
+    }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -242,89 +283,154 @@ const FormCover: React.FC = () => {
     setStep(1);
   };
 
-  const createPersonAndMove = async () => {
-    const personRes = await api.post("/persons", {
-      full_name: formData.name,
-      email: formData.email,
-      phone_number: formData.phone,
-      address: formData.address,
-      additional_info: formData.additional_info,
-    });
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await api.get("/services");
+        setServices(data || []);
+      } catch (e) {
+        console.error("Error loading services:", e);
+      }
+    })();
+  }, []);
 
-    const createdPerson = personRes.data;
-
-    const moveRes = await api.post("/moves", {
-      person_id: createdPerson.person_id,
-      status: "pending",
-      tentative_date: formData.tentative_date,
-      origin_address: formData.origin,
-      destination_address: formData.destination,
-    });
-
-    const createdMove = moveRes.data;
-
-    const bedrooms = getBedroomCount(formData.sizeMove);
-    const moveItemPromises = [
-      api.post("/move-items", {
-        move_id: createdMove.move_id,
-        description: formData.typeOfMove,
-        quantity: 1,
-      }),
-    ];
-
-    if (bedrooms > 0) {
-      moveItemPromises.push(
-        api.post("/move-items", {
-          move_id: createdMove.move_id,
-          description: "bedroom",
-          quantity: bedrooms,
-        })
-      );
-    }
-
-    await Promise.all(moveItemPromises);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleStep2Continue = async (e: React.FormEvent) => {
     e.preventDefault();
     const stepErrors = validateStep2(formData, today);
     setErrors(stepErrors);
 
     if (Object.keys(stepErrors).length === 0) {
-      try {
-        await createPersonAndMove();
-        setShowModal(true);
-      } catch (error) {
-        console.error("Error al guardar datos:", error);
-        alert("There was an error submitting your request.");
-      }
+      setStep(3);
     }
   };
+  const handleFinalSubmitServices = async () => {
+    try {
+      // 1) Person
+      const personRes = await api.post("/persons", {
+        full_name: formData.name,
+        email: formData.email,
+        phone_number: formData.phone,
+        address: formData.address,
+        additional_info: formData.additional_info,
+      });
 
-  const handleModalClose = () => {
-    setShowModal(false);
-    window.location.reload();
+      // 2) Move
+      const moveRes = await api.post("/moves", {
+        person_id: personRes.data.person_id,
+        status: "pending",
+        tentative_date: formData.tentative_date,
+        origin_address: formData.origin,
+        destination_address: formData.destination,
+      });
+      const moveId = moveRes.data.move_id;
+
+      // 3) MoveItems
+      const bedrooms = getBedroomCount(formData.sizeMove);
+      const moveItemPromises = [
+        api.post("/move-items", {
+          move_id: moveId,
+          description: formData.typeOfMove,
+          quantity: 1,
+        }),
+      ];
+      if (bedrooms > 0) {
+        moveItemPromises.push(
+          api.post("/move-items", {
+            move_id: moveId,
+            description: "bedroom",
+            quantity: bedrooms,
+          })
+        );
+      }
+      await Promise.all(moveItemPromises);
+      setShowSuccess(true);
+
+      // 4) MoveServices
+      const idByName = new Map(services.map((s) => [s.name, s.service_id]));
+      const svcRequests = selectedServices
+        .map((k) => idByName.get(SERVICE_NAME_BY_KEY[k]))
+        .filter(Boolean)
+        .map((service_id) =>
+          api.post("/move-services", {
+            move_id: moveId,
+            service_id,
+            quantity: 1,
+          })
+        );
+      await Promise.all(svcRequests);
+
+      setShowModal(true);
+    } catch (error) {
+      console.error("Error al guardar datos:", error);
+      alert("There was an error submitting your request.");
+    }
   };
 
   const renderStep1 = () => (
     <>
-      <InputField
-        label="Origin"
-        name="origin"
-        value={formData.origin}
-        onChange={handleChange}
-        placeholder="Value"
-        error={errors.origin}
-      />
+      <div>
+        <label className="block text-[#606060] text-sm font-medium">
+          Origin
+        </label>
+        <Autocomplete
+          onLoad={(auto) => {
+            originAutoRef.current = auto;
 
-      <InputField
-        label="Destination"
-        name="destination"
-        value={formData.destination}
-        onChange={handleChange}
-        placeholder="Value"
-        error={errors.destination}
-      />
+            const center = new google.maps.LatLng(VA_CENTER.lat, VA_CENTER.lng);
+            const circle = new google.maps.Circle({ center, radius: RADIUS_M });
+
+            auto.setBounds(circle.getBounds()!);
+            auto.setOptions({
+              ...US_AUTOCOMPLETE_OPTIONS,
+              strictBounds: true,
+            });
+          }}
+          onPlaceChanged={() => handlePlaceChanged(originAutoRef, "origin")}
+        >
+          <input
+            type="text"
+            name="origin"
+            value={formData.origin}
+            onChange={handleChange}
+            placeholder="Origin"
+            className={`bg-white w-full border rounded px-3 md:px-4 py-1.5 md:py-2 text-black 
+            focus:outline-none focus:ring-2 focus:ring-[#FFE67B] ${
+              errors.origin ? "border-red-500" : "border-gray-300"
+            }`}
+            autoComplete="off"
+          />
+        </Autocomplete>
+        {errors.origin && (
+          <p className="text-red-500 text-xs mt-1">{errors.origin}</p>
+        )}
+      </div>
+
+      <div>
+        <label className="block text-[#606060] text-sm font-medium">
+          Destination
+        </label>
+        <Autocomplete
+          onLoad={(auto) => (destAutoRef.current = auto)}
+          onPlaceChanged={() => handlePlaceChanged(destAutoRef, "destination")}
+          options={US_AUTOCOMPLETE_OPTIONS}
+        >
+          <input
+            type="text"
+            name="destination"
+            value={formData.destination}
+            onChange={handleChange}
+            placeholder="Destination"
+            className={`bg-white w-full border rounded px-3 md:px-4 py-1.5 md:py-2 text-black 
+            focus:outline-none focus:ring-2 focus:ring-[#FFE67B] ${
+              errors.destination ? "border-red-500" : "border-gray-300"
+            }`}
+            autoComplete="off"
+          />
+        </Autocomplete>
+        {errors.destination && (
+          <p className="text-red-500 text-xs mt-1">{errors.destination}</p>
+        )}
+      </div>
 
       <div className="flex items-start space-x-2">
         <input type="checkbox" id="checkbox" className="mt-1" />
@@ -377,11 +483,11 @@ const FormCover: React.FC = () => {
       />
 
       <InputField
-        label="Address"
+        label="Postal Code"
         name="address"
         value={formData.address}
         onChange={handleChange}
-        placeholder="Street, number..."
+        placeholder="12345"
       />
 
       <TextareaField
@@ -427,25 +533,32 @@ const FormCover: React.FC = () => {
         <Button variant="secondary" onClick={handlePrevStep}>
           BACK
         </Button>
-        <Button type="submit">SUBMIT</Button>
+        <Button type="submit">Continue</Button>
       </div>
     </>
   );
 
   return (
     <>
-      <form
-        onSubmit={step === 1 ? handleNextStep : handleSubmit}
-        className="space-y-1.5 md:space-y-4"
-      >
-        {step === 1 ? renderStep1() : renderStep2()}
-      </form>
-
+      {step <= 2 ? (
+        <form
+          onSubmit={step === 1 ? handleNextStep : handleStep2Continue}
+          className="space-y-1.5 md:space-y-4"
+        >
+          {step === 1 ? renderStep1() : renderStep2()}
+        </form>
+      ) : (
+        <ServicesForm
+          selected={selectedServices}
+          setSelected={setSelectedServices}
+          onSubmit={handleFinalSubmitServices}
+        />
+      )}
       <SuccessModal
-        show={showModal}
-        title="Thank you for your quote!"
-        message="You will shortly receive the information in your email."
-        onClose={handleModalClose}
+        show={showSuccess}
+        title="Request successful"
+        message="Your request has been submitted successfully. You will receive more information in your email."
+        onClose={() => window.location.reload()}
       />
     </>
   );

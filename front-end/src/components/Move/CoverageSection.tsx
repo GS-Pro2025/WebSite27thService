@@ -1,11 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import FirstForm from "../FirstForm";
 import SecondForm from "../SecondForm";
+import ServicesForm from "../ServicesForm";
 import api from "../../api/axiosInstance";
+import SuccessModal from "../SuccessModal";
 import { ArrowRight } from "lucide-react";
 
+type ServiceKey = "pack" | "wrap" | "load" | "unload" | "unpack" | "home_org";
+
+const SERVICE_NAME_BY_KEY: Record<ServiceKey, string> = {
+  pack: "Pack",
+  wrap: "Wrap",
+  load: "Load",
+  unload: "Unload",
+  unpack: "Unpack",
+  home_org: "Home Organization",
+};
+
 const CoverageSection: React.FC = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const [personData, setPersonData] = useState({
     full_name: "",
@@ -23,8 +37,32 @@ const CoverageSection: React.FC = () => {
     size_of_move: "",
   });
 
+  const [selectedServices, setSelectedServices] = useState<ServiceKey[]>([]);
+
+  const [servicesCatalog, setServicesCatalog] = useState<
+    { service_id: number; name: string; base_price: string }[]
+  >([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await api.get("/services");
+        setServicesCatalog(data || []);
+      } catch (err) {
+        console.error("Error loading services catalog:", err);
+      }
+    })();
+  }, []);
+
+  const serviceIdByName = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const s of servicesCatalog) map.set(s.name, s.service_id);
+    return map;
+  }, [servicesCatalog]);
+
   const handleFinalSubmit = async () => {
     try {
+      // 1) Crear person
       const personRes = await api.post("/persons", {
         full_name: personData.full_name,
         email: extraData.email,
@@ -32,9 +70,9 @@ const CoverageSection: React.FC = () => {
         address: extraData.address,
         additional_info: extraData.additional_info,
       });
-
       const createdPerson = personRes.data;
 
+      //move
       const moveRes = await api.post("/moves", {
         person_id: createdPerson.person_id,
         status: "pending",
@@ -42,9 +80,9 @@ const CoverageSection: React.FC = () => {
         origin_address: personData.origin_address,
         destination_address: personData.destination_address,
       });
-
       const createdMove = moveRes.data;
 
+      //move-items
       let bedrooms = 0;
       switch (extraData.size_of_move) {
         case "1_bedroom":
@@ -63,21 +101,48 @@ const CoverageSection: React.FC = () => {
           bedrooms = 0;
       }
 
-      await Promise.all([
+      const promises: Promise<any>[] = [];
+
+      promises.push(
         api.post("/move-items", {
           move_id: createdMove.move_id,
           description: extraData.type_of_move,
           quantity: 1,
-        }),
-        bedrooms > 0 &&
+        })
+      );
+
+      if (bedrooms > 0) {
+        promises.push(
           api.post("/move-items", {
             move_id: createdMove.move_id,
             description: "bedroom",
             quantity: bedrooms,
-          }),
-      ]);
+          })
+        );
+      }
+
+      // 4) Crear move-services
+      for (const key of selectedServices) {
+        const serviceName = SERVICE_NAME_BY_KEY[key];
+        const serviceId = serviceIdByName.get(serviceName);
+        if (serviceId) {
+          promises.push(
+            api.post("/move-services", {
+              move_id: createdMove.move_id,
+              service_id: serviceId,
+              quantity: 1,
+            })
+          );
+        } else {
+          console.warn(`No service_id found for ${serviceName}`);
+        }
+      }
+
+      await Promise.all(promises);
+
+      setShowSuccess(true);
     } catch (error) {
-      console.error("Error al guardar datos:", error);
+      console.error("Error saving data:", error);
     }
   };
 
@@ -121,8 +186,7 @@ const CoverageSection: React.FC = () => {
             </h3>
             <p className="text-white text-base font-light">
               If you're located here, our moving service can travel with you to
-              any state in the country. We take care of the professional
-              logistics to make your move safe.
+              any state in the country.
             </p>
             <h3 className="text-white text-xl font-bold mt-6">
               2. Does your move start in another state?
@@ -138,22 +202,39 @@ const CoverageSection: React.FC = () => {
               <ArrowRight className="text-[#FFE67B] w-15 h-15 mr-8" />
               <h1>Check your coverage HERE</h1>
             </div>
-            {step === 1 ? (
+
+            {step === 1 && (
               <FirstForm
                 personData={personData}
                 setPersonData={setPersonData}
                 goNext={() => setStep(2)}
               />
-            ) : (
+            )}
+
+            {step === 2 && (
               <SecondForm
                 extraData={extraData}
                 setExtraData={setExtraData}
+                goNext={() => setStep(3)}
+              />
+            )}
+
+            {step === 3 && (
+              <ServicesForm
+                selected={selectedServices}
+                setSelected={setSelectedServices}
                 onSubmit={handleFinalSubmit}
               />
             )}
           </div>
         </div>
       </div>
+      <SuccessModal
+        show={showSuccess}
+        title="Request successful"
+        message="Your request has been submitted successfully. You will receive more information in your email."
+        onClose={() => window.location.reload()}
+      />
     </section>
   );
 };

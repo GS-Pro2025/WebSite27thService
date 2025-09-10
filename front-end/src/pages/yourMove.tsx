@@ -9,7 +9,7 @@ import HoverPillSlider from "../components/Move/HoverPillSlider";
 
 const YourMove: React.FC = () => {
   return (
-    <div className="w-full min-h-screen overflow-visible">
+    <div className="w-full min-h-screen overf zlow-visible">
       <ProfessionalMovingSection />
       <MovingStagesSection />
       <CoverageSection />

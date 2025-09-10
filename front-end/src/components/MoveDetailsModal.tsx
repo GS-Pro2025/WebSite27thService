@@ -13,6 +13,12 @@ interface Item {
   quantity: number;
 }
 
+interface Services {
+  service_id: string;
+  name: string;
+  base_price: number;
+}
+
 interface Move {
   move_id: string;
   origin_address: string;
@@ -22,6 +28,7 @@ interface Move {
   status: string;
   client: Client;
   items?: Item[];
+  services?: Services[];
 }
 
 interface Props {
@@ -104,158 +111,199 @@ const MoveDetailsModal: React.FC<Props> = ({ move, onClose, onUpdate }) => {
 
   return (
     <>
-      <div className="fixed inset-0 bg-[#0F6F7C]/80 bg-opacity-40 flex items-center justify-center z-50">
-        <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 relative">
-          {/* Botón cerrar */}
-          <button
-            onClick={onClose}
-            className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
-          >
-            ✕
-          </button>
-
-          <h2 className="text-2xl font-bold text-[#0F6F7C] mb-4">
-            Move Details
-          </h2>
-
-          {/* Datos del cliente */}
-          <div className="text-black mb-4 space-y-1">
-            <p>
-              <span className="font-semibold">Client:</span>{" "}
-              {move.client.full_name}
-            </p>
-            <p>
-              <span className="font-semibold">Email:</span> {move.client.email}
-            </p>
-            <p>
-              <span className="font-semibold">Phone:</span>{" "}
-              {move.client.phone_number}
-            </p>
-            <p>
-              <span className="font-semibold">Origin:</span>{" "}
-              {move.origin_address}
-            </p>
-            <p>
-              <span className="font-semibold">Destination:</span>{" "}
-              {move.destination_address}
-            </p>
-            <p>
-              <span className="font-semibold">Current Status:</span>{" "}
-              {move.status}
-            </p>
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="move-title"
+          className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col relative"
+        >
+          {/* Header (fijo) */}
+          <div className="px-6 py-4 border-b sticky top-0 bg-white z-10">
+            <button
+              onClick={onClose}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+              aria-label="Close"
+              title="Close"
+            >
+              ✕
+            </button>
+            <h2 id="move-title" className="text-2xl font-bold text-[#0F6F7C]">
+              Move Details
+            </h2>
           </div>
 
-          {/* Lista de items */}
-          {move.items && move.items.length > 0 && (
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold text-[#0F6F7C] mb-2">
-                Items
-              </h3>
-              <ul className="list-disc list-inside space-y-1 text-gray-700">
-                {move.items.map((item, idx) => (
-                  <li key={idx}>
-                    {item.description}{" "}
-                    <span className="font-semibold">x{item.quantity}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Campos editables */}
-          <div className="text-black space-y-4">
-            <div>
-              <label className="block text-sm font-semibold mb-1">
-                Estimated Cost
-              </label>
-              <input
-                type="number"
-                value={totalCost ?? ""}
-                onChange={(e) => setTotalCost(Number(e.target.value))}
-                className="w-full border rounded-lg p-2"
-                disabled={!isEditable}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold mb-1">
-                Tentative Date
-              </label>
-              <input
-                type="date"
-                value={tentativeDate ?? ""}
-                onChange={(e) => setTentativeDate(e.target.value)}
-                className="w-full border rounded-lg p-2"
-                disabled={!isEditable}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold mb-1">
-                Reservation Percentage
-              </label>
-              <input
-                type="number"
-                min={0}
-                max={100}
-                value={
-                  reservationPercentage === null ? "" : reservationPercentage
-                }
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (value === "") {
-                    setReservationPercentage(null);
-                  } else {
-                    let num = Number(value);
-                    if (num < 0) num = 0;
-                    if (num > 100) num = 100;
-                    setReservationPercentage(num);
-                  }
-                }}
-                className="w-full border rounded-lg p-2"
-                disabled={!isEditable}
-              />
-              <p className="text-sm text-gray-600 mt-1">
-                Reservation Amount:{" "}
-                <span className="font-semibold">
-                  ${reservationAmount.toFixed(2)}
-                </span>
+          {/* Contenido desplazable */}
+          <div
+            className="px-6 py-4 space-y-4 overflow-y-auto overscroll-contain"
+            style={{ scrollbarWidth: "thin" }}
+          >
+            {/* Datos del cliente */}
+            <div className="text-black space-y-1">
+              <p>
+                <span className="font-semibold">Client:</span>{" "}
+                {move.client.full_name}
+              </p>
+              <p>
+                <span className="font-semibold">Email:</span>{" "}
+                {move.client.email}
+              </p>
+              <p>
+                <span className="font-semibold">Phone:</span>{" "}
+                {move.client.phone_number}
+              </p>
+              <p>
+                <span className="font-semibold">Origin:</span>{" "}
+                {move.origin_address}
+              </p>
+              <p>
+                <span className="font-semibold">Destination:</span>{" "}
+                {move.destination_address}
+              </p>
+              <p>
+                <span className="font-semibold">Current Status:</span>{" "}
+                {move.status}
               </p>
             </div>
+
+            {/* Lista de items */}
+            {move.items && move.items.length > 0 && (
+              <div>
+                <h3 className="text-lg font-semibold text-[#0F6F7C] mb-2">
+                  Items
+                </h3>
+                <ul className="list-disc list-inside space-y-1 text-gray-700">
+                  {move.items.map((item, idx) => (
+                    <li key={idx}>
+                      {item.description}{" "}
+                      <span className="font-semibold">x{item.quantity}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Services */}
+            {move.services && move.services.length > 0 && (
+              <div>
+                <h3 className="text-lg font-semibold text-[#0F6F7C] mb-2">
+                  Services
+                </h3>
+                <ul className="list-disc list-inside space-y-1 text-gray-700">
+                  {move.services.map((svc) => (
+                    <li key={svc.service_id} className="flex justify-between">
+                      <span>{svc.name}</span>
+                      <span className="font-semibold">
+                        $
+                        {Number(svc.base_price).toLocaleString("en-US", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Campos editables */}
+            <div className="text-black space-y-4">
+              <div>
+                <label className="block text-sm font-semibold mb-1">
+                  Estimated Cost
+                </label>
+                <input
+                  type="number"
+                  value={totalCost ?? ""}
+                  onChange={(e) => setTotalCost(Number(e.target.value))}
+                  className="w-full border rounded-lg p-2"
+                  disabled={!isEditable}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-1">
+                  Tentative Date
+                </label>
+                <input
+                  type="date"
+                  value={tentativeDate ?? ""}
+                  onChange={(e) => setTentativeDate(e.target.value)}
+                  className="w-full border rounded-lg p-2"
+                  disabled={!isEditable}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-1">
+                  Reservation Percentage
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  max={100}
+                  value={
+                    reservationPercentage === null ? "" : reservationPercentage
+                  }
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === "") {
+                      setReservationPercentage(null);
+                    } else {
+                      let num = Number(value);
+                      if (num < 0) num = 0;
+                      if (num > 100) num = 100;
+                      setReservationPercentage(num);
+                    }
+                  }}
+                  className="w-full border rounded-lg p-2"
+                  disabled={!isEditable}
+                />
+                <p className="text-sm text-gray-600 mt-1">
+                  Reservation Amount:{" "}
+                  <span className="font-semibold">
+                    ${reservationAmount.toFixed(2)}
+                  </span>
+                </p>
+              </div>
+            </div>
           </div>
 
-          {/* Botones */}
-          <div className="mt-6 flex justify-between gap-3">
-            {canCancel && (
-              <button
-                onClick={() => setShowCancelConfirm(true)}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700"
-              >
-                Cancel Move
-              </button>
-            )}
-            <div className="flex gap-3">
-              <button
-                onClick={onClose}
-                className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
-              >
-                Close
-              </button>
-              {isEditable && (
+          {/* Footer (fijo) */}
+          <div className="px-6 py-4 border-t sticky bottom-0 bg-white z-10">
+            <div className="flex justify-between gap-3">
+              {canCancel && (
                 <button
-                  onClick={() => setShowEditConfirm(true)}
-                  className="px-4 py-2 bg-[#0F6F7C] text-white rounded-lg hover:bg-teal-700"
+                  onClick={() => setShowCancelConfirm(true)}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700"
                 >
-                  Save
+                  Cancel Move
                 </button>
               )}
-              {canComplete && (
+              <div className="flex gap-3">
                 <button
-                  onClick={() => setShowCompleteConfirm(true)}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-800"
+                  onClick={onClose}
+                  className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
                 >
-                  Mark as Completed
+                  Close
                 </button>
-              )}
+                {isEditable && (
+                  <button
+                    onClick={() => setShowEditConfirm(true)}
+                    className="px-4 py-2 bg-[#0F6F7C] text-white rounded-lg hover:bg-teal-700"
+                  >
+                    Save
+                  </button>
+                )}
+                {canComplete && (
+                  <button
+                    onClick={() => setShowCompleteConfirm(true)}
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-800"
+                  >
+                    Mark as Completed
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>

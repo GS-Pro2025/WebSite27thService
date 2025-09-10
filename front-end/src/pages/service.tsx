@@ -46,7 +46,7 @@ const Service: React.FC = () => {
       </div>
       {/* OpinionSection */}
       {/* <div className="relative z-14"> */}
-        <OpinionSection />
+      <OpinionSection />
       {/* </div> */}
       {/* CallToActionBanner */}
       <div
