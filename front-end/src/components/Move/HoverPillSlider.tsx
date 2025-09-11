@@ -1,93 +1,187 @@
 import React, { useState } from "react";
-import { ArrowRight, Bug, Bird, Turtle, Rabbit, Squirrel, Shield, Truck } from "lucide-react";
 
-/**
- * HoverPillSlider (estilo como la imagen)
- * - 8 "líneas" verticales en forma de píldora
- * - Al pasar el cursor por cada línea se EXPANDE y muestra una tarjeta con texto y botón
- * - Colores intercalados: #F7F7F7 y #33A8BA
- * - Un ícono pequeño en la parte inferior de cada línea (puedes reemplazar por tus SVG/PNGs)
- * - Sin dependencias de UI; solo Tailwind + lucide-react (opcional para íconos)
- */
+type Item = {
+  title: string;
+  subtitle: string;
+  desc: string;
+  cta: string;
+  iconSrc: string;
+};
 
-const ITEMS = [
+const ITEMS: Item[] = [
   {
     title: "Ant Team",
     subtitle: "(Labor, solo mano de obra)",
-    desc:
-      "Para quienes ya tienen transporte y solo necesitan un equipo profesional para cargar, descargar o mover dentro del hogar u oficina.",
+    desc: "Para quienes ya tienen transporte y solo necesitan un equipo profesional para cargar, descargar o mover dentro del hogar u oficina.",
     cta: "LO QUIERO",
-    icon: Bug,
+    iconSrc: "ant.svg",
   },
-  { title: "Bear Team", subtitle: "(Carga pesada)", desc: "Ideal para objetos voluminosos y pesados con maniobra especializada.", cta: "Cotizar", icon: Shield },
-  { title: "Butterfly Pack", subtitle: "(Empaque fino)", desc: "Empaque premium para artículos delicados y de alto valor.", cta: "Ver detalles", icon: Bird },
-  { title: "Eagle Move", subtitle: "(Mudanza express)", desc: "Servicio ágil con ventanas de tiempo reducidas y priorización.", cta: "Reservar", icon: Truck },
-  { title: "Hippo Fleet", subtitle: "(Transporte total)", desc: "Incluye camión, personal y materiales de protección.", cta: "Empezar", icon: Rabbit },
-  { title: "Armadillo Care", subtitle: "(Protección extra)", desc: "Funda, cobijas y esquineros para máxima seguridad.", cta: "Activar", icon: Shield },
-  { title: "Turtle Store", subtitle: "(Bodega temporal)", desc: "Almacenamiento por días o semanas mientras reubicas.", cta: "Conocer", icon: Turtle },
-  { title: "Bee Assist", subtitle: "(Ayudante por horas)", desc: "Refuerzo por tiempo limitado para tareas puntuales.", cta: "Solicitar", icon: Squirrel },
-] as const;
+  {
+    title: "Beaver Team",
+    subtitle: "(Carga pesada)",
+    desc: "Ideal para objetos voluminosos y pesados con maniobra especializada.",
+    cta: "Cotizar",
+    iconSrc: "beaver.svg",
+  },
+  {
+    title: "Butterfly Pack",
+    subtitle: "(Empaque fino)",
+    desc: "Empaque premium para artículos delicados y de alto valor.",
+    cta: "Ver detalles",
+    iconSrc: "butterfly.svg",
+  },
+  {
+    title: "Eagle Move",
+    subtitle: "(Mudanza express)",
+    desc: "Servicio ágil con ventanas de tiempo reducidas y priorización.",
+    cta: "Reservar",
+    iconSrc: "eagle.svg",
+  },
+  {
+    title: "Bull Fleet",
+    subtitle: "(Transporte total)",
+    desc: "Incluye camión, personal y materiales de protección.",
+    cta: "Empezar",
+    iconSrc: "bull.svg",
+  },
+  {
+    title: "Kangaroo Care",
+    subtitle: "(Protección extra)",
+    desc: "Funda, cobijas y esquineros para máxima seguridad.",
+    cta: "Activar",
+    iconSrc: "kangaroo.svg",
+  },
+  {
+    title: "Turtle Store",
+    subtitle: "(Bodega temporal)",
+    desc: "Almacenamiento por días o semanas mientras reubicas.",
+    cta: "Conocer",
+    iconSrc: "turtle.svg",
+  },
+  {
+    title: "Bee Assist",
+    subtitle: "(Ayudante por horas)",
+    desc: "Refuerzo por tiempo limitado para tareas puntuales.",
+    cta: "Solicitar",
+    iconSrc: "bee.svg",
+  },
+];
 
-const BG_A = "#F7F7F7";
-const BG_B = "#33A8BA";
+const BG_LIGHT = "#F7F7F7EB";
+const BG_BLUE = "#33A8BAE0";
+const TEAL_TEXT = "#0E6F7E";
+const YELLOW_TEXT = "#FFE67B";
 
 export default function HoverPillSlider() {
-  const [hovered, setHovered] = useState<number | null>(null);
+  const [active, setActive] = useState(0);
 
   return (
-    <section className="relative w-full max-w-6xl mx-auto">
-      {/* Tira de líneas (píldoras) */}
-      <div className="relative flex items-end gap-3 md:gap-4 py-6 md:py-8">
+    <section className="relative w-full overflow-x-auto">
+      <div className="flex items-end gap-3 md:gap-4 py-10 px-4 min-w-full">
         {ITEMS.map((item, i) => {
-          const Icon = item.icon;
+          const isActive = active === i;
           const isEven = i % 2 === 0;
-          const bg = isEven ? BG_A : BG_B;
-          const dark = !isEven; // cuando es #33A8BA, texto blanco en tarjeta
+          const bg = isEven ? BG_LIGHT : BG_BLUE;
+          const dark = !isEven;
+
+          const circleBg = isEven ? "#FFE67B" : "#C6D7CE";
 
           return (
-            <div
+            <button
               key={i}
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
-              className="group relative"
+              type="button"
+              onMouseEnter={() => setActive(i)}
+              onFocus={() => setActive(i)}
+              onClick={() => setActive(i)}
+              className="group relative outline-none flex-shrink-0"
+              aria-expanded={isActive}
             >
-              {/* Píldora */}
               <div
-                className="transition-all duration-300 ease-out rounded-full shadow-sm border border-black/5 flex items-end justify-center overflow-visible"
+                className="transition-all duration-300 ease-out rounded-[3rem] shadow-md border border-black/10 overflow-hidden relative flex"
                 style={{
                   backgroundColor: bg,
-                  width: hovered === i ? "15rem" : "2.75rem",
-                  height: "24rem",
+                  width: isActive ? "26rem" : "5rem",
+                  height: "28rem",
                 }}
               >
-                {/* Icono inferior */}
-                <div className="absolute -bottom-4 flex items-center justify-center w-10 h-10 rounded-full shadow bg-white/90 backdrop-blur border border-black/10">
-                  <Icon className="w-5 h-5 text-slate-600" />
-                </div>
-              </div>
-
-              {/* Tarjeta informativa (aparece al hover) */}
-              <div
-                className={
-                  "pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[calc(100%+16px)] md:-translate-x-[calc(100%+20px)] w-[min(90vw,520px)]" +
-                  " opacity-0 scale-[0.98] group-hover:opacity-100 group-hover:scale-100 transition-all duration-300"
-                }
-              >
-                <div className={`pointer-events-auto rounded-2xl shadow-xl p-5 sm:p-6 ${dark ? "bg-[#1e8997] text-white" : "bg-white text-slate-800"}`}>
-                  <h3 className="text-2xl font-bold leading-tight">{item.title}</h3>
-                  <p className={`mt-1 text-sm ${dark ? "text-white/80" : "text-slate-500"}`}>{item.subtitle}</p>
-                  <p className={`mt-3 text-base ${dark ? "text-white" : "text-slate-700"}`}>{item.desc}</p>
-                  <button
-                    className={`mt-5 inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold shadow ${
-                      dark ? "bg-white text-slate-900 hover:bg-white/90" : "bg-slate-900 text-white hover:bg-slate-800"
-                    }`}
+                {/* Contenido interno */}
+                <div
+                  className={`flex flex-col h-full w-full px-6 pt-6 pb-32
+                    ${dark ? "text-white" : "text-slate-900"}`}
+                >
+                  <div
+                    className={`${
+                      isActive ? "opacity-100" : "opacity-0"
+                    } transition-opacity duration-300`}
                   >
-                    {item.cta}
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
+                    <h3
+                      className="text-3xl font-extrabold leading-tight"
+                      style={
+                        dark ? { color: YELLOW_TEXT } : { color: TEAL_TEXT }
+                      }
+                    >
+                      {item.title}
+                    </h3>
+
+                    <p
+                      className={`mt-1 text-sm ${
+                        dark ? "text-white/80" : "text-slate-500"
+                      }`}
+                    >
+                      {item.subtitle}
+                    </p>
+                    <p
+                      className={`mt-4 text-base ${
+                        dark ? "text-white" : "text-slate-700"
+                      }`}
+                    >
+                      {item.desc}
+                    </p>
+                  </div>
                 </div>
+
+                {isActive ? (
+                  <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between">
+                    {/* Botón a la izquierda */}
+                    <a
+                      href="#contactanos"
+                      className={`rounded-full px-8 py-4 text-base font-extrabold shadow transition
+        ${
+          dark
+            ? "bg-white text-slate-900 hover:bg-white/90"
+            : "bg-white hover:bg-white/90"
+        }`}
+                      style={{ color: dark ? YELLOW_TEXT : TEAL_TEXT }}
+                    >
+                      {item.cta}
+                    </a>
+
+                    {/* Ícono a la derecha con círculo */}
+                    <div
+                      className="w-16 h-16 rounded-full shadow flex items-center justify-center relative"
+                      style={{ backgroundColor: circleBg }}
+                    >
+                      <img
+                        src={`/assets/${item.iconSrc}`}
+                        alt={item.title}
+                        className="w-24 h-24 object-contain absolute -top-2"
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className="absolute bottom-6 left-1/2 -translate-x-1/2 w-16 h-16 rounded-full shadow flex items-center justify-center"
+                    style={{ backgroundColor: circleBg }}
+                  >
+                    <img
+                      src={`/assets/${item.iconSrc}`}
+                      alt={item.title}
+                      className="w-24 h-24 object-contain relative"
+                    />
+                  </div>
+                )}
               </div>
-            </div>
+            </button>
           );
         })}
       </div>

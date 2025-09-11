@@ -28,11 +28,18 @@ const CoverageSection: React.FC = () => {
     origin_address: "",
   });
 
-  const [extraData, setExtraData] = useState({
+  const [extraData, setExtraData] = useState<{
+    email: string;
+    address: string;
+    additional_info: string;
+    tentative_date: Date | null;
+    type_of_move: string;
+    size_of_move: string;
+  }>({
     email: "",
     address: "",
     additional_info: "",
-    tentative_date: "",
+    tentative_date: null,
     type_of_move: "",
     size_of_move: "",
   });
