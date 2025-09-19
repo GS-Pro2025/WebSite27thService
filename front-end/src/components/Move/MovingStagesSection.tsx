@@ -226,8 +226,150 @@ const MovingStagesSection: React.FC = () => {
         </div>
       </div>
 
-      {/* LAYOUT ORIGINAL PARA MÓVIL Y DESKTOP (sin cambios) */}
-      <div className="md:hidden lg:block">
+      {/* NUEVA VISTA MÓVIL - Timeline Vertical Compacto */}
+      <div className="block sm:hidden">
+        <div className="container mx-auto relative z-10 px-6">
+          
+          {/* Header móvil */}
+          <div className="text-center mb-12">
+            <h2 className="text-[#FFE67B] text-3xl font-bold mb-3" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              Moving Stages
+            </h2>
+            <div className="w-16 h-0.5 bg-[#FFE67B] mx-auto mb-4 rounded-full"></div>
+            <p className="text-white/80 text-base leading-relaxed" style={{ fontFamily: "'Montserrat'" }}>
+              Your complete moving journey
+            </p>
+          </div>
+
+          {/* Timeline móvil */}
+          <div className="relative max-w-sm mx-auto">
+            
+            {/* Línea vertical móvil */}
+            <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#FFE67B] via-white/20 to-[#FFE67B] rounded-full"></div>
+            
+            {/* Step 1 - Packing */}
+            <div className="relative flex items-start mb-12">
+              <div className="flex-shrink-0 w-12 h-12 bg-[#FFE67B] rounded-full flex items-center justify-center text-lg font-bold text-[#7AACAE] shadow-lg border-3 border-white relative z-10">
+                1
+              </div>
+              <div className="ml-4 flex-grow">
+                <h3 className="text-[#FFE67B] text-lg font-bold mb-2" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                  Packing
+                </h3>
+                <div 
+                  className="backdrop-blur-sm rounded-xl p-4 shadow-lg border border-white/10"
+                  style={{ background: "linear-gradient(135deg, #FFE67B 10%, #FFE887 40%, #FFEEA5 70%, #FFF4C3 100%)" }}
+                >
+                  <p className="text-black text-sm leading-relaxed">
+                    {stages[0].description}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 2 - Loading */}
+            <div className="relative flex items-start mb-12">
+              <div className="flex-shrink-0 w-12 h-12 bg-[#FFE67B] rounded-full flex items-center justify-center text-lg font-bold text-[#7AACAE] shadow-lg border-3 border-white relative z-10">
+                2
+              </div>
+              <div className="ml-4 flex-grow">
+                <h3 className="text-[#FFE67B] text-lg font-bold mb-2" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                  Loading
+                </h3>
+                <div 
+                  className="backdrop-blur-sm rounded-xl p-4 shadow-lg border border-white/10"
+                  style={{ background: "linear-gradient(135deg, #86B7BE 10%, #4A939E 40%, #2C818E 70%, #1D7886 100%)" }}
+                >
+                  <p className="text-black text-sm leading-relaxed">
+                    {stages[1].description}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Mensaje central móvil */}
+            <div className="relative mb-12">
+              <div className="flex-shrink-0 w-14 h-14 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg border-2 border-[#FFE67B] mx-auto mb-4 relative z-10">
+                <div className="w-2 h-2 bg-[#FFE67B] rounded-full animate-pulse"></div>
+              </div>
+              <div className="text-center">
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20">
+                  <p className="text-white text-base font-medium leading-relaxed mb-2" style={{ fontFamily: "'Montserrat'" }}>
+                    Safe moves twenty seventh does it for you
+                  </p>
+                  <div className="w-12 h-0.5 bg-[#FFE67B] mx-auto my-3 rounded-full"></div>
+                  <p className="text-white/80 text-sm" style={{ fontFamily: "'Montserrat'" }}>
+                    Stress-free, with commitment and care
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 3 - Delivery */}
+            <div className="relative flex items-start mb-12">
+              <div className="flex-shrink-0 w-12 h-12 bg-[#FFE67B] rounded-full flex items-center justify-center text-lg font-bold text-[#7AACAE] shadow-lg border-3 border-white relative z-10">
+                3
+              </div>
+              <div className="ml-4 flex-grow">
+                <h3 className="text-[#FFE67B] text-lg font-bold mb-2" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                  Delivery
+                </h3>
+                <div 
+                  className="backdrop-blur-sm rounded-xl p-4 shadow-lg border border-white/10"
+                  style={{ background: "linear-gradient(135deg, #86B7BE 10%, #4A939E 40%, #2C818E 70%, #1D7886 100%)" }}
+                >
+                  <p className="text-black text-sm leading-relaxed">
+                    {stages[2].description}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 4 - Unpacking */}
+            <div className="relative flex items-start mb-12">
+              <div className="flex-shrink-0 w-12 h-12 bg-[#FFE67B] rounded-full flex items-center justify-center text-lg font-bold text-[#7AACAE] shadow-lg border-3 border-white relative z-10">
+                4
+              </div>
+              <div className="ml-4 flex-grow">
+                <h3 className="text-[#FFE67B] text-lg font-bold mb-2" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                  Unpacking
+                </h3>
+                <div 
+                  className="backdrop-blur-sm rounded-xl p-4 shadow-lg border border-white/10"
+                  style={{ background: "linear-gradient(135deg, #FFE67B 10%, #FFE887 40%, #FFEEA5 70%, #FFF4C3 100%)" }}
+                >
+                  <p className="text-black text-sm leading-relaxed">
+                    {stages[3].description}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 5 - Organization */}
+            <div className="relative flex items-start">
+              <div className="flex-shrink-0 w-12 h-12 bg-[#FFE67B] rounded-full flex items-center justify-center text-lg font-bold text-[#7AACAE] shadow-lg border-3 border-white relative z-10">
+                5
+              </div>
+              <div className="ml-4 flex-grow">
+                <h3 className="text-[#FFE67B] text-lg font-bold mb-2" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                  Organization
+                </h3>
+                <div 
+                  className="backdrop-blur-sm rounded-xl p-4 shadow-lg border border-white/10"
+                  style={{ background: "linear-gradient(135deg, #FFE67B 10%, #FFE887 40%, #FFEEA5 70%, #FFF4C3 100%)" }}
+                >
+                  <p className="text-black text-sm leading-relaxed">
+                    {stages[4].description}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* LAYOUT ORIGINAL PARA DESKTOP (sin cambios) */}
+      <div className="hidden lg:block">
         <div className="absolute inset-0 z-0 opacity-75">
           <img
             src="assets/flechaClara.svg"
@@ -285,7 +427,7 @@ const MovingStagesSection: React.FC = () => {
 
             {/* Grid original - mantiene exactamente el mismo layout */}
             <div
-              className="flex flex-col items-center text-center gap-y-12 
+              className="flex flex-col items-center text-center gap-y-12 mb-10
                            sm:grid sm:grid-cols-3 sm:gap-y-16 sm:gap-x-8 sm:relative sm:text-left sm:-translate-y-20"
             >
               <div className="flex flex-col items-center sm:col-start-2 lg:-translate-y-25">
@@ -314,7 +456,7 @@ const MovingStagesSection: React.FC = () => {
                 </p>
               </div>
 
-              <div className="flex flex-col items-center sm:col-start-3 sm:-translate-y-10">
+              <div className="flex flex-col items-center sm:col-start-3 sm:-translate-y-0">
                 <div className="relative mb-2">
                   <div className="bg-[#FFE67B] w-24 h-20 lg:w-16 lg:w-24 h-24 rounded-full flex items-center justify-center text-2xl lg:text-7xl font-bold text-[#7AACAE] shadow-lg z-10 transform transition-all duration-300 hover:scale-110 group cursor-help">
                     2
