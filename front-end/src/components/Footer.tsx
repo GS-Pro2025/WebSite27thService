@@ -1,5 +1,5 @@
 import React from "react";
-import banner12 from "/assets/banner12.svg";
+import banner12 from "/assets/banner14.svg";
 import logoFooter2 from "/assets/logoFooter2.svg";
 import { FaFacebook, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 
@@ -58,14 +58,6 @@ const Footer: React.FC = () => {
                 </a>
               </div>
             </div>
-          </div>
-
-          <div className="hidden md:flex justify-end items-end -mt-20">
-            <img
-              src={logoFooter2}
-              alt="Logo Texto"
-              className="w-[64vw] max-w-6xl h-auto"
-            />
           </div>
         </div>
       </div>

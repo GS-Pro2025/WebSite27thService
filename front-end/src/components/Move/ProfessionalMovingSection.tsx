@@ -9,7 +9,7 @@ const ProfessionalMovingSection: React.FC = () => {
             className="text-white font-extrabold text-3xl sm:text-4xl text-center md:text-left mb-6 md:mb-0"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
           >
-            This is how we make your move professional
+            This is how we handle your professional move
           </h2>
           <button
             className="bg-[#FFE67B] text-white font-bold py-3 px-8 rounded-full text-lg sm:text-2xl lg:text-3xl whitespace-nowrap"
@@ -40,7 +40,7 @@ const ProfessionalMovingSection: React.FC = () => {
               className="text-[#FFE67B] text-2xl font-semibold text-center"
               style={{ fontFamily: "'Montserrat', sans-serif" }}
             >
-              Customized Moves
+              Customized moving services
             </p>
           </div>
 
@@ -52,7 +52,7 @@ const ProfessionalMovingSection: React.FC = () => {
               className="text-[#FFE67B] text-2xl font-semibold text-center"
               style={{ fontFamily: "'Montserrat', sans-serif" }}
             >
-              Quality Materials and Service
+              Materiales y servicio de calidad
             </p>
           </div>
         </div>

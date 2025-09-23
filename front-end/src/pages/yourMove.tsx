@@ -4,12 +4,12 @@ import MovingStagesSection from "../components/Move/MovingStagesSection";
 import CoverageSection from "../components/Move/CoverageSection";
 import WeightSection from "../components/Move/WeightSection";
 import CalculatorSection from "../components/Move/CalculatorSection";
-import HoverPillSlider from "../components/Move/HoverPillSlider";
-// import Footer from "../components/Footer";
+import ServicesSection from "../components/Move/ServicesSection";
+import Footer from "../components/Footer";
 
 const YourMove: React.FC = () => {
   return (
-    <div className="w-full min-h-screen overf zlow-visible">
+    <div className="w-full min-h-screen overflow-visible">
       <ProfessionalMovingSection />
       <MovingStagesSection />
       <CoverageSection />
@@ -18,7 +18,7 @@ const YourMove: React.FC = () => {
       <div className="relative">
         <div className="absolute inset-x-0 -top-10 md:-top-15 z-20 flex justify-center pointer-events-none select-none">
           <img
-            src="/assets/linea2.svg"
+            src="/assets/linea_move.svg"
             alt="Separador curvo"
             className="w-full"
           />
@@ -28,8 +28,10 @@ const YourMove: React.FC = () => {
           <CalculatorSection />
         </div>
       </div>
-      <HoverPillSlider />
-      {/* <div className="-mt-50"><Footer /></div> */}
+      <ServicesSection />
+      <div className="relative -mt-38 z-20">
+        <Footer />
+      </div>
     </div>
   );
 };
