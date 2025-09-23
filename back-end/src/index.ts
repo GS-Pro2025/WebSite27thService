@@ -28,7 +28,7 @@ app.use(
 
 connectDB();
 setupAssociations();
-// app.use(authenticateJWT);
+app.use(authenticateJWT);
 
 app.use("/api/users", userRoutes);
 app.use("/api/services", serviceRoutes);
