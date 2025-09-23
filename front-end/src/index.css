@@ -31,7 +31,26 @@ body {
   font-family: inherit;
 }
 
-html, body {
+html,
+body {
   overflow-x: hidden;
 }
 
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #0f6f7c;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #0f6f7c #f1f5f9;
+}

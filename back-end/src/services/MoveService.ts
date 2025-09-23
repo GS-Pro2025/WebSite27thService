@@ -3,6 +3,8 @@ import Move, { MoveAttributes } from "../models/Move";
 import Person from "../models/Person";
 import MoveItem from "../models/MoveItem";
 import Payment from "../models/Payment";
+import Service from "../models/Services";
+import MoveService from "../models/MoveService";
 
 /**
  * Creates a new move, generating a unique ID.
@@ -45,15 +47,11 @@ export const getAllMoves = async (): Promise<Move[]> => {
           attributes: ["payment_id", "amount", "payment_status"],
         },
         {
-          model: MoveItem,
-          as: "items",
-          attributes: ["description", "quantity"],
+          model: Service,
+          as: "services",
+          attributes: ["service_id", "name", "base_price"],
+          through: { attributes: ["quantity"] },
         },
-        {
-          model: Payment,
-          as: "payment",
-          attributes: ["payment_id", "amount", "payment_status"],
-        }
       ],
       order: [["createdAt", "DESC"]],
     });
@@ -62,7 +60,6 @@ export const getAllMoves = async (): Promise<Move[]> => {
     console.error("Error getting moves:", error);
     throw new Error("Could not get moves.");
   }
-  
 };
 
 /**
@@ -88,18 +85,13 @@ export const getMoveById = async (moveId: string): Promise<Move | null> => {
           model: Payment,
           as: "payment",
           attributes: ["payment_id", "amount", "payment_status"],
-
         },
         {
-          model: MoveItem,
-          as: "items",
-          attributes: ["description", "quantity"],
+          model: Service,
+          as: "services",
+          attributes: ["service_id", "name", "base_price"],
+          through: { attributes: ["quantity"] },
         },
-        {
-          model: Payment,
-          as: "payment",
-          attributes: ["payment_id", "amount", "payment_status"],
-        }
       ],
       order: [["createdAt", "DESC"]],
     });
@@ -147,7 +139,6 @@ export const deleteMove = async (moveId: string): Promise<boolean> => {
   } catch (error) {
     console.error("Error deleting move:", error);
     throw new Error("Could not delete move.");
-
   }
 };
 
@@ -181,6 +172,12 @@ export const getMovesByUserId = async (userId: number): Promise<Move[]> => {
           as: "payment",
           attributes: ["payment_id", "amount", "payment_status"],
         },
+        {
+          model: Service,
+          as: "services",
+          attributes: ["service_id", "name", "base_price"],
+          through: { attributes: ["quantity"] },
+        },
       ],
     });
 
@@ -188,6 +185,5 @@ export const getMovesByUserId = async (userId: number): Promise<Move[]> => {
   } catch (error) {
     console.error("Error getting moves by user ID:", error);
     throw new Error("Could not get user moves.");
-
   }
 };

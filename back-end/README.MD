@@ -12,6 +12,11 @@ npx sequelize-cli db:migrate
 npx sequelize-cli db:migrate:undo
 ```
 
+# Crear los servicios 
+```bash
+npm run seed:services
+
+```
 ## Ejecutar la Aplicación
 ```bash
 npm run dev

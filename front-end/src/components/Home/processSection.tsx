@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import QuoteForm from "../QuoteForm";
+import ServicesForm from "../ServicesForm";
+import SuccessModal from "../SuccessModal";
 import api from "../../api/axiosInstance";
 
 interface FormData {
@@ -35,6 +37,15 @@ const MOVE_SIZE_TO_BEDROOMS: Record<string, number> = {
   xlarge: 4,
 } as const;
 
+const SERVICE_NAME_BY_KEY = {
+  pack: "Pack",
+  wrap: "Wrap",
+  load: "Load",
+  unload: "Unload",
+  unpack: "Unpack",
+  home_org: "Home Organization",
+} as const;
+
 const INITIAL_FORM_DATA: FormData = {
   name: "",
   phone: "",
@@ -53,6 +64,15 @@ const ProcessSection: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [procStep, setProcStep] = useState<1 | 2>(1);
+  const [quoteData, setQuoteData] = useState<FormData | null>(null);
+  const [selectedServices, setSelectedServices] = useState<
+    ("pack" | "wrap" | "load" | "unload" | "unpack" | "home_org")[]
+  >([]);
+  const [services, setServices] = useState<
+    { service_id: number; name: string }[]
+  >([]);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -70,6 +90,16 @@ const ProcessSection: React.FC = () => {
 
     observer.observe(currentSection);
     return () => observer.disconnect();
+  }, []);
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await api.get("/services");
+        setServices(data || []);
+      } catch (e) {
+        console.error("Error loading services:", e);
+      }
+    })();
   }, []);
 
   const createMoveItems = useCallback(
@@ -99,39 +129,69 @@ const ProcessSection: React.FC = () => {
     []
   );
 
-  const handleFinalSubmit = useCallback(
-    async (data: FormData) => {
-      if (isSubmitting) return;
+  const handleFinalSubmitServices = useCallback(async () => {
+    if (!quoteData || isSubmitting) return;
 
-      setIsSubmitting(true);
+    setIsSubmitting(true);
+    try {
+      // Person
+      const personRes = await api.post("/persons", {
+        full_name: quoteData.name,
+        email: quoteData.email,
+        phone_number: quoteData.phone,
+        address: quoteData.address,
+        additional_info: quoteData.additional_info,
+      });
 
-      try {
-        setFormData(data);
+      // Move
+      const moveRes = await api.post("/moves", {
+        person_id: personRes.data.person_id,
+        status: "pending",
+        tentative_date: quoteData.tentative_date,
+        origin_address: quoteData.origin,
+        destination_address: quoteData.destination,
+      });
+      const moveId = moveRes.data.move_id;
 
-        const personRes = await api.post("/persons", {
-          full_name: data.name,
-          email: data.email,
-          phone_number: data.phone,
-          address: data.address,
-          additional_info: data.additional_info,
-        });
+      // Move Items
+      await createMoveItems(moveId, quoteData);
 
-        const moveRes = await api.post("/moves", {
-          person_id: personRes.data.person_id,
-          status: "pending",
-          tentative_date: data.tentative_date,
-          origin_address: data.origin,
-          destination_address: data.destination,
-        });
-        await createMoveItems(moveRes.data.move_id, data);
-      } catch (error) {
-        console.error("Error al guardar datos:", error);
-      } finally {
-        setIsSubmitting(false);
-      }
-    },
-    [isSubmitting, createMoveItems]
-  );
+      // Move Services
+      const idByName = new Map(services.map((s) => [s.name, s.service_id]));
+      const reqs = selectedServices
+        .map((k) => idByName.get(SERVICE_NAME_BY_KEY[k]))
+        .filter(Boolean)
+        .map((service_id) =>
+          api.post("/move-services", {
+            move_id: moveId,
+            service_id,
+            quantity: 1,
+          })
+        );
+      await Promise.all(reqs);
+
+      setShowSuccess(true);
+    } catch (error) {
+      console.error("Error al guardar datos:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [quoteData, isSubmitting, services, selectedServices, createMoveItems]);
+  const handleQuoteComplete = useCallback((data: any) => {
+    const normalizedData: FormData = {
+      ...data,
+      tentative_date:
+        data.tentative_date instanceof Date
+          ? data.tentative_date.toISOString()
+          : data.tentative_date
+            ? String(data.tentative_date)
+            : "",
+    };
+    setFormData(normalizedData);
+    setQuoteData(normalizedData);
+    setProcStep(2);
+  }, []);
+
   const handleQuoteClick = () => {
     if (window.innerWidth >= 1024) {
       const form = document.querySelector("form");
@@ -234,19 +294,36 @@ const ProcessSection: React.FC = () => {
                   "form"
                 )}`}
               >
-                <div className="absolute -top-6 lg:-top-8 -translate-x-1/2 bg-[#FFE67B] w-12 h-12 lg:w-16 lg:h-16 rounded-full flex items-center justify-center text-2xl lg:text-3xl font-bold text-[#7ARACAE] shadow-lg z-10 transform transition-all duration-300 hover:scale-110 group cursor-help">
-                  1
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-[#0F6F7C] text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 whitespace-nowrap z-20">
-                    Step 1: Fill out the form
+                {procStep === 1 && (
+                  <div className="absolute -top-6 lg:-top-8 -translate-x-1/2 bg-[#FFE67B] w-12 h-12 lg:w-16 lg:h-16 rounded-full flex items-center justify-center text-2xl lg:text-3xl font-bold text-[#7ARACAE] shadow-lg z-10 transform transition-all duration-300 hover:scale-110 group cursor-help">
+                    1
+                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-[#0F6F7C] text-white text-sm rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 whitespace-nowrap z-20">
+                      Step 1: Fill out the form
+                    </div>
                   </div>
-                </div>
-                <QuoteForm onSubmit={handleFinalSubmit} />
+                )}
+
+                {procStep === 1 ? (
+                  <QuoteForm onComplete={handleQuoteComplete} />
+                ) : (
+                  <ServicesForm
+                    selected={selectedServices}
+                    setSelected={setSelectedServices}
+                    onSubmit={handleFinalSubmitServices}
+                  />
+                )}
               </div>
             </div>
           </div>
         </div>
       </section>
       {/* <QuoteModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} /> */}
+      <SuccessModal
+        show={showSuccess}
+        title="Request successful"
+        message="Your request has been submitted successfully. You will receive more information in your email."
+        onClose={() => window.location.reload()}
+      />
     </>
   );
 };

@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "seed:services": "ts-node src/scripts/ensureDefaultServices.ts"
   },
   "keywords": [],
   "author": "",
