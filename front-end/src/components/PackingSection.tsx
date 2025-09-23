@@ -16,7 +16,7 @@ const PackingSection: React.FC = () => {
 
         <div className="w-full md:w-1/2 mt-10 md:mt-0 md:-ml-32">
           <img
-            src="assets/Box.png"
+            src="assets/box.svg"
             alt="Illustration of cardboard boxes for moving"
             className="w-full h-auto"
           />

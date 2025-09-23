@@ -85,7 +85,7 @@ const OpinionSection: React.FC = () => {
           isVisible ? 'translate-x-0 opacity-100 scale-100' : '-translate-x-8 opacity-0 scale-95'
         }`}>
           <div className="bg-[#FFE67B] rounded-full px-4 py-2 sm:px-6 sm:py-3 shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-[#0E6F7E]">
               Opinion of our clients
             </h2>
           </div>
@@ -205,7 +205,7 @@ const OpinionSection: React.FC = () => {
         }`}>
           <div className="relative">
             <img
-              src="/assets/boxes_opinion.png"
+              src="/assets/boxes_opinion_like_2.svg"
               alt="Opinion boxes with thumbs up"
               className="w-24 h-24 sm:w-40 sm:h-40 md:w-56 md:h-56 lg:w-72 lg:h-72 xl:w-80 xl:h-170 object-contain drop-shadow-2xl"
             />

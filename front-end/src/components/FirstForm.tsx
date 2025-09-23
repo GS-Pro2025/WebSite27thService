@@ -111,10 +111,10 @@ const FirstForm: React.FC<FirstFormProps> = ({
       <div className="md:col-span-2">
         <button
           type="submit"
-          className="w-full bg-[#FFE67B] text-white font-bold py-3 px-6 rounded-full hover:bg-yellow-300 transition-colors duration-300 text-lg"
+          className="w-full bg-[#FFE67B] text-[#0E6F7E] font-bold py-3 px-6 rounded-full hover:bg-yellow-300 transition-colors duration-300 text-3xl"
           style={{ fontFamily: "'Montserrat', sans-serif" }}
         >
-          CHECK HERE
+          Your Coverage
         </button>
       </div>
     </form>

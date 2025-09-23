@@ -3,10 +3,26 @@ import ImageCarousel from "./ImageCarousel";
 
 const PhotoCarouselSection: React.FC = () => {
   const carouselImages = [
-    { src: "/assets/mudanza1.jpg", alt: "Equipamiento de mudanza 1" },
-    { src: "/assets/mudanza2.svg", alt: "Equipamiento de mudanza 2" },
-    { src: "/assets/mudanza3.svg", alt: "Equipamiento de mudanza 3" },
-    { src: "/assets/mudanza4.svg", alt: "Equipamiento de mudanza 4" },
+    {
+      src: "/assets/mudanza1.jpg",
+      alt: "Moving equipment 1",
+      title: "Freight Transport",
+    },
+    {
+      src: "/assets/mudanza2.svg",
+      alt: "Moving equipment 2",
+      title: "Home Relocation",
+    },
+    {
+      src: "/assets/mudanza3.svg",
+      alt: "Moving equipment 3",
+      title: "Commercial Moving",
+    },
+    {
+      src: "/assets/mudanza4.svg",
+      alt: "Moving equipment 4",
+      title: "Home Organization",
+    },
   ];
 
   return (
