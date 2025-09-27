@@ -1,12 +1,31 @@
 {
-  "name": "twentyseven",
+  "name": "fullstack-app",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Aplicación fullstack con backend y frontend",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd back-end && npm run dev",
+    "frontend": "cd front-end && npm run dev",
+    "start": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "install:all": "npm install && cd back-end && npm install && cd ../front-end && npm install",
+    "build": "cd front-end && npm run build",
+    "build:backend": "cd back-end && npm run build",
+    "clean": "rm -rf node_modules && cd back-end && rm -rf node_modules && cd ../front-end && rm -rf node_modules"
   },
-  "keywords": [],
-  "author": "",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "fullstack",
+    "react",
+    "node",
+    "express"
+  ],
+  "author": "Tu nombre",
   "license": "ISC",
-  "description": ""
+  "dependencies": {
+    "@react-google-maps/api": "^2.20.7",
+    "react-datepicker": "^8.7.0",
+    "react-google-maps": "^9.4.5"
+  }
 }

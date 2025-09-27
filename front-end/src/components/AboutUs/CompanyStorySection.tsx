@@ -14,7 +14,7 @@ const CompanyStorySection: React.FC = () => {
         className="
           pointer-events-none absolute inset-x-0 top-0
           h-[72%] md:h-[68%] lg:h-[64%] z-0
-          bg-gradient-to-b from-[rgba(244,246,249,1)] to-[rgba(244,246,249,0.57)]
+          bg-gradient-to-b from-[#0E6F7E] to-[#ffffff]
         "
         aria-hidden="true"
       />
@@ -45,7 +45,7 @@ const CompanyStorySection: React.FC = () => {
         <div className="grid grid-cols-12 gap-8 lg:gap-12">
           {/* Título + subtítulo (izquierda) */}
           <div className="col-span-12 lg:col-span-7">
-            <h1 className="text-[clamp(2rem,6vw,4rem)] font-extrabold leading-tight tracking-tight uppercase text-[#0E6F7E]">
+            <h1 className="text-[clamp(2rem,6vw,4rem)] font-extrabold leading-tight tracking-tight uppercase text-[#FFFFFF]">
               TWENTY SEVENTH
             </h1>
             <p className="mt-3 text-[clamp(1.125rem,2.5vw,1.75rem)] font-semibold text-slate-800">

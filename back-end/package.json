@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "nodemon src/index.ts",
     "build": "tsc",
-    "seed:services": "ts-node src/scripts/ensureDefaultServices.ts"
+    "seed:services": "ts-node src/scripts/ensureDefaultServices.ts",
+    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
@@ -18,7 +19,7 @@
     "google-auth-library": "^10.2.1",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.3",
-    "nanoid": "^5.1.5",
+    "nanoid": "^3.3.4",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "sequelize": "^6.37.7"
