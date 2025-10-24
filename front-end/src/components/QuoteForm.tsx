@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, useRef } from "react";
-import { Autocomplete } from "@react-google-maps/api";
+import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -62,25 +62,50 @@ const MOVE_SIZE_OPTIONS = [
   { value: "xlarge", label: "4+ Bedrooms" },
 ] as const;
 
+const libraries: ("places")[] = ["places"];
+
 type StringKeys = Exclude<keyof FormData, "tentative_date">;
 
-const QuoteForm: React.FC<QuoteFormProps> = ({ onComplete, onNextDesktop }) => {
+// Obtener la API key desde las variables de entorno
+// Para Vite: VITE_GOOGLE_MAPS_API_KEY en archivo .env
+// Para Next.js: NEXT_PUBLIC_GOOGLE_MAPS_API_KEY en archivo .env.local
+// Para Create React App: REACT_APP_GOOGLE_MAPS_API_KEY en archivo .env
+const getGoogleMapsApiKey = (): string => {
+  // Vite usa import.meta.env
+  if (typeof import.meta !== 'undefined' && import.meta.env) {
+    return import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "";
+  }
+  
+  // Next.js y CRA usan process.env (con polyfill de bundler)
+  if (typeof process !== 'undefined' && process.env) {
+    return process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || 
+           process.env.REACT_APP_GOOGLE_MAPS_API_KEY || 
+           "";
+  }
+  
+  return "";
+};
+
+const GOOGLE_MAPS_API_KEY = getGoogleMapsApiKey();
+
+const QuoteFormContent: React.FC<QuoteFormProps & { isLoaded: boolean }> = ({ 
+  onComplete, 
+  onNextDesktop,
+  isLoaded 
+}) => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const originAutoRef = useRef<any>(null);
-  const destAutoRef = useRef<any>(null);
+  const originAutoRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const destAutoRef = useRef<google.maps.places.Autocomplete | null>(null);
 
   const handlePlaceChanged = (
-    ref: React.MutableRefObject<any>,
+    ref: React.MutableRefObject<google.maps.places.Autocomplete | null>,
     field: "origin" | "destination"
   ) => {
     const place = ref.current?.getPlace();
-    const value =
-      place?.formatted_address ||
-      place?.name ||
-      (typeof place === "string" ? place : "");
+    const value = place?.formatted_address || place?.name || "";
 
     if (value) {
       setFormData((prev) => ({ ...prev, [field]: value }));
@@ -275,89 +300,97 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onComplete, onNextDesktop }) => {
     <div className="bg-[#D9D9D9] rounded-2xl sm:rounded-3xl p-4 sm:p-4 lg:p-6 pt-8 sm:pt-8 lg:pt-12 font-[Montserrat] shadow-md w-full">
       {/* Paso 1 */}
       {step === 1 && (
-        <form onSubmit={handleNext} className="space-y-4">
+        <div className="space-y-4">
           {/* Fila 1 */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-12">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="text-black flex flex-col">
               <label className="text-xs lg:text-sm font-semibold">Origin</label>
-              <Autocomplete
-                onLoad={(auto) => {
-                  originAutoRef.current = auto;
-
-                  const center = new google.maps.LatLng(37.4316, -78.6569);
-                  const circle = new google.maps.Circle({
-                    center,
-                    radius: 160_934,
-                  });
-
-                  auto.setBounds(circle.getBounds()!);
-                  auto.setOptions({
-                    componentRestrictions: { country: ["us"] },
-                    fields: ["formatted_address", "geometry", "name"],
-                    types: ["geocode"],
-                    strictBounds: true,
-                  });
-                }}
-                onPlaceChanged={() =>
-                  handlePlaceChanged(originAutoRef, "origin")
-                }
-              >
+              {isLoaded ? (
+                <Autocomplete
+                  onLoad={(auto) => {
+                    originAutoRef.current = auto;
+                    const center = new google.maps.LatLng(37.4316, -78.6569);
+                    const circle = new google.maps.Circle({
+                      center,
+                      radius: 160934,
+                    });
+                    auto.setBounds(circle.getBounds()!);
+                    auto.setOptions({
+                      componentRestrictions: { country: ["us"] },
+                      fields: ["formatted_address", "geometry", "name"],
+                      types: ["geocode"],
+                      strictBounds: true,
+                    });
+                  }}
+                  onPlaceChanged={() => handlePlaceChanged(originAutoRef, "origin")}
+                >
+                  <input
+                    type="text"
+                    name="origin"
+                    value={formData.origin}
+                    onChange={handleChange}
+                    placeholder="Origin"
+                    className="p-2 rounded-xl bg-white text-sm transition-colors focus:ring-2 focus:ring-[#FFE67B] focus:outline-none w-full"
+                    disabled={isSubmitting}
+                    autoComplete="off"
+                  />
+                </Autocomplete>
+              ) : (
                 <input
                   type="text"
                   name="origin"
                   value={formData.origin}
                   onChange={handleChange}
                   placeholder="Origin"
-                  className="p-2 rounded-xl bg-white text-sm transition-colors focus:ring-2 focus:ring-[#FFE67B] focus:outline-none"
+                  className="p-2 rounded-xl bg-white text-sm transition-colors focus:ring-2 focus:ring-[#FFE67B] focus:outline-none w-full"
                   disabled={isSubmitting}
-                  autoComplete="off"
                 />
-              </Autocomplete>
+              )}
               {errors.origin && (
-                <span className="text-red-500 text-xs mt-1">
-                  {errors.origin}
-                </span>
+                <span className="text-red-500 text-xs mt-1">{errors.origin}</span>
               )}
             </div>
 
             <div className="text-black flex flex-col">
-              <label className="text-xs lg:text-sm font-semibold">
-                Destination
-              </label>
-              <Autocomplete
-                options={{
-                  componentRestrictions: { country: ["us"] },
-                  fields: ["formatted_address", "geometry", "name"],
-                  types: ["geocode"],
-                }}
-                onLoad={(auto) => (destAutoRef.current = auto)}
-                onPlaceChanged={() =>
-                  handlePlaceChanged(destAutoRef, "destination")
-                }
-              >
+              <label className="text-xs lg:text-sm font-semibold">Destination</label>
+              {isLoaded ? (
+                <Autocomplete
+                  options={{
+                    componentRestrictions: { country: ["us"] },
+                    fields: ["formatted_address", "geometry", "name"],
+                    types: ["geocode"],
+                  }}
+                  onLoad={(auto) => (destAutoRef.current = auto)}
+                  onPlaceChanged={() => handlePlaceChanged(destAutoRef, "destination")}
+                >
+                  <input
+                    type="text"
+                    name="destination"
+                    value={formData.destination}
+                    onChange={handleChange}
+                    placeholder="Destination"
+                    className="p-2 rounded-xl bg-white text-sm transition-colors focus:ring-2 focus:ring-[#FFE67B] focus:outline-none w-full"
+                    disabled={isSubmitting}
+                    autoComplete="off"
+                  />
+                </Autocomplete>
+              ) : (
                 <input
                   type="text"
                   name="destination"
                   value={formData.destination}
                   onChange={handleChange}
                   placeholder="Destination"
-                  className="p-2 rounded-xl bg-white text-sm transition-colors focus:ring-2 focus:ring-[#FFE67B] focus:outline-none"
+                  className="p-2 rounded-xl bg-white text-sm transition-colors focus:ring-2 focus:ring-[#FFE67B] focus:outline-none w-full"
                   disabled={isSubmitting}
-                  autoComplete="off"
                 />
-              </Autocomplete>
+              )}
               {errors.destination && (
-                <span className="text-red-500 text-xs mt-1">
-                  {errors.destination}
-                </span>
+                <span className="text-red-500 text-xs mt-1">{errors.destination}</span>
               )}
             </div>
 
-            {renderField.select(
-              "typeOfMove",
-              "Type of move",
-              MOVE_TYPE_OPTIONS
-            )}
+            {renderField.select("typeOfMove", "Type of move", MOVE_TYPE_OPTIONS)}
           </div>
 
           {/* Fila 2 */}
@@ -369,26 +402,24 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onComplete, onNextDesktop }) => {
 
           <div className="text-black flex justify-center pt-4">
             <button
-              type="submit"
+              type="button"
+              onClick={handleNext}
               disabled={isSubmitting}
               className="bg-[#FFE67B] px-6 py-2 rounded-full font-semibold transition-all duration-200 hover:bg-[#FFD700] disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
             >
               {isSubmitting ? "PROCESSING..." : "GET A QUOTE NOW"}
             </button>
           </div>
-        </form>
+        </div>
       )}
 
       {/* Paso 2 */}
       {step === 2 && (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Fila 1 */}
+        <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {renderField.input("address", "Postal code")}
             <div className="text-black flex flex-col">
-              <label className="text-xs lg:text-sm font-semibold">
-                Tentative date
-              </label>
+              <label className="text-xs lg:text-sm font-semibold">Tentative date</label>
               <ReactDatePicker
                 selected={formData.tentative_date}
                 onChange={(date) => {
@@ -400,7 +431,7 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onComplete, onNextDesktop }) => {
                 placeholderText="Select a date"
                 minDate={new Date()}
                 dateFormat="yyyy-MM-dd"
-                className={`p-2 rounded-xl bg-white text-sm transition-colors focus:ring-2 focus:ring-[#FFE67B] focus:outline-none ${
+                className={`p-2 rounded-xl bg-white text-sm transition-colors focus:ring-2 focus:ring-[#FFE67B] focus:outline-none w-full ${
                   errors.tentative_date ? "border border-red-500" : ""
                 }`}
                 disabled={isSubmitting}
@@ -408,20 +439,13 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onComplete, onNextDesktop }) => {
                 showPopperArrow
               />
               {errors.tentative_date && (
-                <span className="text-red-500 text-xs mt-1">
-                  {errors.tentative_date}
-                </span>
+                <span className="text-red-500 text-xs mt-1">{errors.tentative_date}</span>
               )}
             </div>
           </div>
 
-          {/* Fila 2 */}
           <div className="text-black grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {renderField.select(
-              "size_of_move",
-              "Size of move",
-              MOVE_SIZE_OPTIONS
-            )}
+            {renderField.select("size_of_move", "Size of move", MOVE_SIZE_OPTIONS)}
             {renderField.textarea("additional_info", "Additional info")}
           </div>
 
@@ -435,17 +459,63 @@ const QuoteForm: React.FC<QuoteFormProps> = ({ onComplete, onNextDesktop }) => {
               Back
             </button>
             <button
-              type="submit"
+              type="button"
+              onClick={handleSubmit}
               disabled={isSubmitting}
               className="text-black bg-[#FFE67B] px-6 py-2 rounded-full font-semibold transition-all duration-200 hover:bg-[#FFD700] disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
             >
               {isSubmitting ? "SUBMITTING..." : "CONTINUE"}
             </button>
           </div>
-        </form>
+        </div>
       )}
     </div>
   );
+};
+
+const QuoteForm: React.FC<QuoteFormProps> = (props) => {
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    libraries,
+  });
+
+  if (loadError) {
+    return (
+      <div className="bg-[#D9D9D9] rounded-2xl sm:rounded-3xl p-4 sm:p-4 lg:p-6 pt-8 sm:pt-8 lg:pt-12 font-[Montserrat] shadow-md w-full">
+        <div className="text-red-500 text-center p-4">
+          <p className="font-bold mb-2">⚠️ Error loading Google Maps</p>
+          <p className="text-sm mb-2">Please check:</p>
+          <ul className="text-left text-sm space-y-1 max-w-md mx-auto">
+            <li>• Your API key is valid</li>
+            <li>• Places API is enabled</li>
+            <li>• Maps JavaScript API is enabled</li>
+            <li>• Billing is set up in Google Cloud Console</li>
+          </ul>
+          <a 
+            href="https://developers.google.com/maps/documentation/javascript/get-api-key"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block mt-4 text-blue-600 underline text-sm"
+          >
+            Get API Key Instructions →
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isLoaded) {
+    return (
+      <div className="bg-[#D9D9D9] rounded-2xl sm:rounded-3xl p-4 sm:p-4 lg:p-6 pt-8 sm:pt-8 lg:pt-12 font-[Montserrat] shadow-md w-full">
+        <div className="text-center p-4">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+          <p className="mt-2 text-sm text-gray-600">Loading Google Maps...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return <QuoteFormContent {...props} isLoaded={isLoaded} />;
 };
 
 export default QuoteForm;

@@ -37,11 +37,11 @@ const Service: React.FC = () => {
       </div>
 
       {/* ValuableObjects */}
-      <div className="relative z-12 sm:-mt-0 -mt-50">
+      <div className="relative z-12 sm:-mt-0 -mt-50  md:mb-10">
         <ValuableObjects />
       </div>
       {/* Carousel objects */}
-      <div className="relative z-13 sm:-mt-60 -mt-50">
+      <div className="relative z-13 ">
         <Carousel />
       </div>
       {/* OpinionSection */}

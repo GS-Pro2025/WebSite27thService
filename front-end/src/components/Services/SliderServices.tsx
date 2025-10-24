@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import CardTS from '../Services/CardTS';
 import CardComponent from '../Services/CardCom';
 import CardHome from '../Services/CardHg';
+import CardPackaging from '../Services/CardEmb';
+import CardOrganization from '../Services/CardOrg';
+import CardOffices from '../Services/CardOf';
+import CardServices from '../Services/CardSer';
 import icon from "/assets/LogoAzul.svg"
 import icon1 from "/assets/RecursoSlider1.svg"
 import icon2 from "/assets/RecursoSlider2.svg"
@@ -14,79 +18,51 @@ const TabsCarousel: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
 
   const tabs = [
-    {
-      id: 0,
-      icon: icon,
-      title: "TWENTY SEVENT"
-    },
-    {
-      id: 1,
-      icon: icon1,
-      title: "COMMERCIAL"
-    },
-    {
-      id: 2,
-      icon: icon2,
-      title: "HOME"
-    },
-    {
-      id: 3,
-      icon: icon3,
-      title: "PACKAGING"
-    },
-    {
-      id: 4,
-      icon: icon4,
-      title: "ORGANIZATION"
-    },
-    {
-      id: 5,
-      icon: icon5,
-      title: "OFFICES"
-    },
-    {
-      id: 6,
-      icon: icon6,
-      title: "SERVICES"
-    }
+    { id: 0, icon: icon, title: "TWENTY SEVEN" },
+    { id: 1, icon: icon1, title: "COMMERCIAL" },
+    { id: 2, icon: icon2, title: "HOME" },
+    { id: 3, icon: icon3, title: "PACKING AND UNPACKING" },
+    { id: 4, icon: icon4, title: "REMOVAL OF OBJECTS" },
+    { id: 5, icon: icon5, title: "HOME ORGANIZATION" },
+    { id: 6, icon: icon6, title: "CARGO TRANSPORT" }
   ];
 
   return (
-    <div className="w-full overflow-hidden">
+    <div className="w-full min-h-screen overflow-hidden bg-gradient-to-b from-gray-50 to-white">
       {/* Tabs Container */}
-      <div className="flex justify-center items-center py-2">
+      <div className="flex justify-center items-center py-4 px-2">
         {/* Desktop Version - Overlapping tabs */}
         <div className="hidden md:flex relative items-center justify-center">
           {tabs.map((tab, index) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(index)}
-              className={`min-w-30 px-11.5 relative transition-all duration-500 transform rounded-full border-2 border-[#0F6F7C]/80 
+              className={`relative transition-all duration-500 transform rounded-full border-2 border-[#0F6F7C]/80 
                 ${activeTab === index
-                  ? 'z-20 scale-110 bg-[#FFE67B]'
-                  : 'z-10 hover:scale-105 bg-white'
+                  ? 'z-20 scale-110 bg-[#FFE67B] shadow-xl px-6'
+                  : 'z-10 hover:scale-105 bg-white hover:shadow-md px-4'
                 }`}
               style={{
-                marginLeft: index === 0 ? '0' : '-70px',
-                marginBottom: '-40px',
+                marginLeft: index === 0 ? '0' : '-60px',
+                marginBottom: '-35px',
                 zIndex: activeTab === index ? 20 : 10 - Math.abs(activeTab - index)
               }}
               title={tab.title}
             >
               <div className={`h-20 flex items-center font-semibold transition-all duration-500
                 ${activeTab === index
-                  ? ' text-black min-w-[150px] justify-center'
-                  : ' hover:bg-opacity-80 text-gray-600 w-35 justify-end pr-9'
+                  ? 'text-black justify-center gap-3'
+                  : 'text-gray-600 w-32 justify-end pr-6'
                 }`}>
                 <img 
                   src={tab.icon} 
                   alt={tab.title}
-                  className="w-10 h-auto object-contain"
+                  className="w-10 h-auto object-contain flex-shrink-0"
                 />
-                <span className={`ml-2 overflow-hidden transition-all duration-500
+                <span className={`transition-all duration-500 text-[11px] leading-tight text-center
                   ${activeTab === index 
-                    ? 'max-w-[100px] opacity-100' 
-                    : 'max-w-0 opacity-0'
+                    ? 'max-w-[200px] opacity-100' 
+                    : 'max-w-0 opacity-0 overflow-hidden'
                   }`}>
                   {tab.title}
                 </span>
@@ -102,9 +78,9 @@ const TabsCarousel: React.FC = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(index)}
-                className={`flex-shrink-0 px-4 py-3 rounded-2xl border-2 transition-all duration-300 min-w-[120px]
+                className={`flex-shrink-0 px-4 py-3 rounded-2xl border-2 transition-all duration-300 min-w-[110px]
                   ${activeTab === index
-                    ? 'bg-[#FFE67B] border-black scale-105 shadow-lg'
+                    ? 'bg-[#FFE67B] border-[#0F6F7C] scale-105 shadow-lg'
                     : 'bg-white border-gray-300 hover:border-gray-400'
                   }`}
               >
@@ -112,9 +88,9 @@ const TabsCarousel: React.FC = () => {
                   <img 
                     src={tab.icon} 
                     alt={tab.title}
-                    className="w-6 h-6 object-contain"
+                    className="w-7 h-7 object-contain"
                   />
-                  <span className={`text-xs font-semibold text-center transition-colors duration-300
+                  <span className={`text-[10px] font-semibold text-center leading-tight transition-colors duration-300
                     ${activeTab === index ? 'text-black' : 'text-gray-600'}
                   `}>
                     {tab.title}
@@ -126,50 +102,50 @@ const TabsCarousel: React.FC = () => {
         </div>
       </div>
 
-      {/* Content Container */}
-      <div className="relative min-h-[400px] md:min-h-[600px]">
-        {tabs.map((tab, index) => (
-          <div
-            key={tab.id}
-            className={`absolute inset-0 transition-all duration-500 transform ${
-              activeTab === index
-                ? 'opacity-100 translate-x-0'
-                : index < activeTab
-                ? 'opacity-0 -translate-x-full'
-                : 'opacity-0 translate-x-full'
-            }`}
-          >
-            {/* Renderizar componente específico para cada tab */}
-            {index === 0 ? (
-              <CardTS />
-            ) : index === 1 ? (
-              <CardComponent /> 
-            ) :index === 2 ? (
-            <CardHome/>
-          ):(
-              <div className="flex items-center justify-center h-full px-4">
-                <div className="text-center">
-                  <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
-                    {tab.title}
-                  </h2>
-                  <p className="text-gray-600 text-sm md:text-base">
-                    Componente específico para {tab.title} próximamente
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
+      {/* Content Container - MEJORADO */}
+      <div className="relative w-full px-2 md:px-4 lg:px-6">
+        <div className="relative w-full min-h-[600px] md:min-h-[700px] lg:min-h-[800px]">
+          {tabs.map((tab, index) => (
+            <div
+              key={tab.id}
+              className={`absolute inset-0 transition-all duration-700 ease-in-out ${
+                activeTab === index
+                  ? 'opacity-100 translate-x-0 z-10'
+                  : index < activeTab
+                  ? 'opacity-0 -translate-x-full z-0 pointer-events-none'
+                  : 'opacity-0 translate-x-full z-0 pointer-events-none'
+              }`}
+            >
+              {index === 0 ? (
+                <CardTS />
+              ) : index === 1 ? (
+                <CardComponent /> 
+              ) : index === 2 ? (
+                <CardHome />
+              ) : index === 3 ? (
+                <CardPackaging />
+              ) : index === 4 ? (
+                <CardOrganization />
+              ) : index === 5 ? (
+                <CardOffices />
+              ) : index === 6 ? (
+                <CardServices />
+              ) : null}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Progress Indicators */}
-      <div className="flex justify-center py-4 space-x-2 bg-[#0E6F7E]/60 mb-6 rounded-b-4xl">
+      <div className="flex justify-center py-6 space-x-2 bg-[#0E6F7E] rounded-b-3xl mx-2 md:mx-4 mt-2">
         {tabs.map((_, index) => ( 
-          <div
+          <button
             key={index}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              activeTab === index ? 'w-8 bg-[#FFE67B]' : 'w-2 bg-gray-300'
+            onClick={() => setActiveTab(index)}
+            className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+              activeTab === index ? 'w-8 bg-[#FFE67B]' : 'w-2 bg-gray-300 hover:bg-gray-400'
             }`}
+            aria-label={`Ir a slide ${index + 1}`}
           />
         ))}
       </div>

@@ -29,11 +29,15 @@ const Navbar: React.FC = () => {
   const navigateToPage = (page: string) => {
     setIsMobileMenuOpen(false);
     navigate(`/${page}`);
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const goToHome = () => {
     setIsMobileMenuOpen(false);
     navigate("/");
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const toggleMobileMenu = () => {
@@ -53,6 +57,8 @@ const Navbar: React.FC = () => {
     setIsAuthenticated(false);
     setIsMobileMenuOpen(false);
     navigate("/");
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -93,12 +99,6 @@ const Navbar: React.FC = () => {
                 className="text-white font-medium transition-colors duration-300 hover:text-[#FFE67B]"
               >
                 ABOUT US
-              </button>
-              <button
-                onClick={() => navigateToPage("coverage")}
-                className="text-white font-medium transition-colors duration-300 hover:text-[#FFE67B]"
-              >
-                COVERAGE
               </button>
               <button
                 onClick={() => navigateToPage("contact")}

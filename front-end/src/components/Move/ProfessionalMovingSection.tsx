@@ -1,4 +1,8 @@
 import React from "react";
+import cargaImg from "/assets/carga.png";
+import camionSvg from "/assets/camion.svg";
+import empaqueSvg from "/assets/empaque.png";
+import flechaCompletaSvg from "/assets/flechaCompleta.svg";
 
 const ProfessionalMovingSection: React.FC = () => {
   return (
@@ -22,7 +26,7 @@ const ProfessionalMovingSection: React.FC = () => {
         <div className="inline-grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="flex flex-col items-center">
             <div className="bg-[#DCE3D7] rounded-3xl w-full aspect-square mb-4 flex items-center justify-center p-1">
-              <img src="/assets/carga.svg" alt="Carga" />
+              <img src={cargaImg} alt="Carga" />
             </div>
             <p
               className="text-[#FFE67B] text-2xl font-semibold text-center"
@@ -34,7 +38,7 @@ const ProfessionalMovingSection: React.FC = () => {
 
           <div className="flex flex-col items-center">
             <div className="bg-[#DCE3D7] rounded-3xl w-full aspect-square mb-4 flex items-center justify-center p-1">
-              <img src="assets/camion.svg" alt="Camion" />
+              <img src={camionSvg} alt="Camion" />
             </div>
             <p
               className="text-[#FFE67B] text-2xl font-semibold text-center"
@@ -46,7 +50,7 @@ const ProfessionalMovingSection: React.FC = () => {
 
           <div className="flex flex-col items-center">
             <div className="bg-[#DCE3D7] rounded-3xl w-full aspect-square mb-4 flex items-center justify-center p-1">
-              <img src="/assets/empaque.svg" alt="Empaque" />
+              <img src={empaqueSvg} alt="Empaque" />
             </div>
             <p
               className="text-[#FFE67B] text-2xl font-semibold text-center"
@@ -60,7 +64,7 @@ const ProfessionalMovingSection: React.FC = () => {
 
       <div className="absolute left-0 w-full hidden md:flex md:bottom-23 lg:bottom-5">
         <img
-          src="assets/flechaCompleta.svg"
+          src={flechaCompletaSvg}
           alt="Flecha decorativa de ancho completo"
           className="w-full h-auto"
         />

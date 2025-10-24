@@ -21,7 +21,7 @@
     "node",
     "express"
   ],
-  "author": "Tu nombre",
+  "author": "F5 Team",
   "license": "ISC",
   "dependencies": {
     "@react-google-maps/api": "^2.20.7",

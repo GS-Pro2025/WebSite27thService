@@ -1,11 +1,10 @@
 import React from "react";
 import banner12 from "/assets/banner14.svg";
-import logoFooter2 from "/assets/logoFooter2.svg";
 import { FaFacebook, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="relative -mt-30 z-10 overflow-hidden">
+    <footer className="relative bg-[#0E6F7E]/70 -mt-30 z-10 overflow-hidden">
       <div className="relative w-full">
         <img src={banner12} alt="banner" className="w-full" />
 
