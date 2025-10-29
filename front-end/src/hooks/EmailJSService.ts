@@ -3,8 +3,10 @@ import emailjs from '@emailjs/browser';
 // Configuración de EmailJS
 const EMAIL_CONFIG = {
   SERVICE_ID: import.meta.env.VITE_EMAILJS_SERVICE_ID || 'your_service_id',
-  TEMPLATE_ID: import.meta.env.VITE_EMAILJS_TEMPLATE_SENDQUOTE_ID || 'your_template_id', 
-  PUBLIC_KEY: import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'your_public_key'
+  TEMPLATE_ID: import.meta.env.VITE_EMAILJS_TEMPLATE_SENDQUOTE_ID || 'your_template_id',
+  TEMPLATE_PAYMENTLINK_ID: import.meta.env.VITE_EMAILJS_TEMPLATE_PAYMENTLINK_ID || 'your_payment_link_template_id',
+  PUBLIC_KEY: import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'your_public_key',
+  
 };
 
 export interface EmailTemplateParams {
@@ -81,4 +83,34 @@ export const formatDate = (date: Date | string): string => {
     month: 'long',
     day: 'numeric'
   });
+};
+
+// Añadir después de formatDate
+export const sendPaymentLinkEmail = async (templateParams: Record<string, unknown>) => {
+
+  try {
+    if (!EMAIL_CONFIG.SERVICE_ID || !EMAIL_CONFIG.TEMPLATE_PAYMENTLINK_ID || !EMAIL_CONFIG.PUBLIC_KEY) {
+      console.error('EmailJS configuration missing for payment link:', {
+        SERVICE_ID: EMAIL_CONFIG.SERVICE_ID,
+        TEMPLATE_ID: EMAIL_CONFIG.TEMPLATE_PAYMENTLINK_ID,
+        PUBLIC_KEY: EMAIL_CONFIG.PUBLIC_KEY ? '***' : undefined,
+      });
+      return { success: false, error: 'EmailJS configuration incomplete' };
+    }
+
+    console.log('Sending payment link email with template:', EMAIL_CONFIG.TEMPLATE_PAYMENTLINK_ID);
+
+    const response = await emailjs.send(
+      EMAIL_CONFIG.SERVICE_ID,
+      EMAIL_CONFIG.TEMPLATE_PAYMENTLINK_ID,
+      templateParams,
+      EMAIL_CONFIG.PUBLIC_KEY
+    );
+
+    console.log('Payment link email sent:', response.status, response.text);
+    return { success: true, response };
+  } catch (error) {
+    console.error('Error sending payment link email:', error);
+    return { success: false, error };
+  }
 };
