@@ -3,10 +3,22 @@ import * as CommentService from "../services/CommentService";
 
 export const create = async (req: Request, res: Response) => {
   try {
-    const comment = await CommentService.createComment(req.body);
+    // obtener userId desde el token (seteado por el middleware 'protect')
+    const userId = (req as any).user?.userId;
+    if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+    const payload = {
+      userId,
+      message: req.body.message,
+      date: req.body.date,
+      rating: req.body.rating,
+    };
+
+    const comment = await CommentService.createComment(payload);
     res.status(201).json(comment);
   } catch (error) {
-    res.status(500).json({ error: "Error creating comment" });
+    console.error("Error creating comment:", error);
+    res.status(500).json({ error: "Error creating comment", details: error instanceof Error ? error.message : String(error) });
   }
 };
 

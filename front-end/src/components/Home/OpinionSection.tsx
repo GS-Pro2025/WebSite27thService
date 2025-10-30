@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from "react";
 import FormCobertura from "../FormCover";
 import TestimonialCard from "../TestimonialCard";
@@ -6,6 +7,7 @@ import banner8 from "/assets/banner8.2.svg";
 import globo from "/assets/globo.svg";
 import linea from "/assets/Linea.svg";
 import logoSimple from "/assets/logo_simple.png";
+import { getComments } from "../../hooks/CommentService";
 
 const testimonialsData = [
   {
@@ -34,10 +36,20 @@ const testimonialsData = [
   },
 ];
 
+type TestimonialItem = {
+  id: string | number;
+  text: string;
+  containerClassName: string;
+};
+
 const OpinionSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-
+  const [displayedTestimonials, setDisplayedTestimonials] = useState<TestimonialItem[]>(testimonialsData);
+  const [loadingComments, setLoadingComments] = useState(false);
+  const [commentsError, setCommentsError] = useState<string | null>(null);
+  console.log("loadingComments:", loadingComments);
+  console.log("commentsError:", commentsError);
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -57,6 +69,59 @@ const OpinionSection = () => {
       if (sectionRef.current) {
         observer.unobserve(sectionRef.current);
       }
+    };
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadComments = async () => {
+      setLoadingComments(true);
+      setCommentsError(null);
+      try {
+        const comments = await getComments(); // returns CommentResponse[]
+        // take first 4 from backend
+        const top = comments.slice(0, 4);
+
+        const mappedFromBackend: TestimonialItem[] = top.map((c, i) => ({
+          id: c.id,
+          text: c.message,
+          // try to reuse one of the positions from testimonialsData for layout
+          containerClassName:
+            testimonialsData[i]?.containerClassName || testimonialsData[i % testimonialsData.length].containerClassName,
+        }));
+
+        // If fewer than 4, fill with fallback testimonial texts (avoid duplicates)
+        const usedTexts = new Set(mappedFromBackend.map((t) => t.text));
+        const fallback: TestimonialItem[] = [];
+        for (const t of testimonialsData) {
+          if (mappedFromBackend.length + fallback.length >= 4) break;
+          if (!usedTexts.has(t.text)) {
+            fallback.push({
+              id: `fallback-${t.id}`,
+              text: t.text,
+              containerClassName: t.containerClassName,
+            });
+            usedTexts.add(t.text);
+          }
+        }
+
+        const finalList = [...mappedFromBackend, ...fallback].slice(0, 4);
+        if (mounted) setDisplayedTestimonials(finalList);
+      } catch (err: any) {
+        console.error("Error loading comments:", err);
+        if (mounted) {
+          setCommentsError(err?.message || "Failed to load comments");
+          // fallback to original testimonials (first 4)
+          setDisplayedTestimonials(testimonialsData.slice(0, 4));
+        }
+      } finally {
+        if (mounted) setLoadingComments(false);
+      }
+    };
+
+    loadComments();
+    return () => {
+      mounted = false;
     };
   }, []);
 
@@ -121,7 +186,7 @@ const OpinionSection = () => {
           
           {/* Testimonios fijos (no rotan) */}
           <div className="pointer-events-auto">
-            {testimonialsData.map((testimonial, index) => (
+            {displayedTestimonials.map((testimonial, index) => (
               <div
                 key={testimonial.id}
                 className={`transition-all duration-700 ease-out ${

@@ -38,7 +38,7 @@ export default function ServicesSection() {
         <img
           src="/assets/flechaService.svg"
           alt="Flecha hacia los servicios"
-          className="absolute left-0 right-0 w-full md:w-3/4 max-w-none"
+          className="absolute left-0 right-0 w-full md:w-3/4 max-w-none pointer-events-none"
         />
         <h2 className="relative z-10 text-white font-extrabold text-xl md:text-5xl tracking-wide translate-y-5 -translate-x-30">
           DISCOVER OUR PACKAGES
@@ -46,7 +46,7 @@ export default function ServicesSection() {
         <img
           src="/assets/box.svg"
           alt="Cajas"
-          className="absolute right-0 md:right-20 w-100 translate-x-40"
+          className="absolute right-0 md:right-20 w-100 translate-x-40 pointer-events-none"
         />
       </div>
 
@@ -59,11 +59,11 @@ export default function ServicesSection() {
         <HoverPillSlider />
 
         {/* CTA inferior amarillo */}
-        <div className="mt-4 md:mt-8 flex justify-center">
+        <div className="relative z-30 mt-4 md:mt-8 flex justify-center">
           <button
             type="button"
             onClick={handleGetQuote}
-            className="rounded-full px-12 md:px-16 py-5 font-extrabold text-2xl md:text-3xl shadow-lg transition-colors duration-200"
+            className="relative z-40 rounded-full px-12 md:px-16 py-5 font-extrabold text-2xl md:text-3xl shadow-lg transition-colors duration-200"
             style={{ backgroundColor: YELLOW, color: TEAL }}
             onMouseEnter={(e) =>
               ((e.currentTarget as HTMLButtonElement).style.backgroundColor =
