@@ -29,8 +29,14 @@ app.use(
 
 connectDB();
 setupAssociations();
+
+// Rutas públicas (sin token)
+app.use("/api/comments", commentRoutes);
+
+// Middleware de autenticación para las demás rutas
 app.use(authenticateJWT);
 
+// Rutas protegidas (requieren token)
 app.use("/api/users", userRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/moves", moveRoutes);
@@ -40,7 +46,6 @@ app.use("/api/events", calendarEventRoutes);
 app.use("/api/move-services", moveServiceRoutes);
 app.use("/api/persons", personRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/comments", commentRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Servidor funcionando");
