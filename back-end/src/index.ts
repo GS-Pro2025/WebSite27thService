@@ -13,6 +13,7 @@ import moveServiceRoutes from "./routes/MoveServiceRoutes";
 import authRoutes from "./routes/AuthRoutes";
 import personRoutes from "./routes/PersonRoutes";
 import { authenticateJWT } from "./config/securityConfig";
+import commentRoutes from "./routes/CommentRoutes"; 
 
 dotenv.config();
 
@@ -39,6 +40,7 @@ app.use("/api/events", calendarEventRoutes);
 app.use("/api/move-services", moveServiceRoutes);
 app.use("/api/persons", personRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/comments", commentRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Servidor funcionando");
