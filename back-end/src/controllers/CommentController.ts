@@ -18,6 +18,7 @@ export const create = async (req: Request, res: Response) => {
     res.status(201).json(comment);
   } catch (error) {
     console.error("Error creating comment:", error);
+    console.log("Error creating comment", error);
     res.status(500).json({ error: "Error creating comment", details: error instanceof Error ? error.message : String(error) });
   }
 };
