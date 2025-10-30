@@ -7,7 +7,7 @@ import banner8 from "/assets/banner8.2.svg";
 import globo from "/assets/globo.svg";
 import linea from "/assets/Linea.svg";
 import logoSimple from "/assets/logo_simple.png";
-import { getComments } from "../../hooks/CommentService";
+import { getComments, type CommentResponse } from "../../hooks/CommentService";
 
 const testimonialsData = [
   {
@@ -15,28 +15,28 @@ const testimonialsData = [
     text: "I can always find what I'm looking for on Splice, whether it's the exact sound I want or just a bit of inspiration.",
     rating: 5,
     containerClassName:
-      "absolute top-25 right-20 w-auto max-w-[180px] sm:max-w-[220px] lg:max-w-[460px] xl:max-w-[600px] z-30",
+      "absolute top-25 right-20 w-auto max-w-[180px] sm:max-w-[220px] lg:max-w-[430px] xl:max-w-[600px] z-30",
   },
   {
     id: 2,
     text: "Finally a way to buy plugins that works. By paying a little at a time, producers can get legit access to the top VSTs.",
     rating: 4,
     containerClassName:
-      "absolute top-75 right-100 w-auto max-w-[180px] sm:max-w-[220px] lg:max-w-[460px] xl:max-w-[600px] z-30",
+      "absolute top-110 right-100 w-auto max-w-[180px] sm:max-w-[220px] lg:max-w-[430px] xl:max-w-[600px] z-30",
   },
   {
     id: 3,
     text: "Its been fun to drive into Splices creator community and explore tools that support my own creative process.",
     rating: 5,
     containerClassName:
-      "absolute top-25 right-160 w-auto max-w-[180px] sm:max-w-[220px] lg:max-w-[460px] xl:max-w-[600px] z-30",
+      "absolute top-50 right-160 w-auto max-w-[180px] sm:max-w-[220px] lg:max-w-[430px] xl:max-w-[600px] z-30",
   },
   {
     id: 4,
     text: "Splice is a necessity for any producer. The value of the sounds and inspiration is immeasurable.",
     rating: 5,
     containerClassName:
-      "absolute top-75 right-40 w-auto max-w-[180px] sm:max-w-[220px] lg:max-w-[460px] xl:max-w-[600px] z-30",
+      "absolute top-85 right-40 w-auto max-w-[180px] sm:max-w-[220px] lg:max-w-[430px] xl:max-w-[600px] z-30",
   },
 ];
 
@@ -51,6 +51,8 @@ const OpinionSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [displayedTestimonials, setDisplayedTestimonials] = useState<TestimonialItem[]>(testimonialsData);
+  const [allComments, setAllComments] = useState<CommentResponse[]>([]);
+  const [currentPage, setCurrentPage] = useState(0); // page of 4 comments
   const [loadingComments, setLoadingComments] = useState(false);
   const [commentsError, setCommentsError] = useState<string | null>(null);
   console.log("loadingComments:", loadingComments);
@@ -86,40 +88,11 @@ const OpinionSection = () => {
         console.log("Fetching comments from backend...");
         const comments = await getComments(); // returns CommentResponse[]
         console.log("Comments received:", comments);
-        // take first 4 from backend
-        const top = comments.slice(0, 4);
-        console.log("Top 4 comments:", top);
-
-        const mappedFromBackend: TestimonialItem[] = top.map((c, i) => ({
-          id: c.id,
-          text: c.message,
-          rating: c.rating || 5, // Usar rating del backend
-          // try to reuse one of the positions from testimonialsData for layout
-          containerClassName:
-            testimonialsData[i]?.containerClassName || testimonialsData[i % testimonialsData.length].containerClassName,
-        }));
-
-        console.log("Mapped testimonials:", mappedFromBackend);
-
-        // If fewer than 4, fill with fallback testimonial texts (avoid duplicates)
-        const usedTexts = new Set(mappedFromBackend.map((t) => t.text));
-        const fallback: TestimonialItem[] = [];
-        for (const t of testimonialsData) {
-          if (mappedFromBackend.length + fallback.length >= 4) break;
-          if (!usedTexts.has(t.text)) {
-            fallback.push({
-              id: `fallback-${t.id}`,
-              text: t.text,
-              rating: t.rating,
-              containerClassName: t.containerClassName,
-            });
-            usedTexts.add(t.text);
-          }
+        // store all comments and reset page
+        if (mounted) {
+          setAllComments(comments);
+          setCurrentPage(0);
         }
-
-        const finalList = [...mappedFromBackend, ...fallback].slice(0, 4);
-        console.log("Final testimonials to display:", finalList);
-        if (mounted) setDisplayedTestimonials(finalList);
       } catch (err: any) {
         console.error("Error loading comments:", err);
         console.error("Error details:", err?.response?.data);
@@ -127,7 +100,7 @@ const OpinionSection = () => {
         if (mounted) {
           setCommentsError(err?.message || "Failed to load comments");
           // fallback to original testimonials (first 4)
-          console.log("🔄 Using fallback testimonials");
+          console.log("Using fallback testimonials");
           setDisplayedTestimonials(testimonialsData.slice(0, 4));
         }
       } finally {
@@ -140,6 +113,50 @@ const OpinionSection = () => {
       mounted = false;
     };
   }, []);
+
+  // rotate pages every 10s when there are more than 4 comments
+  useEffect(() => {
+    if (!allComments || allComments.length <= 4) return;
+    const pages = Math.ceil(allComments.length / 4);
+    const id = setInterval(() => {
+      setCurrentPage((p) => (p + 1) % pages);
+    }, 10000);
+    return () => clearInterval(id);
+  }, [allComments]);
+
+  // compute displayedTestimonials whenever allComments or currentPage changes
+  useEffect(() => {
+    if (!allComments || allComments.length === 0) return;
+    const start = currentPage * 4;
+    const slice = allComments.slice(start, start + 4);
+
+    const mappedFromBackend: TestimonialItem[] = slice.map((c, i) => ({
+      id: c.id,
+      text: c.message,
+      rating: c.rating ?? 5,
+      containerClassName:
+        testimonialsData[i]?.containerClassName || testimonialsData[i % testimonialsData.length].containerClassName,
+    }));
+
+    // If fewer than 4 items in slice, fill with fallback (no duplicates)
+    const usedTexts = new Set(mappedFromBackend.map((t) => t.text));
+    const fallback: TestimonialItem[] = [];
+    for (const t of testimonialsData) {
+      if (mappedFromBackend.length + fallback.length >= 4) break;
+      if (!usedTexts.has(t.text)) {
+        fallback.push({
+          id: `fallback-${t.id}`,
+          text: t.text,
+          rating: t.rating,
+          containerClassName: t.containerClassName,
+        });
+        usedTexts.add(t.text);
+      }
+    }
+
+    const finalList = [...mappedFromBackend, ...fallback].slice(0, 4);
+    setDisplayedTestimonials(finalList);
+  }, [allComments, currentPage]);
 
   return (
     <section 
