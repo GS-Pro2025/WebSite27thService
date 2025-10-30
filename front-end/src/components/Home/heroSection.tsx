@@ -1,8 +1,23 @@
 import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const HeroSection: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleQuoteClick = () => {
+    const targetId = "process-section";
+    if (location.pathname === "/") {
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    } else {
+      navigate("/", { state: { scrollTo: targetId } });
+    }
+  };
 
   // Animación de carga inicial
   useEffect(() => {
@@ -89,12 +104,14 @@ const HeroSection: React.FC = () => {
           }}
         >
           <button
+            onClick={handleQuoteClick}
+            aria-label="Get a quote - ir a proceso"
             className="bg-[#FFE67B] text-[#535353] font-['Montserrat'] font-semibold rounded-full shadow-md hover:scale-105 transition-all duration-300 hover:shadow-xl hover:bg-yellow-300 active:scale-95 group
-             text-xs py-2 px-5            
-             sm:text-sm sm:py-2.5 sm:px-6             
-             md:text-base md:py-3 md:px-8            
-             lg:text-xl            
-             xl:text-[28px] xl:py-5 xl:px-12"
+              text-xs py-2 px-5            
+              sm:text-sm sm:py-2.5 sm:px-6             
+              md:text-base md:py-3 md:px-8            
+              lg:text-xl            
+              xl:text-[28px] xl:py-5 xl:px-12"
             style={{
               boxShadow: `0 ${Math.max(4, 8 - scrollY * 0.01)}px ${Math.max(
                 8,

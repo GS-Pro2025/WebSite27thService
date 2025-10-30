@@ -29,7 +29,7 @@ const YourMove: React.FC = () => {
         </div>
       </div>
       <ServicesSection />
-      <div className="relative -mt-38 z-20">
+      <div className="relative -mt-50 z-20">
         <Footer />
       </div>
     </div>

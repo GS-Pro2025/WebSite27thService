@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import HoverPillSlider from "./HoverPillSlider";
 
 const TEAL = "#0E6F7E";
@@ -6,6 +7,21 @@ const YELLOW = "#FFE67B";
 const YELLOW_HOVER = "#FFD54D";
 
 export default function ServicesSection() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleGetQuote = () => {
+    const targetId = "process-section";
+    if (location.pathname === "/") {
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    } else {
+      navigate("/", { state: { scrollTo: targetId } });
+    }
+  };
+
   return (
     <section
       className="
@@ -46,6 +62,7 @@ export default function ServicesSection() {
         <div className="mt-4 md:mt-8 flex justify-center">
           <button
             type="button"
+            onClick={handleGetQuote}
             className="rounded-full px-12 md:px-16 py-5 font-extrabold text-2xl md:text-3xl shadow-lg transition-colors duration-200"
             style={{ backgroundColor: YELLOW, color: TEAL }}
             onMouseEnter={(e) =>
