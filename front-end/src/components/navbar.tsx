@@ -14,8 +14,35 @@ const Navbar: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
+    const isTokenValid = (token?: string | null) => {
+      if (!token) return false;
+      if (token === "undefined" || token === "null") return false;
+      // Si es JWT, validar expiración; si no, considerarlo inválido de forma segura
+      try {
+        const parts = token.split(".");
+        if (parts.length !== 3) return false;
+        const payload = JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")));
+        if (payload && payload.exp) return payload.exp * 1000 > Date.now();
+        return false;
+      } catch {
+        return false;
+      }
+    };
+
     const token = localStorage.getItem("token");
-    setIsAuthenticated(!!token);
+    const valid = isTokenValid(token);
+    if (!valid && token) localStorage.removeItem("token");
+    setIsAuthenticated(valid);
+
+    // Sincronizar cambios de token entre pestañas
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "token") {
+        const newToken = localStorage.getItem("token");
+        setIsAuthenticated(isTokenValid(newToken));
+      }
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
   }, [location]);
 
   useEffect(() => {
@@ -109,12 +136,22 @@ const Navbar: React.FC = () => {
             </div>
             <div className="hidden md:flex items-center space-x-4 ml-auto">
               {isAuthenticated ? (
-                <button
-                  onClick={handleLogout}
-                  className="bg-white text-black font-semibold px-5 py-2 rounded-full transition-colors duration-300 hover:bg-gray-200"
-                >
-                  Logout
-                </button>
+                <>
+                  {/* Botón elegante a user-dashboard, visible solo si está logeado */}
+                  <button
+                    onClick={() => { setIsMobileMenuOpen(false); navigate("/user-dashboard"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                    className="bg-white/10 text-white border border-white/20 px-4 py-2 rounded-full font-semibold transition-all duration-200 hover:bg-white/20 hover:scale-[1.02] focus:outline-none"
+                    aria-label="Ir a dashboard"
+                  >
+                    Dashboard
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="bg-white text-black font-semibold px-5 py-2 rounded-full transition-colors duration-300 hover:bg-gray-200"
+                  >
+                    Logout
+                  </button>
+                </>
               ) : (
                 <>
                   <button

@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import QuoteForm from "../QuoteForm";
 import ServicesForm from "../ServicesForm";
 import SuccessModal from "../SuccessModal";
 import api from "../../api/axiosInstance";
+import { sendQuoteConfirmationEmail, formatSelectedServices, formatDate } from "../../hooks/EmailJSService";
+import type { EmailTemplateParams } from "../../hooks/EmailJSService";
 
 interface FormData {
   name: string;
@@ -169,6 +172,24 @@ const ProcessSection: React.FC = () => {
           })
         );
       await Promise.all(reqs);
+
+      const emailParams: EmailTemplateParams = {
+        to_email: formData.email,
+        to_name: formData.name,
+        move_type: formData.typeOfMove,
+        move_date: formatDate(formData.tentative_date),
+        origin_address: formData.origin,
+        destination_address: formData.destination,
+        size_of_move: formData.size_of_move,
+        phone_number: formData.phone,
+        additional_info: formData.additional_info,
+        selected_services: formatSelectedServices(selectedServices),
+        quote_id: `QT-${moveId}`,
+        company_name: "Twenty Seventh Group",
+        company_email: "contact@twentyseventhservicesgroup.com"
+      };
+
+      await sendQuoteConfirmationEmail(emailParams);
 
       setShowSuccess(true);
     } catch (error) {

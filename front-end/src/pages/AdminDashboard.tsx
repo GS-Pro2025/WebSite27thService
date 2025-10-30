@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../api/axiosInstance";
 import MoveDetailsModal from "../components/MoveDetailsModal";
-import emailjs from "@emailjs/browser";
+import { sendPaymentLinkEmail } from "../hooks/EmailJSService";
 import SuccessModal from "../components/SuccessModal";
 
 interface Client {
@@ -79,7 +79,7 @@ const AdminDashboard: React.FC = () => {
     fetchMoves();
   }, []);
 
-  const handleSendPaymentLink = (moveId: string) => {
+  const handleSendPaymentLink = async (moveId: string) => {
     const move = moves.find((m) => m.move_id === moveId);
     if (!move) return;
 
@@ -98,6 +98,7 @@ const AdminDashboard: React.FC = () => {
     const reservationStatus = reservationPayment?.payment_status ?? "N/A";
 
     const templateParams = {
+      to_email: move.client.email, // ← Añadir esta línea
       client_name: move.client.full_name,
       client_email: move.client.email,
       client_phone: move.client.phone_number,
@@ -113,23 +114,18 @@ const AdminDashboard: React.FC = () => {
       register_link: `https://tusitio.com/register?email=${move.client.email}`,
     };
 
-    const serviceID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-    const templateID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-
-    if (!serviceID || !templateID || !publicKey) {
-      alert("Error: Configura las variables de entorno de EmailJS");
-      return;
-    }
-
-    emailjs.send(serviceID, templateID, templateParams, publicKey).then(
-      () => {
+    try {
+      const result = await sendPaymentLinkEmail(templateParams);
+      if (result.success) {
         setShowSuccessModal(true);
-      },
-      () => {
+      } else {
+        console.error('Email service returned error:', result.error);
         setShowErrorModal(true);
       }
-    );
+    } catch (err) {
+      console.error('Unexpected error sending payment link email:', err);
+      setShowErrorModal(true);
+    }
   };
 
   const handleViewDetails = (moveId: string) => {

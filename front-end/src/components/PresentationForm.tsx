@@ -3,8 +3,11 @@ import { Autocomplete } from "@react-google-maps/api";
 import api from "../api/axiosInstance";
 import ServicesForm from "./ServicesForm";
 import SuccessModal from "./SuccessModal";
-import ReactDatePicker, { DatePicker } from "react-datepicker";
+import { DatePicker } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+// Importar EmailJS - Separar importaciones de tipos y funciones
+import { sendQuoteConfirmationEmail, formatSelectedServices, formatDate } from "../hooks/EmailJSService";
+import type { EmailTemplateParams } from "../hooks/EmailJSService";
 
 interface PresentationFormProps {
   isLoaded: boolean;
@@ -177,6 +180,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
   };
   const handleFinalSubmitServices = async () => {
     try {
+      // 1. Crear person
       const personRes = await api.post("/persons", {
         full_name: formData.name,
         email: formData.email,
@@ -185,6 +189,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
         additional_info: formData.additional_info,
       });
 
+      // 2. Crear move
       const moveRes = await api.post("/moves", {
         person_id: personRes.data.person_id,
         status: "pending",
@@ -194,6 +199,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
       });
       const moveId = moveRes.data.move_id;
 
+      // 3. Crear move items
       const bedrooms = getBedroomCount(formData.sizeMove);
       const moveItemPromises = [
         api.post("/move-items", {
@@ -213,6 +219,7 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
       }
       await Promise.all(moveItemPromises);
 
+      // 4. Crear move services
       const idByName = new Map(services.map((s) => [s.name, s.service_id]));
       const svcRequests = selectedServices
         .map((k) => idByName.get(SERVICE_NAME_BY_KEY[k]))
@@ -225,6 +232,29 @@ const PresentationForm: React.FC<PresentationFormProps> = ({
           })
         );
       await Promise.all(svcRequests);
+
+      // 5. ¡NUEVO! Enviar email de confirmación
+      const emailParams: EmailTemplateParams = {
+        to_email: formData.email,
+        to_name: formData.name,
+        move_type: formData.tipoMovimiento,
+        move_date: formatDate(formData.fecha!),
+        origin_address: formData.origin,
+        destination_address: formData.destination,
+        size_of_move: SIZE_OPTIONS.find(opt => opt.value === formData.sizeMove)?.label || formData.sizeMove,
+        phone_number: formData.phone,
+        additional_info: formData.additional_info,
+        selected_services: formatSelectedServices(selectedServices),
+        quote_id: `QT-${moveId}`,
+        company_name: "Safe Moves Twenty Seventh",
+        company_email: "info@safemoves27th.com"
+      };
+
+      const emailResult = await sendQuoteConfirmationEmail(emailParams);
+      
+      if (!emailResult.success) {
+        console.warn('Email sending failed, but quote was saved successfully');
+      }
 
       setShowModal(true);
     } catch (error) {

@@ -1,14 +1,42 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback, useMemo, useState } from "react";
+import { createComment } from "../hooks/CommentService";
 
 const RatingSection: React.FC<{ className: string }> = ({ className }) => {
   const [rating, setRating] = useState(0);
   const [hovered, setHovered] = useState(0);
   const [feedback, setFeedback] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
-  const handleRatingSubmit = useCallback(() => {
-    alert(
-      `Calificación enviada: ${rating} estrellas. Comentario: "${feedback}"`
-    );
+  const handleRatingSubmit = useCallback(async () => {
+    setError(null);
+    setSuccess(null);
+    if (!feedback || rating === 0) {
+      setError("Please provide a rating and a short comment.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const payload = {
+        message: feedback,
+        date: new Date().toISOString(),
+        rating,
+      };
+      const created = await createComment(payload);
+      console.log("Comment created:", created);
+      setSuccess("Thanks for your feedback!");
+      // opcional: limpiar formulario
+      setFeedback("");
+      setRating(0);
+    } catch (err: any) {
+      console.error("Error creating comment:", err);
+      setError(err?.message || "Failed to submit comment");
+    } finally {
+      setLoading(false);
+    }
   }, [rating, feedback]);
 
   const stars = useMemo(() => [1, 2, 3, 4, 5], []);
@@ -61,13 +89,16 @@ const RatingSection: React.FC<{ className: string }> = ({ className }) => {
           />
         </div>
         {/* Botón de envío */}
-        <div className="flex justify-center">
+        <div className="flex flex-col items-center">
           <button
             onClick={handleRatingSubmit}
-            className="bg-[#FFE67B]/40 text-[#606060] font-semibold px-4 sm:px-6 py-1 sm:py-2 rounded-full border border-[#FFE67B] hover:brightness-105 transition text-xs sm:text-sm md:text-base"
+            disabled={loading}
+            className="bg-[#FFE67B]/40 text-[#606060] font-semibold px-4 sm:px-6 py-1 sm:py-2 rounded-full border border-[#FFE67B] hover:brightness-105 transition text-xs sm:text-sm md:text-base disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Submit your rating
+            {loading ? "Sending..." : "Submit your rating"}
           </button>
+          {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
+          {success && <p className="text-green-500 text-xs mt-2">{success}</p>}
         </div>
       </div>
     </div>

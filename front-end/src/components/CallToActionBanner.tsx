@@ -1,6 +1,23 @@
 import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const CallToActionBanner: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleBookClick = () => {
+    const targetId = 'process-section';
+    if (location.pathname === '/') {
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } else {
+      // Navigate to home and send a small state payload so Home scrolls after navigation
+      navigate('/', { state: { scrollTo: targetId } });
+    }
+  };
+
   return (
     <div className="relative z-40 w-[95%] md:w-[85%] mx-auto flex justify-center -mt-4">
       <div
@@ -13,7 +30,11 @@ const CallToActionBanner: React.FC = () => {
           Book today, plan with peace of mind, and ensure the care your move
           deserves.
         </h2>
-        <button className="mt-2 px-5 py-1 sm:px-8 sm:py-2 bg-white text-black text-xs sm:text-sm md:text-base font-semibold rounded-full shadow hover:bg-gray-100 transition-colors">
+        <button
+          onClick={handleBookClick}
+          className="mt-2 px-5 py-1 sm:px-8 sm:py-2 bg-white text-black text-xs sm:text-sm md:text-base font-semibold rounded-full shadow hover:bg-gray-100 transition-colors"
+          aria-label="Book here - ir a proceso"
+        >
           BOOK HERE
         </button>
       </div>

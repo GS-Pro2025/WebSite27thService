@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from "react";
 import FormCobertura from "../FormCover";
 import TestimonialCard from "../TestimonialCard";
@@ -6,38 +7,54 @@ import banner8 from "/assets/banner8.2.svg";
 import globo from "/assets/globo.svg";
 import linea from "/assets/Linea.svg";
 import logoSimple from "/assets/logo_simple.png";
+import { getComments } from "../../hooks/CommentService";
 
 const testimonialsData = [
   {
     id: 1,
     text: "I can always find what I'm looking for on Splice, whether it's the exact sound I want or just a bit of inspiration.",
+    rating: 5,
     containerClassName:
-      "absolute top-[8%] left-[8%] md:left-[10%] lg:left-[15%] w-auto max-w-[140px] sm:max-w-[170px] lg:max-w-[200px] z-30",
+      "absolute top-25 right-20 w-auto max-w-[180px] sm:max-w-[220px] lg:max-w-[460px] xl:max-w-[600px] z-30",
   },
   {
     id: 2,
     text: "Finally a way to buy plugins that works. By paying a little at a time, producers can get legit access to the top VSTs.",
+    rating: 4,
     containerClassName:
-      "hidden lg:block absolute top-[8%] right-[15%] w-auto max-w-[200px] z-30",
+      "absolute top-75 right-100 w-auto max-w-[180px] sm:max-w-[220px] lg:max-w-[460px] xl:max-w-[600px] z-30",
   },
   {
     id: 3,
     text: "Its been fun to drive into Splices creator community and explore tools that support my own creative process.",
+    rating: 5,
     containerClassName:
-      "hidden lg:block absolute bottom-[8%] left-[15%] w-auto max-w-[200px] z-30",
+      "absolute top-25 right-160 w-auto max-w-[180px] sm:max-w-[220px] lg:max-w-[460px] xl:max-w-[600px] z-30",
   },
   {
     id: 4,
     text: "Splice is a necessity for any producer. The value of the sounds and inspiration is immeasurable.",
+    rating: 5,
     containerClassName:
-      "hidden md:block absolute bottom-[8%] right-[8%] md:right-[10%] lg:right-[15%] w-auto max-w-[140px] sm:max-w-[170px] lg:max-w-[200px] z-30",
+      "absolute top-75 right-40 w-auto max-w-[180px] sm:max-w-[220px] lg:max-w-[460px] xl:max-w-[600px] z-30",
   },
 ];
+
+type TestimonialItem = {
+  id: string | number;
+  text: string;
+  rating?: number;
+  containerClassName: string;
+};
 
 const OpinionSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-
+  const [displayedTestimonials, setDisplayedTestimonials] = useState<TestimonialItem[]>(testimonialsData);
+  const [loadingComments, setLoadingComments] = useState(false);
+  const [commentsError, setCommentsError] = useState<string | null>(null);
+  console.log("loadingComments:", loadingComments);
+  console.log("commentsError:", commentsError);
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -57,6 +74,70 @@ const OpinionSection = () => {
       if (sectionRef.current) {
         observer.unobserve(sectionRef.current);
       }
+    };
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadComments = async () => {
+      setLoadingComments(true);
+      setCommentsError(null);
+      try {
+        console.log("Fetching comments from backend...");
+        const comments = await getComments(); // returns CommentResponse[]
+        console.log("Comments received:", comments);
+        // take first 4 from backend
+        const top = comments.slice(0, 4);
+        console.log("Top 4 comments:", top);
+
+        const mappedFromBackend: TestimonialItem[] = top.map((c, i) => ({
+          id: c.id,
+          text: c.message,
+          rating: c.rating || 5, // Usar rating del backend
+          // try to reuse one of the positions from testimonialsData for layout
+          containerClassName:
+            testimonialsData[i]?.containerClassName || testimonialsData[i % testimonialsData.length].containerClassName,
+        }));
+
+        console.log("Mapped testimonials:", mappedFromBackend);
+
+        // If fewer than 4, fill with fallback testimonial texts (avoid duplicates)
+        const usedTexts = new Set(mappedFromBackend.map((t) => t.text));
+        const fallback: TestimonialItem[] = [];
+        for (const t of testimonialsData) {
+          if (mappedFromBackend.length + fallback.length >= 4) break;
+          if (!usedTexts.has(t.text)) {
+            fallback.push({
+              id: `fallback-${t.id}`,
+              text: t.text,
+              rating: t.rating,
+              containerClassName: t.containerClassName,
+            });
+            usedTexts.add(t.text);
+          }
+        }
+
+        const finalList = [...mappedFromBackend, ...fallback].slice(0, 4);
+        console.log("Final testimonials to display:", finalList);
+        if (mounted) setDisplayedTestimonials(finalList);
+      } catch (err: any) {
+        console.error("Error loading comments:", err);
+        console.error("Error details:", err?.response?.data);
+        console.error("Error status:", err?.response?.status);
+        if (mounted) {
+          setCommentsError(err?.message || "Failed to load comments");
+          // fallback to original testimonials (first 4)
+          console.log("🔄 Using fallback testimonials");
+          setDisplayedTestimonials(testimonialsData.slice(0, 4));
+        }
+      } finally {
+        if (mounted) setLoadingComments(false);
+      }
+    };
+
+    loadComments();
+    return () => {
+      mounted = false;
     };
   }, []);
 
@@ -100,7 +181,7 @@ const OpinionSection = () => {
         <FormCobertura />
       </div>
 
-      {/* Container del Globo con opiniones */}
+      {/* Container del Globo */}
       <div 
         className={`absolute right-[-3%] top-[20%] md:right-[-3%] md:top-[25%] lg:right-[20%] lg:top-[100%] xl:right-[-3%] xl:top-[27.5%] transform -translate-y-1/2 z-20 pointer-events-none transition-all duration-1500 ease-out ${
           isVisible 
@@ -109,35 +190,33 @@ const OpinionSection = () => {
         }`}
         style={{ transitionDelay: "400ms" }}
       >
-        <div className="relative">
-          {/* Globo terráqueo giratorio */}
-          <div className="animate-[spin_60s_linear_infinite]">
-            <img
-              src={globo}
-              alt="Globo terráqueo"
-              className="w-[300px] h-[300px] md:w-[400px] md:h-[400px] lg:w-[600px] lg:h-[600px] xl:w-[800px] xl:h-[800px] object-contain opacity-90"
-            />
-          </div>
-          
-          {/* Testimonios fijos (no rotan) */}
-          <div className="pointer-events-auto">
-            {testimonialsData.map((testimonial, index) => (
-              <div
-                key={testimonial.id}
-                className={`transition-all duration-700 ease-out ${
-                  isVisible 
-                    ? "opacity-100 translate-y-0" 
-                    : "opacity-0 translate-y-10"
-                }`}
-                style={{ 
-                  transitionDelay: `${600 + (index * 150)}ms` 
-                }}
-              >
-                <TestimonialCard {...testimonial} />
-              </div>
-            ))}
-          </div>
+        {/* Globo terráqueo giratorio */}
+        <div className="animate-[spin_60s_linear_infinite]">
+          <img
+            src={globo}
+            alt="Globo terráqueo"
+            className="w-[300px] h-[300px] md:w-[400px] md:h-[400px] lg:w-[600px] lg:h-[600px] xl:w-[800px] xl:h-[800px] object-contain opacity-90"
+          />
         </div>
+      </div>
+
+      {/* Testimonios distribuidos en la parte superior derecha */}
+      <div className="absolute top-[15%] right-0 w-[70%] h-[70%] pointer-events-auto">
+        {displayedTestimonials.map((testimonial, index) => (
+          <div
+            key={testimonial.id}
+            className={`transition-all duration-700 ease-out ${
+              isVisible 
+                ? "opacity-100 translate-y-0" 
+                : "opacity-0 translate-y-10"
+            }`}
+            style={{ 
+              transitionDelay: `${600 + (index * 150)}ms` 
+            }}
+          >
+            <TestimonialCard {...testimonial} />
+          </div>
+        ))}
       </div>
 
       {/* Línea decorativa con animación */}
@@ -174,7 +253,8 @@ const OpinionSection = () => {
 
       {/* Sección de calificación con animación desde abajo */}
       <div
-        className={`absolute bottom-[3%] sm:bottom-[13%] md:bottom-[7%] lg:bottom-[6%] right-[-260px] transform -translate-x-1/2 z-50 w-[95%] sm:w-[85%] md:w-[65%] lg:w-[50%] max-w-2xl transition-all duration-1000 ease-out ${
+        className={`absolute bottom-[3%] sm:bottom-[13%] md:bottom-[7%] lg:bottom-[6%] right-[-260px] transform 
+          -translate-x-1/2 z-50 w-[95%] sm:w-[85%] md:w-[65%] lg:w-[50%] max-w-2xl transition-all duration-1000 ease-out ${
           isVisible 
             ? "opacity-100 translate-y-0" 
             : "opacity-0 translate-y-10"

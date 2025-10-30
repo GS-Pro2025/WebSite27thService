@@ -13,6 +13,7 @@ import moveServiceRoutes from "./routes/MoveServiceRoutes";
 import authRoutes from "./routes/AuthRoutes";
 import personRoutes from "./routes/PersonRoutes";
 import { authenticateJWT } from "./config/securityConfig";
+import commentRoutes from "./routes/CommentRoutes"; 
 
 dotenv.config();
 
@@ -28,8 +29,14 @@ app.use(
 
 connectDB();
 setupAssociations();
+
+// Rutas públicas (sin token)
+app.use("/api/comments", commentRoutes);
+
+// Middleware de autenticación para las demás rutas
 app.use(authenticateJWT);
 
+// Rutas protegidas (requieren token)
 app.use("/api/users", userRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/moves", moveRoutes);

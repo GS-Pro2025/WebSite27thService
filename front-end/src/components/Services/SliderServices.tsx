@@ -28,36 +28,37 @@ const TabsCarousel: React.FC = () => {
   ];
 
   return (
-    <div className="w-full min-h-screen overflow-hidden bg-gradient-to-b from-gray-50 to-white">
-      {/* Tabs Container */}
-      <div className="flex justify-center items-center py-4 px-2">
+    <div className="w-full min-h-screen bg-gradient-to-b py-10 from-gray-50 to-white relative">
+      {/* Tabs Container overflow not hidden*/}
+      <div className="absolute top-0 left-0 w-full flex justify-center items-center pt-4 px-0 z-40 pointer-events-auto">
         {/* Desktop Version - Overlapping tabs */}
-        <div className="hidden md:flex relative items-center justify-center">
+        <div className="md:flex relative items-center justify-center w-full px-8 lg:px-12 xl:px-16">
           {tabs.map((tab, index) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(index)}
-              className={`relative transition-all duration-500 transform rounded-full border-2 border-[#0F6F7C]/80 
+              className={`relative z-50 px-23 transition-all duration-500 transform rounded-full border-2 border-[#0F6F7C]/80 flex-shrink-0
                 ${activeTab === index
-                  ? 'z-20 scale-110 bg-[#FFE67B] shadow-xl px-6'
-                  : 'z-10 hover:scale-105 bg-white hover:shadow-md px-4'
+                  ? 'scale-110 bg-[#FFE67B] shadow-xl px-8'
+                  : 'hover:scale-105 bg-white hover:shadow-md px-5'
                 }`}
               style={{
-                marginLeft: index === 0 ? '0' : '-60px',
-                marginBottom: '-35px',
-                zIndex: activeTab === index ? 20 : 10 - Math.abs(activeTab - index)
+                marginLeft: index === 0 ? '0' : '-20px',
+                zIndex: activeTab === index ? 50 : 40 - Math.abs(activeTab - index)
               }}
               title={tab.title}
             >
-              <div className={`h-20 flex items-center font-semibold transition-all duration-500
+              <div className={`h-24 flex items-center font-semibold transition-all duration-500
                 ${activeTab === index
                   ? 'text-black justify-center gap-3'
-                  : 'text-gray-600 w-32 justify-end pr-6'
+                  : 'text-gray-600 justify-center w-20'
                 }`}>
                 <img 
                   src={tab.icon} 
                   alt={tab.title}
-                  className="w-10 h-auto object-contain flex-shrink-0"
+                  className={`object-contain flex-shrink-0 transition-all duration-500
+                    ${activeTab === index ? 'w-12 h-12' : 'w-10 h-10'}
+                  `}
                 />
                 <span className={`transition-all duration-500 text-[11px] leading-tight text-center
                   ${activeTab === index 

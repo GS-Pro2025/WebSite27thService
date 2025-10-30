@@ -1,6 +1,7 @@
 import React from "react";
 import bagroundImg from "/assets/Slider0.webp";
 import ServiceImg from "/assets/logos.png";
+import wemove from "/assets/wemoveitforu.svg"
 
 const MovingServicesHero: React.FC = () => {
   return (
@@ -22,7 +23,7 @@ const MovingServicesHero: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 h-full gap-8">
           
           {/* Left Content */}
-          <div className="flex items-center justify-center lg:justify-start px-6 md:px-10 lg:px-12 py-8 md:py-12">
+          <div className="flex items-center justify-center lg:justify-start px-6 md:px-10 lg:px-12 py-8 md:py-12 lg:-translate-y-12">
             <div className="w-full max-w-2xl">
               {/* Question Badge */}
               <div className="inline-block mb-6 md:mb-8">
@@ -64,7 +65,12 @@ const MovingServicesHero: React.FC = () => {
               </div>
             </div>
           </div>
-
+          {/* Recurso central sobre la imagen */}
+          <img
+            src={wemove}
+            alt="We Move It For You"
+            className="absolute left-1/2 top-1/2 transform -translate-x-1/2 translate-y-5/7 z-20 pointer-events-none opacity-90 w-64 md:w-80 lg:w-full"
+          />
           {/* Right Side - Services Image - Desktop Only */}
           <div className="hidden lg:flex items-center justify-center relative px-8">
             <div className="relative">
