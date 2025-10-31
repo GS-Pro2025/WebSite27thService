@@ -15,28 +15,28 @@ const testimonialsData = [
     text: "I can always find what I'm looking for on Splice, whether it's the exact sound I want or just a bit of inspiration.",
     rating: 5,
     containerClassName:
-      "absolute top-25 right-20 w-auto max-w-[180px] sm:max-w-[220px] lg:max-w-[430px] xl:max-w-[600px] z-30",
+      "absolute lg:top-5 lg:right-60 w-auto max-w-[180px] sm:max-w-[220px] lg:max-w-[300px] xl:max-w-[380px] z-30",
   },
   {
     id: 2,
     text: "Finally a way to buy plugins that works. By paying a little at a time, producers can get legit access to the top VSTs.",
     rating: 4,
     containerClassName:
-      "absolute top-110 right-100 w-auto max-w-[180px] sm:max-w-[220px] lg:max-w-[430px] xl:max-w-[600px] z-30",
+      "absolute lg:top-180 lg:right-110 w-auto max-w-[180px] sm:max-w-[220px] lg:max-w-[300px] xl:max-w-[380px] z-30",
   },
   {
     id: 3,
     text: "Its been fun to drive into Splices creator community and explore tools that support my own creative process.",
     rating: 5,
     containerClassName:
-      "absolute top-50 right-160 w-auto max-w-[180px] sm:max-w-[220px] lg:max-w-[430px] xl:max-w-[600px] z-30",
+      "absolute lg:top-70 lg:right-120 w-auto max-w-[180px] sm:max-w-[220px] lg:max-w-[300px] xl:max-w-[380px] z-30",
   },
   {
     id: 4,
     text: "Splice is a necessity for any producer. The value of the sounds and inspiration is immeasurable.",
     rating: 5,
     containerClassName:
-      "absolute top-85 right-40 w-auto max-w-[180px] sm:max-w-[220px] lg:max-w-[430px] xl:max-w-[600px] z-30",
+      "absolute lg:top-125 lg:right-50 w-auto max-w-[180px] sm:max-w-[220px] lg:max-w-[300px] xl:max-w-[380px] z-30",
   },
 ];
 
@@ -52,11 +52,46 @@ const OpinionSection = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [displayedTestimonials, setDisplayedTestimonials] = useState<TestimonialItem[]>(testimonialsData);
   const [allComments, setAllComments] = useState<CommentResponse[]>([]);
-  const [currentPage, setCurrentPage] = useState(0); // page of 4 comments
+  const [currentPage, setCurrentPage] = useState(0); // page index
   const [loadingComments, setLoadingComments] = useState(false);
   const [commentsError, setCommentsError] = useState<string | null>(null);
+
+  // new: detect mobile layout (width < 820 AND height < 1180)
+  const [isMobileLayout, setIsMobileLayout] = useState<boolean>(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia("(max-width: 820px) and (max-height: 1180px)").matches
+      : false
+  );
+
+  // pageSize depends on layout: mobile = 1, desktop = 4
+  const pageSize = isMobileLayout ? 1 : 4;
+
+  useEffect(() => {
+    const m = window.matchMedia("(max-width: 820px) and (max-height: 1180px)");
+    const handler = (e: MediaQueryListEvent) => setIsMobileLayout(e.matches);
+    // add listener
+    if ("addEventListener" in m) {
+      m.addEventListener("change", handler);
+    } else {
+      // older browsers
+      // @ts-ignore
+      m.addListener(handler);
+    }
+    // sync initial set (in case SSR or initial mismatch)
+    setIsMobileLayout(m.matches);
+    return () => {
+      if ("removeEventListener" in m) {
+        m.removeEventListener("change", handler);
+      } else {
+        // @ts-ignore
+        m.removeListener(handler);
+      }
+    };
+  }, []);
+
   console.log("loadingComments:", loadingComments);
   console.log("commentsError:", commentsError);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -86,11 +121,24 @@ const OpinionSection = () => {
       setCommentsError(null);
       try {
         console.log("Fetching comments from backend...");
-        const comments = await getComments(); // returns CommentResponse[]
-        console.log("Comments received:", comments);
-        // store all comments and reset page
+        const comments = await getComments(pageSize === 1 ? 1 : 1, pageSize === 1 ? 100 : 100); // keep signature, normalize below
+        console.log("Comments received (raw):", comments);
+
+        // Normalizar respuesta: aceptar array o { data: [...], meta: {...} } o { rows: [...], count }
+        let list: CommentResponse[] = [];
+        if (Array.isArray(comments)) {
+          list = comments;
+        } else if ((comments as any)?.data && Array.isArray((comments as any).data)) {
+          list = (comments as any).data;
+        } else if ((comments as any)?.rows && Array.isArray((comments as any).rows)) {
+          list = (comments as any).rows;
+        } else {
+          // Por seguridad, stringify para debug si la forma es inesperada
+          console.warn("Unexpected comments payload shape:", comments);
+        }
+
         if (mounted) {
-          setAllComments(comments);
+          setAllComments(list);
           setCurrentPage(0);
         }
       } catch (err: any) {
@@ -99,9 +147,9 @@ const OpinionSection = () => {
         console.error("Error status:", err?.response?.status);
         if (mounted) {
           setCommentsError(err?.message || "Failed to load comments");
-          // fallback to original testimonials (first 4)
+          // fallback to original testimonials (first pageSize)
           console.log("Using fallback testimonials");
-          setDisplayedTestimonials(testimonialsData.slice(0, 4));
+          setDisplayedTestimonials(testimonialsData.slice(0, pageSize));
         }
       } finally {
         if (mounted) setLoadingComments(false);
@@ -112,51 +160,57 @@ const OpinionSection = () => {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [pageSize]);
 
-  // rotate pages every 10s when there are more than 4 comments
+  // rotate pages every 10s using current pageSize
   useEffect(() => {
-    if (!allComments || allComments.length <= 4) return;
-    const pages = Math.ceil(allComments.length / 4);
+    if (!allComments || allComments.length <= pageSize) return;
+    const pages = Math.ceil(allComments.length / pageSize);
     const id = setInterval(() => {
       setCurrentPage((p) => (p + 1) % pages);
     }, 10000);
     return () => clearInterval(id);
-  }, [allComments]);
+  }, [allComments, pageSize]);
 
-  // compute displayedTestimonials whenever allComments or currentPage changes
+  // compute displayedTestimonials whenever allComments, currentPage or pageSize changes
   useEffect(() => {
-    if (!allComments || allComments.length === 0) return;
-    const start = currentPage * 4;
-    const slice = allComments.slice(start, start + 4);
+    if (!allComments || allComments.length === 0) {
+      // If backend empty, show fallback (respect pageSize)
+      setDisplayedTestimonials(testimonialsData.slice(0, pageSize));
+      return;
+    }
+    const start = currentPage * pageSize;
+    const slice = allComments.slice(start, start + pageSize);
 
     const mappedFromBackend: TestimonialItem[] = slice.map((c, i) => ({
       id: c.id,
       text: c.message,
       rating: c.rating ?? 5,
-      containerClassName:
-        testimonialsData[i]?.containerClassName || testimonialsData[i % testimonialsData.length].containerClassName,
+      // for mobile use centered stacked layout; for desktop reuse positional classes
+      containerClassName: isMobileLayout
+        ? "relative mx-auto mt-6 w-[90%] max-w-[420px] z-30"
+        : testimonialsData[i]?.containerClassName || testimonialsData[i % testimonialsData.length].containerClassName,
     }));
 
-    // If fewer than 4 items in slice, fill with fallback (no duplicates)
+    // Fill with fallbacks if fewer than pageSize (avoid duplicates)
     const usedTexts = new Set(mappedFromBackend.map((t) => t.text));
     const fallback: TestimonialItem[] = [];
     for (const t of testimonialsData) {
-      if (mappedFromBackend.length + fallback.length >= 4) break;
+      if (mappedFromBackend.length + fallback.length >= pageSize) break;
       if (!usedTexts.has(t.text)) {
         fallback.push({
           id: `fallback-${t.id}`,
           text: t.text,
           rating: t.rating,
-          containerClassName: t.containerClassName,
+          containerClassName: isMobileLayout ? "relative mx-auto mt-6 w-[90%] max-w-[420px] z-30" : t.containerClassName,
         });
         usedTexts.add(t.text);
       }
     }
 
-    const finalList = [...mappedFromBackend, ...fallback].slice(0, 4);
+    const finalList = [...mappedFromBackend, ...fallback].slice(0, pageSize);
     setDisplayedTestimonials(finalList);
-  }, [allComments, currentPage]);
+  }, [allComments, currentPage, pageSize, isMobileLayout]);
 
   return (
     <section 
@@ -217,24 +271,40 @@ const OpinionSection = () => {
         </div>
       </div>
 
-      {/* Testimonios distribuidos en la parte superior derecha */}
-      <div className="absolute top-[15%] right-0 w-[70%] h-[70%] pointer-events-auto">
-        {displayedTestimonials.map((testimonial, index) => (
-          <div
-            key={testimonial.id}
-            className={`transition-all duration-700 ease-out ${
-              isVisible 
-                ? "opacity-100 translate-y-0" 
-                : "opacity-0 translate-y-10"
-            }`}
-            style={{ 
-              transitionDelay: `${600 + (index * 150)}ms` 
-            }}
-          >
-            <TestimonialCard {...testimonial} />
-          </div>
-        ))}
-      </div>
+      {/* Testimonios: mobile -> centered single; desktop -> positioned 4-grid */}
+      {isMobileLayout ? (
+        <div className="relative z-30 w-full flex justify-center items-start pt-28 pointer-events-auto">
+          {displayedTestimonials.map((testimonial, index) => (
+            <div
+              key={testimonial.id}
+              className={`transition-all duration-700 ease-out w-full flex justify-center ${
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+              }`}
+              style={{ transitionDelay: `${400 + index * 150}ms` }}
+            >
+              <TestimonialCard {...testimonial} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="absolute top-[15%] right-0 w-[70%] h-[70%] pointer-events-auto">
+          {displayedTestimonials.map((testimonial, index) => (
+            <div
+              key={testimonial.id}
+              className={`transition-all duration-700 ease-out ${
+                isVisible 
+                  ? "opacity-100 translate-y-0" 
+                  : "opacity-0 translate-y-10"
+              }`}
+              style={{ 
+                transitionDelay: `${600 + (index * 150)}ms` 
+              }}
+            >
+              <TestimonialCard {...testimonial} />
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Línea decorativa con animación */}
       <div 
@@ -281,6 +351,7 @@ const OpinionSection = () => {
         <RatingSection className="" />
       </div>
 
+      
       <style>{`
         @keyframes spin {
           from {

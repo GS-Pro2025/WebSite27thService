@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import api from "../api/axiosInstance";
-import axios from "axios";
 
 export interface CommentPayload {
   message: string;
@@ -22,7 +21,10 @@ export interface CommentResponse {
  */
 export const getComments = async (page = 1, limit = 100): Promise<CommentResponse[]> => {
   try {
-    const res = await axios.get(`/api/comments?page=${page}&limit=${limit}`);
+    // usar la instancia `api` para respetar baseURL y Authorization
+    const res = await api.get(`/comments?page=${page}&limit=${limit}`);
+    console.log("getComments response status:", res.status);
+    console.log("getComments response data:", res.data);
     // formato nuevo: { data: [...], meta: {...} }
     const payload = res.data;
     if (!payload) return [];
@@ -43,8 +45,8 @@ export const getComments = async (page = 1, limit = 100): Promise<CommentRespons
     }
 
     return [];
-  } catch (error) {
-    console.error("getComments error:", error);
+  } catch (error: any) {
+    console.error("getComments error:", error?.response?.data || error.message);
     return [];
   }
 };

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback, useMemo, useState } from "react";
 import { createComment } from "../hooks/CommentService";
+import SignUpModal from "./Auth/SignUpModal";
 
 const RatingSection: React.FC<{ className: string }> = ({ className }) => {
   const [rating, setRating] = useState(0);
@@ -9,10 +10,17 @@ const RatingSection: React.FC<{ className: string }> = ({ className }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [showSignUp, setShowSignUp] = useState(false);
 
   const handleRatingSubmit = useCallback(async () => {
     setError(null);
     setSuccess(null);
+    // si no hay token, abrir modal de registro/login
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setShowSignUp(true);
+      return;
+    }
     if (!feedback || rating === 0) {
       setError("Please provide a rating and a short comment.");
       return;
@@ -101,6 +109,8 @@ const RatingSection: React.FC<{ className: string }> = ({ className }) => {
           {success && <p className="text-green-500 text-xs mt-2">{success}</p>}
         </div>
       </div>
+      {/* Sign up modal si el usuario intenta comentar sin token */}
+      <SignUpModal isOpen={showSignUp} onClose={() => setShowSignUp(false)} />
     </div>
   );
 };
