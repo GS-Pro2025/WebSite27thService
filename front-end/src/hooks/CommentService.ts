@@ -3,28 +3,51 @@ import api from "../api/axiosInstance";
 
 export interface CommentPayload {
   message: string;
-  date: string; // ISO string
   rating?: number;
+  date?: string;
+  userId?: number;
 }
 
 export interface CommentResponse {
   id: number;
-  userId: number;
   message: string;
-  date: string;
   rating?: number;
+  date?: string;
+  userId?: number;
 }
 
 /**
  * Obtiene todos los comentarios
  */
-export const getComments = async (): Promise<CommentResponse[]> => {
+export const getComments = async (page = 1, limit = 100): Promise<CommentResponse[]> => {
   try {
-    const res = await api.get<CommentResponse[]>("/comments");
-    return res.data;
-  } catch (err: any) {
-    console.error("Error fetching comments:", err?.response?.data || err.message);
-    throw new Error(err?.response?.data?.error || "Could not fetch comments");
+    // usar la instancia `api` para respetar baseURL y Authorization
+    const res = await api.get(`/comments?page=${page}&limit=${limit}`);
+    console.log("getComments response status:", res.status);
+    console.log("getComments response data:", res.data);
+    // formato nuevo: { data: [...], meta: {...} }
+    const payload = res.data;
+    if (!payload) return [];
+
+    if (Array.isArray(payload)) {
+      // backend antiguo: devolvía directamente un array
+      return payload as CommentResponse[];
+    }
+
+    if (Array.isArray(payload.data)) {
+      // backend paginado: { data: [...], meta: {...} }
+      return payload.data as CommentResponse[];
+    }
+
+    if (Array.isArray(payload.rows)) {
+      // alternativa: { rows: [...], count: ... }
+      return payload.rows as CommentResponse[];
+    }
+
+    return [];
+  } catch (error: any) {
+    console.error("getComments error:", error?.response?.data || error.message);
+    return [];
   }
 };
 
