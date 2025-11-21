@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import ServicesWheel from "./ServiceCarr";
 
 interface ImageData {
   src: string;
@@ -50,19 +51,15 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     );
   };
 
-  const goToSlide = (index: number) => {
-    setDirection(index > currentIndex ? 1 : -1);
-    setCurrentIndex(index);
-  };
 
   return (
     <div 
       ref={carouselRef}
-      className="relative z-0 w-full -mt-[170px] sm:-mt-[230px] md:-mt-[230px] lg:-mt-[300px] xl:-mt-[320px]"
+      className="relative z-0 w-full min-h-screen"
     >
-      {/* Contenedor del carrusel */}
-      <div className="relative w-full h-auto overflow-hidden rounded-lg group">
-        {/* Stack de imágenes con transición */}
+      {/* Carousel Container */}
+      <div className="relative w-full h-auto overflow-hidden rounded-3xl group">
+        {/* Image Stack with Transitions */}
         <div className="relative w-full h-auto">
           {images.map((image, index) => (
             <div
@@ -86,73 +83,64 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
             </div>
           ))}
           
-          {/* Imagen visible para mantener el espacio */}
+          {/* Visible image to maintain space */}
           <img
             src={images[currentIndex].src}
             alt={images[currentIndex].alt}
             className="w-full h-auto object-cover opacity-0"
           />
 
-          {/* Texto superpuesto - posicionado a la izquierda y centrado verticalmente */}
-          <div className="absolute left-8 md:left-16 lg:left-24 top-1/2 -translate-y-1/2 z-20">
+          {/* Service Title Overlay - Top Right */}
+          <div className="absolute top-6 md:top-8 right-6 md:right-8 z-20">
             <div 
-              key={currentIndex}
-              className="bg-white/80 backdrop-blur-sm text-[#757575] px-6 md:px-10 py-4 md:py-7 rounded-3xl shadow-2xl text-xl md:text-2xl lg:text-3xl font-bold max-w-md transform transition-all duration-500 hover:scale-105 hover:shadow-3xl"
+              key={`title-${currentIndex}`}
+              className=" backdrop-blur-sm text-teal-600 px-6 md:px-8 py-3 md:py-4 rounded-2xl  text-2xl md:text-3xl lg:text-4xl font-light transform transition-all duration-500"
               style={{
-                animation: "slideInLeft 0.6s ease-out"
+                animation: "fadeInScale 0.6s ease-out"
               }}
             >
               {images[currentIndex].title}
             </div>
           </div>
+
+          {/* Services Wheel - Left Side */}
+          <div className="absolute left-4 md:left-8 top-1/4 -translate-y-1/2 z-20 w-50 md:w-70 lg:w-90">
+            <ServicesWheel />
+          </div>
         </div>
 
-        {/* Botones de navegación mejorados */}
-        <button
-          onClick={goToPrevious}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-md text-white p-3 rounded-full transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110 z-20"
-          aria-label="Imagen anterior"
-        >
-          <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
-        </button>
+        {/* Navigation Buttons - Bottom Center */}
+        <div className="absolute bottom-4 md:bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2 md:gap-3 z-20">
+          <button
+            onClick={goToPrevious}
+            className="bg-yellow-400 hover:bg-yellow-500 text-gray-800 p-2 md:p-2.5 rounded-full transition-all duration-300 hover:scale-110 shadow-lg"
+            aria-label="Previous image"
+          >
+            <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
+          </button>
 
-        <button
-          onClick={goToNext}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-md text-white p-3 rounded-full transition-all duration-300 opacity-0 group-hover:opacity-100 hover:scale-110 z-20"
-          aria-label="Imagen siguiente"
-        >
-          <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
-        </button>
-
-        {/* Indicadores (dots) mejorados */}
-        <div className="absolute bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
-          {images.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`rounded-full transition-all duration-300 ${
-                index === currentIndex
-                  ? "w-10 h-3 bg-white shadow-lg"
-                  : "w-3 h-3 bg-white/60 hover:bg-white/90 hover:scale-125"
-              }`}
-              aria-label={`Ir a imagen ${index + 1}`}
-            />
-          ))}
+          <button
+            onClick={goToNext}
+            className="bg-yellow-400 hover:bg-yellow-500 text-gray-800 p-2 md:p-2.5 rounded-full transition-all duration-300 hover:scale-110 shadow-lg"
+            aria-label="Next image"
+          >
+            <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
+          </button>
         </div>
 
-        {/* Overlay gradiente para mejor legibilidad */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent pointer-events-none" />
+        {/* Subtle gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black/10 via-transparent to-transparent pointer-events-none" />
       </div>
 
       <style>{`
-        @keyframes slideInLeft {
+        @keyframes fadeInScale {
           from {
             opacity: 0;
-            transform: translateX(-30px);
+            transform: scale(0.9);
           }
           to {
             opacity: 1;
-            transform: translateX(0);
+            transform: scale(1);
           }
         }
       `}</style>

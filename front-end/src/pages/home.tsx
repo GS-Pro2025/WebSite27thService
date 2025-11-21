@@ -36,20 +36,19 @@ const Home: React.FC = () => {
   }, [location]);
 
   return (
-    <div className="w-full min-h-screen bg-white overflow-visible">
+    <div className="bg-[0E6F7E] overflow-visible">
       <HeroSection />
-      <div id="process-section">
+
+      <div id="process-section" className="-mt-32 md:-mt-40 lg:-mt-48">
         <ProcessSection />
       </div>
+      
       <EquipmentSection />
       <PhotoCarouselSection />
       <OpinionSection />
-      <div className="-mt-16">
       <CallToActionBanner />
-      </div>
-      <div className="-mt-36">
       <Footer />
-      </div>
+
     </div>
   );
 };

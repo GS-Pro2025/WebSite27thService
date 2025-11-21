@@ -1,173 +1,245 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import {
+  Zap,
+  Globe,
+  ShieldCheck,
+  
+  Home,
+  Search,Truck,
+} from "lucide-react";
+import banner from "../../../public/assets/bannerCamion.png";
+import hotel from "../../../public/assets/hotel.svg";
+
+interface QuoteFormData {
+  from: string;
+  to: string;
+  date: string;
+  services: string;
+}
 
 const HeroSection: React.FC = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [formData, setFormData] = useState<QuoteFormData>({
+    from: "",
+    to: "",
+    date: "",
+    services: "Full",
+  });
 
-  const handleQuoteClick = () => {
-    const targetId = "process-section";
-    if (location.pathname === "/") {
-      const el = document.getElementById(targetId);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    } else {
-      navigate("/", { state: { scrollTo: targetId } });
-    }
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  // Animación de carga inicial
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 200);
-    return () => clearTimeout(timer);
-  }, []);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Quote form submitted:", formData);
+    // Handle form submission
+  };
 
-  // Manejar scroll
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Calcular transformaciones basadas en scroll
-  const contentTransform = -scrollY * 0.3; // Parallax inverso para el contenido
-  const titleScale = Math.max(0.8, 1 - scrollY * 0.0008); // Escala del título
-  const contentOpacity = Math.max(0.2, 1 - scrollY * 0.002); // Opacidad del contenido
-  const imageOpacity = Math.max(0.3, 1 - scrollY * 0.001); // Opacidad de la imagen
+  // Format date for display
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = { 
+      day: 'numeric', 
+      month: 'short', 
+      weekday: 'short' 
+    };
+    return date.toLocaleDateString('en-US', options);
+  };
 
   return (
-    <section className="w-full bg-[#68A2A6] overflow-hidden relative">
-      {/* Imagen de fondo */}
-      <img
-        src="/assets/banner1.svg"
-        alt="Hero Banner"
-        className={`w-full h-auto block transition-all duration-1000 ${
-          isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-105"
-        }`}
-        style={{
-          opacity: isLoaded ? imageOpacity : 0,
-        }}
-      />
+    <section className="relative min-h-[120vh] flex items-start justify-center overflow-y-auto">
+      {/* Background Image with Overlay */}
+      <div className="absolute inset-0 z-0 h-9/10">
+        <img
+          src={banner}
+          alt="Twenty Seventh Moving Team"
+          className="w-full h-full object-cover object-center"
+        />
+      </div>
 
-      {/* Contenedor principal */}
-      <div
-        className="absolute top-[42%] left-[6%] sm:left-[8%] lg:left-[10%] w-11/12 max-w-[240px] sm:max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg"
-        style={{
-          transform: `translateY(-50%) translateY(${contentTransform}px)`,
-          opacity: contentOpacity,
-        }}
-      >
-        {/* Título principal */}
-        <h1
-          className={`font-['Montserrat'] text-white text-[16px] sm:text-xl md:text-2xl lg:text-3xl xl:text-[40px] leading-tight text-center -ml-28 sm:-ml-6 md:-ml-50 lg:-ml-50 transition-all duration-1000 delay-300 ${
-            isLoaded
-              ? "opacity-100 transform translate-y-0"
-              : "opacity-0 transform translate-y-8"
-          }`}
-          style={{
-            transform: `scale(${titleScale}) translateY(${
-              isLoaded ? 0 : 32
-            }px)`,
-            filter: `brightness(${Math.max(0.7, 1 - scrollY * 0.001)})`,
-          }}
-        >
-          <span className="font-medium inline-block transition-all duration-700 delay-400 hover:text-[#FFE67B]">
-            A NEW BEGINNING
-          </span>
-          <br />
-          <span
-            className={`font-extrabold inline-block transition-all duration-700 delay-600 hover:text-[#FFE67B] ${
-              isLoaded ? "transform scale-100" : "transform scale-95"
-            }`}
-          >
-            STARTS HERE
-          </span>
-        </h1>
-
-        {/* Botón de cotización */}
-        <div
-          className={`mt-3 sm:mt-4 md:mt-6 transition-all duration-1000 delay-800 ${
-            isLoaded
-              ? "opacity-100 transform translate-y-0"
-              : "opacity-0 transform translate-y-6"
-          }`}
-          style={{
-            transform: `translateY(${isLoaded ? 0 : 24}px) scale(${Math.max(
-              0.9,
-              1 - scrollY * 0.0005
-            )})`,
-          }}
-        >
-          <button
-            onClick={handleQuoteClick}
-            aria-label="Get a quote - ir a proceso"
-            className="bg-[#FFE67B] text-[#535353] font-['Montserrat'] font-semibold rounded-full shadow-md hover:scale-105 transition-all duration-300 hover:shadow-xl hover:bg-yellow-300 active:scale-95 group
-              text-xs py-2 px-5            
-              sm:text-sm sm:py-2.5 sm:px-6             
-              md:text-base md:py-3 md:px-8            
-              lg:text-xl            
-              xl:text-[28px] xl:py-5 xl:px-12"
-            style={{
-              boxShadow: `0 ${Math.max(4, 8 - scrollY * 0.01)}px ${Math.max(
-                8,
-                16 - scrollY * 0.02
-              )}px rgba(0,0,0,0.2)`,
-            }}
-          >
-            <span className="group-hover:animate-pulse">GET A QUOTE</span>
-          </button>
+      {/* Content Container */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col min-h-[150vh]">
+        {/* Hero Text */}
+        <div className="text-center mb-auto pt-12">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 drop-shadow-lg">
+            Your new beginning starts
+            <br />
+            with a move
+          </h1>
+          <p className="text-lg sm:text-xl text-white/95 max-w-2xl mx-auto drop-shadow-md">
+            Find the security of a reliable service and expert quality
+            <br />
+            to take care of your valuable belongings.
+          </p>
         </div>
 
-        {/* Párrafo descriptivo */}
-        <p
-          className={`mt-3 sm:mt-4 md:mt-6 -ml-2 sm:-ml-2 md:-ml-4 lg:-ml-10 font-['Montserrat'] text-[#585858] leading-snug transition-all duration-1000 delay-1000
-            text-[12px]             
-            sm:text-sm             
-            md:text-base            
-            lg:text-lg            
-            xl:text-[30px] ${
-              isLoaded
-                ? "opacity-100 transform translate-y-0"
-                : "opacity-0 transform translate-y-4"
-            }`}
-          style={{
-            transform: `translateY(${isLoaded ? 0 : 16}px) scale(${Math.max(
-              0.95,
-              1 - scrollY * 0.0003
-            )})`,
-            opacity: Math.max(0.4, contentOpacity * 1.2),
-          }}
-        >
-          <span
-            className={`font-semibold transition-all duration-500 ${
-              isLoaded ? "opacity-100" : "opacity-0"
-            }`}
-            style={{ transitionDelay: "1200ms" }}
-          >
-            Your move is part of your new story, that's why{" "}
-          </span>
-          <span
-            className={`font-extrabold text-[#FFE67B] transition-all duration-500 hover:animate-pulse ${
-              isLoaded ? "opacity-100" : "opacity-0"
-            }`}
-            style={{ transitionDelay: "1400ms" }}
-          >
-            we are here to take care of what you love{" "}
-          </span>
-          <span
-            className={`font-semibold transition-all duration-500 ${
-              isLoaded ? "opacity-100" : "opacity-0"
-            }`}
-            style={{ transitionDelay: "1600ms" }}
-          >
-            and guide you every step of the way.
-          </span>
-        </p>
+        {/* Spacer to push content down */}
+        <div className="flex-grow"></div>
+
+        {/* Feature Badges - Outside the main card */}
+        <div className="flex justify-center gap-2 mb-6 max-w-5xl mx-auto px-4 pb-24">
+          <div className="bg-[#FFE67B] rounded-lg px-4 py-2.5 flex flex-col items-center min-w-[100px] shadow-md">
+            <Zap className="w-10 h-10 mb-1" />
+            <span className="text-[10px] font-semibold leading-tight text-center">
+              Fast
+              <br />
+              moves
+            </span>
+          </div>
+
+          <div className="bg-[#FFE67B]  rounded-lg px-4 py-2.5 flex flex-col items-center min-w-[100px] shadow-md">
+            <Globe className="w-10 h-10 mb-1" />
+            <span className="text-[10px] font-semibold leading-tight text-center">
+              International
+              <br />
+              coverage
+            </span>
+          </div>
+
+          <div className="bg-[#FFE67B]  rounded-lg px-4 py-2.5 flex flex-col items-center min-w-[100px] shadow-md">
+            <ShieldCheck className="w-10 h-10 mb-1" />
+            <span className="text-[10px] font-semibold leading-tight text-center">
+              Trusted
+              <br />
+              choice
+            </span>
+          </div>
+        </div>
+
+        {/* Quote Form Container */}
+        <div className="max-w-5xl mx-auto px-4 mb-16">
+          {/* Folder Tab - Quote Here */}
+          <div className="inline-flex items-center gap-2 bg-white rounded-t-2xl px-5 py-3 shadow-sm border-b-0">
+            <div className="inline-flex items-center gap-2 bg-[#C9E1EC] px-5 py-3 shadow-sm rounded-full">
+              <img src={hotel} alt="Quote" className="w-5 h-5" />
+              <span className="text-sm font-semibold text-blue-700">
+                Quote here
+              </span>
+            </div>
+          </div>
+
+          {/* Main Form Card */}
+          <div className="bg-white rounded-3xl rounded-tl-none shadow-2xl overflow-hidden">
+            <form onSubmit={handleSubmit} className="p-8">
+              <div className="flex gap-6 items-center">
+                {/* Card 1: From/To with Truck Icon */}
+                <div className="flex-1 bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+                  <div className="flex items-center gap-4">
+                    {/* From */}
+                    <div className="flex-1">
+                      <label className="text-xs text-gray-500 block mb-2">
+                        From
+                      </label>
+                      <input
+                        type="text"
+                        name="from"
+                        value={formData.from}
+                        onChange={handleInputChange}
+                        className="text-xl font-bold text-gray-900 outline-none w-full bg-transparent placeholder:text-gray-400 placeholder:font-normal"
+                        placeholder="Origin city"
+                      />
+                    </div>
+
+                    {/* Truck/Swap Icon */}
+                    <div className="flex items-center justify-center">
+                      <button
+                        type="button"
+                        className="p-3 bg-white rounded-full shadow-md hover:shadow-lg transition-all border border-gray-200"
+                        onClick={() => {
+                          setFormData((prev) => ({
+                            ...prev,
+                            from: prev.to,
+                            to: prev.from,
+                          }));
+                        }}
+                      >
+                        <Truck className="w-5 h-5 text-gray-600" />
+                      </button>
+                    </div>
+
+                    {/* To */}
+                    <div className="flex-1">
+                      <label className="text-xs text-gray-500 block mb-2">
+                        Going to
+                      </label>
+                      <input
+                        type="text"
+                        name="to"
+                        value={formData.to}
+                        onChange={handleInputChange}
+                        className="text-xl font-bold text-gray-900 outline-none w-full bg-transparent placeholder:text-gray-400 placeholder:font-normal"
+                        placeholder="Destination city"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card 2: Date and Services with House Icon */}
+                <div className="flex-1 bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+                  <div className="flex items-center gap-4">
+                    {/* Date */}
+                    <div className="flex-1 relative">
+                      <label className="text-xs text-gray-500 block mb-2">
+                        Date
+                      </label>
+                      <input
+                        type="date"
+                        name="date"
+                        value={formData.date}
+                        onChange={handleInputChange}
+                        className="text-xl font-bold text-gray-900 outline-none w-full bg-transparent cursor-pointer [color-scheme:light]"
+                        style={{
+                          colorScheme: 'light'
+                        }}
+                      />
+                    </div>
+
+                    {/* House Icon */}
+                    <div className="flex items-center justify-center">
+                      <div className="p-3 bg-white rounded-full shadow-md border border-gray-200">
+                        <Home className="w-5 h-5 text-gray-600" />
+                      </div>
+                    </div>
+
+                    {/* Services */}
+                    <div className="flex-1">
+                      <label className="text-xs text-gray-500 block mb-2">
+                        Services
+                      </label>
+                      <select
+                        name="services"
+                        value={formData.services}
+                        onChange={handleInputChange}
+                        className="text-xl font-bold text-gray-900 outline-none w-full bg-transparent cursor-pointer"
+                      >
+                        <option value="Full">Full</option>
+                        <option value="Partial">Partial</option>
+                        <option value="Packing">Packing Only</option>
+                        <option value="Loading">Loading Only</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Search Button */}
+                <button
+                  type="submit"
+                  className="bg-teal-600 hover:bg-teal-700 text-white rounded-full p-6 transition-all shadow-lg hover:shadow-xl hover:scale-105 flex-shrink-0"
+                  aria-label="Search quotes"
+                >
+                  <Search className="w-7 h-7" strokeWidth={2.5} />
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </section>
   );

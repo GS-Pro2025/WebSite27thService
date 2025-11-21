@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+@theme {
+  --font-family-manrope: "Manrope", sans-serif;
+  --font-family-poppins: "Poppins", sans-serif;
+}
+
+:root {
+  font-family: "Montserrat", system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+/* Resto de tu CSS */
 :root {
   font-family: "Montserrat", system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
