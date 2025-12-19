@@ -4,7 +4,6 @@ import MovingStagesSection from "../components/Move/MovingStagesSection";
 import CoverageSection from "../components/Move/CoverageSection";
 import WeightSection from "../components/Move/WeightSection";
 import CalculatorSection from "../components/Move/CalculatorSection";
-import ServicesSection from "../components/Move/ServicesSection";
 import Footer from "../components/Footer";
 
 const YourMove: React.FC = () => {
@@ -14,24 +13,8 @@ const YourMove: React.FC = () => {
       <MovingStagesSection />
       <CoverageSection />
       <WeightSection />
-
-      <div className="relative">
-        <div className="absolute inset-x-0 -top-10 md:-top-15 z-20 flex justify-center pointer-events-none select-none">
-          <img
-            src="/assets/linea_move.svg"
-            alt="Separador curvo"
-            className="w-full"
-          />
-        </div>
-
-        <div className="relative">
-          <CalculatorSection />
-        </div>
-      </div>
-      <ServicesSection />
-      <div className="relative -mt-50 z-20">
+      <CalculatorSection />
         <Footer />
-      </div>
     </div>
   );
 };

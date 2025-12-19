@@ -1,141 +1,218 @@
-import React, { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import teamGroup from "/assets/teamgroup.png";
-import team2 from "/assets/team2.png";
-import team3 from "/assets/team3.png";
-import flechaTeam from "/assets/flechaTeam.svg";
+import React, { useState, useEffect, useRef } from 'react';
+import banner from "../../../public/assets/about.png";
 
-const TeamCarousel = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+export default function MovingLeadersComponent() {
+  const [isVisible, setIsVisible] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
-  // Array de imágenes del equipo
-  const teamImages = [
-    {
-      src: teamGroup,
-      alt: "Equipo Twenty Seventh - Grupo Principal",
-      title: "TRAINED PROFESSIONALS"
-    },
-    {
-      src: team2,
-      alt: "Equipo Twenty Seventh - En Acción",
-      title: "EXPERT MOVERS"
-    },
-    {
-      src: team3,
-      alt: "Equipo Twenty Seventh - Servicio Premium",
-      title: "QUALITY SERVICE"
-    }
-  ];
-
-  // Auto-play del carrusel
+  // Intersection Observer para animaciones de scroll
   useEffect(() => {
-    if (!isAutoPlaying) return;
-    
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % teamImages.length);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [isAutoPlaying, teamImages.length]);
-
-  const goToSlide = (index: number) => {
-    setCurrentIndex(index);
-    setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 10000);
-  };
-
-  const goToPrevious = () => {
-    setCurrentIndex((prev) => 
-      prev === 0 ? teamImages.length - 1 : prev - 1
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            if (!hasAnimated) {
+              setHasAnimated(true);
+            }
+          } else {
+            setIsVisible(false);
+          }
+        });
+      },
+      {
+        threshold: 0.2,
+        rootMargin: "-50px",
+      }
     );
-    setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 10000);
-  };
 
-  const goToNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % teamImages.length);
-    setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 10000);
-  };
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, [hasAnimated]);
+
+  // Animación inicial al cargar
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+      setHasAnimated(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <section className="relative w-full h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800">
-      {/* Imágenes del carrusel */}
-      <div className="relative w-full h-full">
-        {teamImages.map((image, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
-              index === currentIndex
-                ? "opacity-100 scale-100"
-                : "opacity-0 scale-105"
-            }`}
-          >
+    <div ref={sectionRef} className="min-h-screen bg-white">
+      <svg 
+        xmlns="http://www.w3.org/2000/svg" 
+        viewBox="0 0 1440 320"
+        className={`transition-all duration-1000 ${
+          isVisible ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <path fill="#C9E1EC" fillOpacity="1" d="M0,192L80,170.7C160,149,320,107,480,122.7C640,139,800,213,960,229.3C1120,245,1280,203,1360,181.3L1440,160L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
+      </svg>
+      <div className="max-w-7xl mx-auto px-4">
+        {/* Título principal */}
+        <h1 
+          className={`text-4xl md:text-5xl font-semibold text-gray-900 text-center mb-4 transition-all duration-1000 ${
+            isVisible
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 -translate-y-8"
+          }`}
+          style={{
+            transitionDelay: isVisible ? "200ms" : "0ms",
+          }}
+        >
+          Leaders in moving
+        </h1>
+
+        {/* Subtítulo descriptivo */}
+        <p 
+          className={`text-center text-gray-600 max-w-2xl mx-auto mb-12 leading-relaxed transition-all duration-1000 ${
+            isVisible
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 -translate-y-8"
+          }`}
+          style={{
+            transitionDelay: isVisible ? "400ms" : "0ms",
+          }}
+        >
+          We are a team dedicated to professional moves, we have been characterized by our commitment to help more families in each new beginning
+        </p>
+
+        {/* Tarjeta con imagen */}
+        <div 
+          className={`relative rounded-3xl overflow-hidden shadow-2xl mb-8 transition-all duration-1000 ${
+            isVisible
+              ? "opacity-100 scale-100"
+              : "opacity-0 scale-95"
+          }`}
+          style={{
+            transitionDelay: isVisible ? "600ms" : "0ms",
+          }}
+        >
+          {/* Imagen de ejemplo */}
+          <div className="relative">
             <img
-              src={image.src}
-              alt={image.alt}
+              src={banner}
+              alt="Safe box"
               className="w-full h-full object-cover"
             />
-            {/* Overlay degradado */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
           </div>
-        ))}
-      </div>
+        </div>
 
-      {/* Flecha decorativa + texto */}
-      <div className="pointer-events-none absolute left-0 right-0 top-4 md:top-6 flex justify-end z-20">
-        <div className="relative ml-auto w-[520px] sm:w-[600px] md:w-[720px] animate-[fadeInSlide_1s_ease-out]">
-          <img 
-            src={flechaTeam} 
-            alt="" 
-            className="w-full h-auto drop-shadow-2xl" 
-          />
-          <div className="absolute inset-0 flex items-center justify-center pr-8 md:pr-16">
-            <span 
-              className="text-[#FFE67B] font-extrabold tracking-wide text-base sm:text-xl md:text-2xl drop-shadow-lg transition-all duration-500"
-              key={currentIndex}
-            >
-              {teamImages[currentIndex].title}
+        {/* Sección de misión y visión */}
+        <div className="grid md:grid-cols-2 gap-8 mb-12">
+          {/* Misión */}
+          <div
+            className={`transition-all duration-1000 ${
+              isVisible
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 -translate-x-12"
+            }`}
+            style={{
+              transitionDelay: isVisible ? "800ms" : "0ms",
+            }}
+          >
+            <div className="inline-block mb-4">
+              <span className="bg-[#F4D35E] text-gray-900 px-4 py-2 rounded-xl text-sm font-medium">
+                Our Mission
+              </span>
+            </div>
+            <p className="text-gray-700 leading-relaxed">
+              Make every move an easy, safe and stress-free experience, accompanying our clients at the beginning of new stages with commitment, efficiency and personalized care.
+            </p>
+          </div>
+
+          {/* Visión */}
+          <div
+            className={`transition-all duration-1000 ${
+              isVisible
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 translate-x-12"
+            }`}
+            style={{
+              transitionDelay: isVisible ? "1000ms" : "0ms",
+            }}
+          >
+            <div className="inline-block mb-4">
+              <span className="bg-[#F4D35E] text-gray-900 px-4 py-2 rounded-xl text-sm font-medium">
+                Our Vision
+              </span>
+            </div>
+            <p className="text-gray-700 leading-relaxed">
+              To establish ourselves as the reference moving company in Virginia, recognized for our operational excellence, innovation in logistics services and the human closeness that distinguishes us.
+            </p>
+          </div>
+        </div>
+
+        {/* Sección de valores */}
+        <div className="mb-8">
+          <div 
+            className={`inline-block mb-6 transition-all duration-1000 ${
+              isVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-8"
+            }`}
+            style={{
+              transitionDelay: isVisible ? "1200ms" : "0ms",
+            }}
+          >
+            <span className="bg-[#F4D35E] text-gray-900 px-4 py-2 rounded-xl text-sm font-medium">
+              Our Values
             </span>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                title: "Responsibility",
+                description: "We keep our promises and take care of every detail.",
+                delay: "1400ms"
+              },
+              {
+                title: "Innovation",
+                description: "We constantly seek new ways to improve our service.",
+                delay: "1550ms"
+              },
+              {
+                title: "Commitment",
+                description: "We get involved in every move as if it were our own.",
+                delay: "1700ms"
+              },
+              {
+                title: "Honesty",
+                description: "We act with transparency and ethics in every service.",
+                delay: "1850ms"
+              }
+            ].map((value, index) => (
+              <div
+                key={index}
+                className={`transition-all duration-1000 ${
+                  isVisible
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-12"
+                }`}
+                style={{
+                  transitionDelay: isVisible ? value.delay : "0ms",
+                }}
+              >
+                <h3 className="font-semibold text-gray-900 mb-2">{value.title}</h3>
+                <p className="text-gray-700 text-sm">
+                  {value.description}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
-
-      {/* Botones de navegación */}
-      <button
-        onClick={goToPrevious}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-white/10 hover:bg-white/20 backdrop-blur-md p-3 rounded-full transition-all duration-300 hover:scale-110 group"
-        aria-label="Anterior"
-      >
-        <ChevronLeft className="w-6 h-6 md:w-8 md:h-8 text-white group-hover:text-[#FFE67B] transition-colors" />
-      </button>
-      
-      <button
-        onClick={goToNext}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-white/10 hover:bg-white/20 backdrop-blur-md p-3 rounded-full transition-all duration-300 hover:scale-110 group"
-        aria-label="Siguiente"
-      >
-        <ChevronRight className="w-6 h-6 md:w-8 md:h-8 text-white group-hover:text-[#FFE67B] transition-colors" />
-      </button>
-
-      {/* Indicadores de puntos */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-30">
-        {teamImages.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => goToSlide(index)}
-            className={`transition-all duration-300 rounded-full ${
-              index === currentIndex
-                ? "w-12 h-3 bg-[#FFE67B]"
-                : "w-3 h-3 bg-white/50 hover:bg-white/80"
-            }`}
-            aria-label={`Ir a la imagen ${index + 1}`}
-          />
-        ))}
-      </div>
-    </section>
+    </div>
   );
-};
-
-export default TeamCarousel;
+}

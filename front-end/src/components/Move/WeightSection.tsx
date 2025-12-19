@@ -1,160 +1,272 @@
 import React, { useEffect, useRef, useState } from "react";
+import QuoteForm from "./quoteForm";
+import type { QuoteFormData } from "./quoteForm";
 
-const WeightSection: React.FC = () => {
-  const sectionRef = useRef<HTMLElement>(null);
+// Import the images
+import safeImage from "/assets/cajaFuerte.png";
+import safeImage2 from "/assets/piano.png";
+import safeImage3 from "/assets/reloj.png";
+import safeImage4 from "/assets/moto.png";
+import safeImage5 from "/assets/alacena.png";
+
+interface CarouselItem {
+  id: number;
+  image: string;
+  title: string;
+  weight: string;
+  description: string;
+}
+
+const WeightGuideSection: React.FC = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [showForm, setShowForm] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<CarouselItem | null>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const autoPlayRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
+  const items: CarouselItem[] = [
+    {
+      id: 1,
+      image: safeImage,
+      title: "Safe Box",
+      weight: "500-700 lbs",
+      description: "Heavy-duty safes require special handling and equipment. Our team has experience moving safes of all sizes safely and securely."
+    },
+    {
+      id: 2,
+      image: safeImage2,
+      title: "Piano",
+      weight: "300-600 lbs",
+      description: "Pianos are delicate and heavy. We use specialized equipment and techniques to ensure your piano arrives in perfect condition."
+    },
+    {
+      id: 3,
+      image: safeImage3,
+      title: "Grandfather Clock",
+      weight: "100-200 lbs",
+      description: "Antique clocks require careful disassembly and packing. Trust our experts to handle these precious timepieces with care."
+    },
+    {
+      id: 4,
+      image: safeImage4,
+      title: "Motorcycle",
+      weight: "400-800 lbs",
+      description: "We have specialized equipment to safely transport motorcycles, ensuring they arrive without a scratch."
+    },
+    {
+      id: 5,
+      image: safeImage5,
+      title: "China Cabinet",
+      weight: "200-400 lbs",
+      description: "Large furniture pieces are our specialty. We'll disassemble, transport, and reassemble your cabinet at your new location."
+    }
+  ];
+
+  // Intersection Observer for scroll animations
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          } else {
+            setIsVisible(false);
+          }
+        });
       },
       {
         threshold: 0.2,
-        rootMargin: "0px"
+        rootMargin: "-50px",
       }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const currentRef = sectionRef.current;
+
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);
 
+  const handleGetQuote = () => {
+    const currentItem = items[currentIndex];
+    setSelectedItem(currentItem);
+    setShowForm(true);
+    
+    setTimeout(() => {
+      document.getElementById('quote-form')?.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }, 100);
+  };
+
+  const handleFormSubmit = (formData: QuoteFormData) => {
+    console.log("Quote submitted:", formData);
+  };
+
+  const handleCloseForm = () => {
+    setShowForm(false);
+  };
+
+  const goToSlide = (index: number) => {
+    setCurrentIndex(index);
+  };
+
+  // Auto-play functionality
+  useEffect(() => {
+    autoPlayRef.current = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % items.length);
+    }, 7000);
+
+    return () => {
+      if (autoPlayRef.current) clearInterval(autoPlayRef.current);
+    };
+  }, [items.length]);
+
   return (
-    <section ref={sectionRef} className="w-full">
-      {/* SECTION 1: Top gradient banner with title */}
-      <div className="w-full bg-[linear-gradient(90deg,#002C3D_0%,#0E6F7E_45%,#FFE67B_80%,#FFF7E6_100%)]">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="py-10 md:py-14 text-center">
-            <h2 
-              className={`text-white text-3xl md:text-4xl font-extrabold transition-all duration-1000 ease-out ${
-                isVisible 
-                  ? "opacity-100 translate-y-0" 
-                  : "opacity-0 -translate-y-10"
-              }`}
-            >
-              How Much Does Your Move Weigh?
+    <>
+      <section ref={sectionRef} className="relative py-20 px-4 bg-white overflow-hidden">
+        <div className="max-w-8xl mx-auto">
+          {/* Badge */}
+          <div 
+            className={`flex justify-start mb-8 transition-all duration-1000 ease-out ${
+              isVisible 
+                ? "opacity-100 translate-x-0" 
+                : "opacity-0 -translate-x-8"
+            }`}
+          >
+            <span className="inline-block bg-[#B8CCC5] text-gray-800 px-6 py-2 rounded-full text-sm font-semibold shadow-md">
+              Special moving
+            </span>
+          </div>
+
+          {/* Title */}
+          <div 
+            className={`text-center mb-12 transition-all duration-1000 ease-out ${
+              isVisible 
+                ? "opacity-100 translate-y-0" 
+                : "opacity-0 -translate-y-8"
+            }`}
+            style={{ transitionDelay: "200ms" }}
+          >
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-gray-900 mb-6 font-[Poppins] leading-tight">
+              discover how much your move weighs
             </h2>
-          </div>
-        </div>
-      </div>
-
-      {/* SECTION 2: Gray card full width */}
-      <div className="w-full bg-[#C6D7CE] shadow-[0_4px_12px_rgba(0,0,0,0.15)]">
-        {/* Container to center card content */}
-        <div 
-          className={`max-w-6xl mx-auto px-6 md:px-10 py-6 md:py-8 text-slate-700 transition-all duration-1000 ease-out ${
-            isVisible 
-              ? "opacity-100 translate-x-0" 
-              : "opacity-0 -translate-x-10"
-          }`}
-          style={{ transitionDelay: "200ms" }}
-        >
-          <p>
-            Knowing the weight of your move is key to planning the best logistics. Having this info helps us:
-          </p>
-          <ol className="mt-4 space-y-2">
-            <li className="font-semibold">
-              1. Give you an accurate cost estimate
-            </li>
-            <li className="font-semibold">
-              2. Ensure your move goes smoothly with top-quality standards and no surprises.
-            </li>
-          </ol>
-        </div>
-      </div>
-
-      {/* SECTION 3: Bottom pale yellow band */}
-      <div className="w-full bg-[#FFE67B]/65">
-        <div className="max-w-6xl mx-auto px-6 py-10 md:py-14">
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr_auto_1fr] gap-8 md:gap-6 items-start">
-            <p 
-              className={`text-slate-800 leading-relaxed transition-all duration-700 ease-out ${
-                isVisible 
-                  ? "opacity-100 translate-y-0" 
-                  : "opacity-0 translate-y-10"
-              }`}
-              style={{ transitionDelay: "400ms" }}
-            >
-              We know figuring out the weight of your entire move can be tricky, but we've got a simple guide to help you out.
-            </p>
-
-            <ArrowRight 
-              className={`hidden md:block mt-2 transition-all duration-700 ease-out ${
-                isVisible 
-                  ? "opacity-100 scale-100" 
-                  : "opacity-0 scale-75"
-              }`}
-              style={{ transitionDelay: "600ms" }}
-            />
-
-            <p 
-              className={`text-slate-800 leading-relaxed transition-all duration-700 ease-out ${
-                isVisible 
-                  ? "opacity-100 translate-y-0" 
-                  : "opacity-0 translate-y-10"
-              }`}
-              style={{ transitionDelay: "700ms" }}
-            >
-              Get clear on how many rooms or spaces you're moving, then identify the largest items and make a list for each space.
-            </p>
-
-            <ArrowRight 
-              className={`hidden md:block mt-2 transition-all duration-700 ease-out ${
-                isVisible 
-                  ? "opacity-100 scale-100" 
-                  : "opacity-0 scale-75"
-              }`}
-              style={{ transitionDelay: "900ms" }}
-            />
-
-            <p 
-              className={`text-slate-800 leading-relaxed transition-all duration-700 ease-out ${
-                isVisible 
-                  ? "opacity-100 translate-y-0" 
-                  : "opacity-0 translate-y-10"
-              }`}
-              style={{ transitionDelay: "1000ms" }}
-            >
-              We'll give you some helpful data on common items and their approximate weights so you have a good reference point.
+            <p className="text-gray-600 text-base md:text-lg font-[Manrope] max-w-4xl mx-auto leading-relaxed">
+              We give you a guide of objects and their approximate weights so you can reference your next move. 
+              Doubts about the total weight? Don't worry, we'll do it for you, request more information at the button below.
             </p>
           </div>
+
+          {/* Carousel Container */}
+          <div 
+            className={`relative h-[500px] md:h-[600px] rounded-3xl overflow-hidden shadow-2xl transition-all duration-1000 ease-out ${
+              isVisible 
+                ? "opacity-100 translate-y-0 scale-100" 
+                : "opacity-0 translate-y-12 scale-95"
+            }`}
+            style={{ transitionDelay: "400ms" }}
+          >
+            {/* Main Image Display */}
+            {items.map((item, index) => (
+              <div
+                key={item.id}
+                className={`absolute inset-0 transition-opacity duration-1000 ${
+                  index === currentIndex ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-full object-cover"
+                />
+                {/* Overlay Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
+
+                {/* Content */}
+                <div className="absolute top-[10%] left-8 md:left-16 max-w-xl text-white z-10">
+                  <div className="font-bold tracking-[8px] text-xs md:text-sm mb-3 opacity-90">
+                    WEIGHT GUIDE
+                  </div>
+                  <h3 className="text-3xl md:text-5xl lg:text-6xl font-semibold leading-tight mb-3">
+                    {item.title}
+                  </h3>
+                  <div className="text-3xl md:text-4xl lg:text-5xl font-semibold text-[#FFE67B] mb-4">
+                    {item.weight}
+                  </div>
+                  <p className="text-sm md:text-base leading-relaxed mb-6 max-w-md">
+                    {item.description}
+                  </p>
+                  <button
+                    onClick={handleGetQuote}
+                    className="bg-[#FFE67B] hover:bg-[#FFD700] text-gray-900 font-semibold px-8 py-3 rounded-lg transition-all duration-300 hover:scale-105 font-[Manrope] tracking-wide text-sm shadow-lg"
+                  >
+                    GET QUOTE
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            {/* Thumbnail Navigation - Inside Image at Bottom */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex justify-center gap-3 md:gap-4 z-20 overflow-x-auto max-w-[98%] p-4">
+              {items.map((item, index) => (
+                <button
+                  key={item.id}
+                  onClick={() => goToSlide(index)}
+                  className={`relative flex-shrink-0 w-28 h-16 md:w-44 md:h-24 rounded-xl overflow-hidden transition-all duration-300 ${
+                    index === currentIndex
+                      ? "ring-4 ring-[#FFE67B] scale-105"
+                      : "ring-2 ring-white/50 hover:ring-white hover:scale-105"
+                  }`}
+                >
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+                  <div className="absolute bottom-1 left-2 right-2 text-white">
+                    <div className="font-semibold text-[10px] md:text-xs truncate">
+                      {item.title}
+                    </div>
+                    <div className="font-light text-[8px] md:text-[10px] text-gray-300">
+                      {item.weight}
+                    </div>
+                  </div>
+                  {/* Active Indicator */}
+                  {index === currentIndex && (
+                    <div className="absolute top-2 right-2 w-2 h-2 bg-[#FFE67B] rounded-full animate-pulse"></div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* Quote Form Section */}
+      {showForm && selectedItem && (
+        <section id="quote-form" className="bg-gray-50 py-12 px-4">
+          <QuoteForm
+            selectedItem={{
+              title: selectedItem.title,
+              weight: selectedItem.weight,
+              image: selectedItem.image,
+            }}
+            onSubmit={handleFormSubmit}
+            onClose={handleCloseForm}
+          />
+        </section>
+      )}
+    </>
   );
 };
 
-/* Aesthetic thin arrow, vertically centered in the row */
-const ArrowRight: React.FC<{ className?: string; style?: React.CSSProperties }> = ({ 
-  className, 
-  style 
-}) => (
-  <svg
-    className={className}
-    style={style}
-    width="44"
-    height="44"
-    viewBox="0 0 24 24"
-    fill="none"
-    aria-hidden="true"
-  >
-    <path
-      d="M4 12h13M13 5l7 7-7 7"
-      stroke="#0E6F7E"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-export default WeightSection;
+export default WeightGuideSection;

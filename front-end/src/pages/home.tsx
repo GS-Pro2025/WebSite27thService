@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import HeroSection from "../components/Home/heroSection";
-import ProcessSection from "../components/Home/processSection";
-import EquipmentSection from "../components/Home/EquipmentSection";
-import OpinionSection from "../components/Home/OpinionSection";
-import PhotoCarouselSection from "../components/Home/PhotoCarouselSection";
-import CallToActionBanner from "../components/CallToActionBanner";
+import HomeFirst from "../components/Home/HomeFirst";
+import Steps from "../components/Home/Steps";
+import Packages from "../components/Home/Packages";
+import Quality from "../components/Home/Quality";
+import HomeServices from "../components/Home/HomeServices";
+import Interstate from "../components/Interstate";
 import Footer from "../components/Footer";
+
 const Home: React.FC = () => {
   const location = useLocation();
 
@@ -36,19 +37,27 @@ const Home: React.FC = () => {
   }, [location]);
 
   return (
-    <div className="bg-[0E6F7E] overflow-visible">
-      <HeroSection />
+    <div className="bg-[0E6F7E]">
+      <HomeFirst />
 
-      <div id="process-section" className="-mt-32 md:-mt-40 lg:-mt-48">
-        <ProcessSection />
+      <div id="process" className="-mt-32 md:-mt-40 lg:-mt-48">
+        <Steps />
+      </div>
+      <div id="package">
+      <Packages />
+      </div>
+     
+      <HomeServices />
+      
+      <div id="quality">
+        <Quality />
       </div>
       
-      <EquipmentSection />
-      <PhotoCarouselSection />
-      <OpinionSection />
-      <CallToActionBanner />
+      <div id="interstate">
+        <Interstate />
+      </div>
+      
       <Footer />
-
     </div>
   );
 };

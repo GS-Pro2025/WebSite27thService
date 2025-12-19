@@ -1,141 +1,233 @@
-import React, { useState, useEffect } from "react";
-import logoFlecha from "/assets/FlechaLogo.svg";
-import Family from "/assets/Family.png";
-import onda from "/assets/Vector.svg";
-import Linea from "/assets/Linea.svg";
-import PresentationForm from "../PresentationForm";
+import { useState, useEffect, useRef } from "react";
+import banner from "/assets/slider1.png";
+import banner1 from "/assets/slider2.png";
+import banner2 from "/assets/slider3.png";
+import banner3 from "/assets/slider4.png";
+import banner4 from "/assets/slider5.png";
+import banner5 from "/assets/slider6.png";
+import banner6 from "/assets/slider7.png";
+import icon1 from "/assets/icono1.png";
+import icon2 from "/assets/icono2.png";
+import icon3 from "/assets/icono3.png";
+import icon4 from "/assets/icono4.png";
+import icon5 from "/assets/icono5.png";
+import icon6 from "/assets/icono6.png";
+import icon7 from "/assets/icono7.png";
 
-const Presentation: React.FC = () => {
+interface Slide {
+  title: string;
+  description: string;
+  image: string;
+  icon: string;
+}
 
+const slides: Slide[] = [
+  {
+    title: "Twenty-seventh\nchoice",
+    description: "Professional moving services tailored to your needs",
+    image: banner,
+    icon: icon1,
+  },
+  {
+    title: "Commercial\nrelocation",
+    description: "Efficient business moving solutions",
+    image: banner1,
+    icon: icon2,
+  },
+  {
+    title: "Fast\nmoves",
+    description: "Quick and reliable moving services",
+    image: banner2,
+    icon: icon3,
+  },
+  {
+    title: "Residential\nrelocation",
+    description: "Safe home moving for families",
+    image: banner3,
+    icon: icon4,
+  },
+  {
+    title: "International\nrelocation",
+    description: "Global moving expertise",
+    image: banner4,
+    icon: icon5,
+  },
+  {
+    title: "Storage\nsolutions",
+    description: "Secure storage facilities",
+    image: banner5,
+    icon: icon6,
+  },
+  {
+    title: "Reliable\nchoice",
+    description: "Your trusted moving partner",
+    image: banner6,
+    icon: icon7,
+  },
+];
 
-  // Estados para animaciones
-  const [scrollY, setScrollY] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
+const HeroSection: React.FC = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
-  // Manejar scroll
+  // Auto-play functionality
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
-  // Animar elementos al cargar la página
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 100);
-    return () => clearTimeout(timer);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
   }, []);
 
-
-
-  // Calcular transformaciones basadas en scroll
-  const arrowTransform = Math.min(0, 0 + scrollY * 0.3);
-  const formTransform = Math.max(0, scrollY * 0.2);
-  const textOpacity = Math.max(0.3, 1 - scrollY * 0.003);
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+  };
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      {/* Right Section - Family Image (Fondo) */}
-      <div className="absolute right-0 w-full md:w-2/3 lg:w-5/10 h-full">
-        <img
-          src={Family}
-          alt="Familia feliz"
-          className={`w-full h-auto object-cover object-center transition-all duration-1200 ${
-            isLoaded
-              ? "opacity-100 transform scale-100"
-              : "opacity-0 transform scale-105"
-          }`}
-        />
-
-        {/* Overlay con texto animado */}
-        <div
-          className={`absolute bottom-60 right-20 text-right transition-all duration-1000 ${
-            isLoaded
-              ? "opacity-100 transform translate-y-0"
-              : "opacity-0 transform translate-y-8"
-          }`}
-          style={{
-            opacity: textOpacity,
-            transform: `translateY(${formTransform * 0.5}px)`,
-          }}
-        >
-          <h2 className="text-white text-lg md:text-xl lg:text-2xl xl:text-4xl font-medium leading-tight">
-            We turn every{" "}
-            <span className="text-[#FFE67B] font-bold">move</span>
-            <br />
-            into a{" "}
-            <span className="text-[#FFE67B] font-bold">MEMORABLE</span>{" "}
-            experience
-          </h2>
-        </div>
-      </div>
-
-      {/* Logo Grande - Superpuesto y Animado */}
-      <div
-        className="absolute z-20 transition-transform duration-300 ease-out"
-        style={{
-          transform: `translateX(${arrowTransform}px) scale(${
-            1 + scrollY * 0.0005
-          })`,
-        }}
-      >
-        <img
-          src={logoFlecha}
-          alt="Twenty Seventh Logo"
-          className={`w-80 md:w-96 lg:w-6/7 xl:w-300 h-auto transition-all duration-1500 ${
-            isLoaded
-              ? "opacity-100 transform translate-x-0 rotate-0"
-              : "opacity-0 transform -translate-x-full rotate-12"
-          }`}
-        />
-      </div>
-
-      {/* Vector decorativo */}
-      <div className="absolute top-80 left-0 w-full z-5">
-        <img
-          src={onda}
-          alt="Vector decorativo"
-          className="w-full h-150 object-cover"
-        />
-      </div>
-
-      {/* Left Section - Contenido principal */}
-      <div className="relative top-50 mb-10 z-30 flex flex-col justify-center min-h-screen px-4 md:px-8 lg:px-16 pt-32 md:pt-40">
-        <div className="max-w-md lg:max-w-lg">
-          {/* Título animado */}
+    <div 
+      ref={sectionRef}
+      className="relative w-full h-[60vh] md:h-screen overflow-hidden"
+    >
+      {/* Background Image Container with Carousel */}
+      <div className="absolute inset-0">
+        {slides.map((slide, index) => (
           <div
-            className={`mb-8 transition-all duration-1000 delay-300 ${
-              isLoaded
-                ? "opacity-100 transform translate-y-0"
-                : "opacity-0 transform translate-y-8"
+            key={index}
+            className={`absolute inset-0 transition-all duration-1000 ${
+              index === currentSlide 
+                ? "opacity-100 scale-100" 
+                : "opacity-0 scale-105"
             }`}
           >
-            <h1 className="text-white text-xl md:text-2xl lg:text-3xl xl:text-4xl font-light mb-2">
-              <span className="text-[#FFE67B] font-bold">Unique</span> and{" "}
-              <span className="text-[#FFE67B] font-bold">personalized</span>{" "}
-              moves
-            </h1>
+            <img
+              src={slide.image}
+              alt={slide.title}
+              className="w-full h-auto object-contain md:object-cover object-top"
+            />
+            {/* Overlay */}
+            <div className="absolute inset-0 bg-black/20 md:bg-[#0E6F7E]/20" />
           </div>
+        ))}
+      </div>
 
-          {/* nuevo componente */}
-          <PresentationForm
-            isLoaded={isLoaded}
-            formTransform={formTransform}
-          />
+      {/* Content Container */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 py-6 md:py-8">
+        {/* Hero Text */}
+        <div 
+          className={`text-center transition-all duration-1000 ease-out ${
+            isVisible 
+              ? "opacity-100 translate-y-0" 
+              : "opacity-0 -translate-y-10"
+          }`}
+          style={{ transitionDelay: "300ms" }}
+        >
+          <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-semibold font-[Poppins] text-white mb-4 md:mb-6 drop-shadow-2xl px-2">
+            Know what we move for you
+          </h1>
+          <p 
+            className={`text-xs sm:text-base md:text-lg lg:text-xl text-gray-200 max-w-3xl mx-auto drop-shadow-lg px-4 transition-all duration-1000 ease-out ${
+              isVisible 
+                ? "opacity-100 translate-y-0" 
+                : "opacity-0 translate-y-10"
+            }`}
+            style={{ transitionDelay: "500ms" }}
+          >
+            Knowing the type of move you're going to make helps us manage your
+            move in record time.
+          </p>
+        </div>
+
+        {/* Feature Badges - Ocultas en móvil, visibles en desktop */}
+        <div 
+          className={`hidden md:block w-full absolute bottom-8 left-0 right-0 transition-all duration-1000 ease-out ${
+            isVisible 
+              ? "opacity-100 translate-y-0" 
+              : "opacity-0 translate-y-20"
+          }`}
+          style={{ transitionDelay: "700ms" }}
+        >
+          <div className="flex flex-wrap justify-center gap-4 max-w-7xl mx-auto px-2">
+            {slides.map((slide, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`flex flex-col items-center justify-center gap-3 p-4 rounded-lg transition-all duration-500 
+                  w-28 flex-shrink-0
+                  ${
+                    index === currentSlide
+                      ? "bg-[#FFE67B] shadow-lg scale-105 -translate-y-2"
+                      : "bg-white/90 backdrop-blur-sm hover:bg-white shadow-md hover:scale-105 hover:-translate-y-1"
+                  }
+                  ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}
+                `}
+                style={{ transitionDelay: `${800 + index * 100}ms` }}
+              >
+                <div className="w-12 h-12 flex items-center justify-center flex-shrink-0 transition-transform duration-300">
+                  <img
+                    src={slide.icon}
+                    alt={slide.title}
+                    className={`w-full h-full object-contain transition-transform duration-300 ${
+                      index === currentSlide ? "scale-110" : ""
+                    }`}
+                  />
+                </div>
+                <span
+                  className={`font-medium text-xs text-center leading-tight whitespace-pre-line ${
+                    index === currentSlide ? "text-gray-900" : "text-gray-700"
+                  }`}
+                >
+                  {slide.title}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Línea decorativa inferior */}
-      <div className="relative w-full h-30 md:h-42 lg:h-60">
-        <img
-          src={Linea}
-          alt="Linea Punteada"
-          className="w-full h-full object-contain opacity-60"
-        />
-      </div>
+      <style>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .animate-fadeIn {
+          animation: fadeIn 0.8s ease-out forwards;
+        }
+      `}</style>
     </div>
   );
 };
 
-export default Presentation;
+export default HeroSection;

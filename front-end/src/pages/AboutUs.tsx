@@ -11,10 +11,10 @@ const AboutUs: React.FC = () => {
   return (
     <>
       <CompanyStoryV2 />
-      <TeamSection />
+      <JoinTeamSection />
       <TeamArrowSection />
       <CompanyValuesSection />
-      <JoinTeamSection />
+      <TeamSection />
       <PackingSection />
       <div className="-mt-10 md:-mt-50">
         <Footer />

@@ -1,63 +1,35 @@
 import React from "react";
 import Presentation from "../components/Services/Presentation";
-import SliderServices from "../components/Services/SliderServices";
+import Moving from "../components/Services/Moving";
 import Question from "../components/Services/Question";
-import ValuableObjects from "../components/Services/ValuableObjects";
+import Packages from "../components/Services/Packages";
 import Carousel from "../components/Services/Carousel";
-import OpinionSection from "../components/Services/OpinionSection";
-import CallToActionBanner from "../components/CallToActionBanner";
 import Footer from "../components/Footer";
 
 const Service: React.FC = () => {
   return (
     <section
       id="services"
-      className="relative w-full bg-[#7AACAE] overflow-visible"
+      className="relative w-full"
     >
-      {/* Presentation como bloque normal */}
-      <div className="relative z-10 w-full">
-        <Presentation />
-      </div>
-      {/* SliderServices */}
-      <div className="relative z-10">
-        <SliderServices />
-      </div>
-      {/* Question */}
-      <div className="relative z-11 ">
-        <Question />
-      </div>
-
-      {/* Línea curva punteada de transición */}
-      <div className="relative z-15 w-full h-auto -my-6 md:-my-8 md:mb-10">
-        <img
-          src="/assets/linea2.svg"
-          alt="Decorative curved transition line"
-          className="w-full h-auto object-contain opacity-60"
-        />
-      </div>
-
-      {/* ValuableObjects */}
-      <div className="relative z-12 sm:-mt-0 -mt-50  md:mb-10">
-        <ValuableObjects />
-      </div>
-      {/* Carousel objects */}
-      <div className="relative z-13 ">
-        <Carousel />
-      </div>
-      {/* OpinionSection */}
-      {/* <div className="relative z-14"> */}
-      <OpinionSection />
-      {/* </div> */}
-      {/* CallToActionBanner */}
-      <div
-        className="relative z-[60] -translate-y-12 md:-translate-y-20 lg:-translate-y-8 
-                mb-[-3rem] md:mb-[-5rem] lg:mb-[-6rem]"
-      >
-        <CallToActionBanner />
-      </div>
-      <div className="-mt-40">
-        <Footer />
-      </div>
+        <div id="presentation">
+          <Presentation />
+        </div>
+        <div id="moving">
+          <Moving />
+        </div>
+        <div id="question">
+          <Question />
+        </div>
+        <div id="packages">
+          <Packages />
+        </div>
+        <div id="carousel">
+          <Carousel />
+        </div>
+        <div id="footer">
+          <Footer />
+        </div>
     </section>
   );
 };

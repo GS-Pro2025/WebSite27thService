@@ -1,120 +1,234 @@
-import React from "react";
-import Img from "/assets/logo_principal_inicio.png";
-import lineas from "/assets/Vectorabout.svg";
-import Img2 from "/assets/Group2.png";
+import React, { useState, useEffect, useRef } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const CompanyStorySection: React.FC = () => {
+import banner from "../../../public/assets/sliderAbout.png";
+import slide2 from "../../../public/assets/sliderAbout1.png";
+
+interface Slide {
+  id: number;
+  image: string;
+  title: string;
+  subtitle: string;
+}
+
+const HeroSection: React.FC = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  const slides: Slide[] = [
+    {
+      id: 1,
+      image: banner,
+      title: "Your move step by step",
+      subtitle:
+        "Because your belongings deserve to follow high-quality protocols, follow your move with us",
+    },
+    {
+      id: 2,
+      image: slide2,
+      title: "Professional moving services",
+      subtitle:
+        "Expert care for your most valuable possessions, ensuring a safe and efficient relocation experience",
+    },
+
+  ];
+
+  // Intersection Observer for scroll animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            if (!hasAnimated) {
+              setHasAnimated(true);
+            }
+          } else {
+            setIsVisible(false);
+          }
+        });
+      },
+      {
+        threshold: 0.2,
+        rootMargin: "-50px",
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, [hasAnimated]);
+
+  // Initial load animation
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+      setHasAnimated(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Auto-advance slides
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+    }, 4000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const changeSlide = (newIndex: number) => {
+    if (isTransitioning) return;
+    
+    setIsTransitioning(true);
+    setCurrentSlide(newIndex);
+    
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, 700);
+  };
+
+  const handlePrevSlide = () => {
+    const newIndex = currentSlide === 0 ? slides.length - 1 : currentSlide - 1;
+    changeSlide(newIndex);
+  };
+
+  const handleNextSlide = () => {
+    const newIndex = currentSlide === slides.length - 1 ? 0 : currentSlide + 1;
+    changeSlide(newIndex);
+  };
+
+  const handleDotClick = (index: number) => {
+    if (index !== currentSlide) {
+      changeSlide(index);
+    }
+  };
+
   return (
-    <section
-      className="
-        relative w-full
-        min-h-[140vh] md:min-h-[140vh]
-        overflow-hidden bg-[#7AACAE]
-      "
+    <section 
+      ref={sectionRef}
+      className="relative w-full flex items-start justify-center overflow-hidden"
     >
-      {/* Degradado grande superior */}
-      <div
-        className="
-          pointer-events-none absolute inset-x-0 top-0
-          h-[72%] md:h-[68%] lg:h-[64%] z-0
-          bg-gradient-to-b from-[#0E6F7E] to-[#ffffff]
-        "
-        aria-hidden="true"
-      />
+      {/* Background Images Container */}
+      <div className="absolute inset-0 z-0 h-auto w-full">
+        {slides.map((slide, index) => (
+          <div
+            key={slide.id}
+            className={`absolute inset-0 transition-all duration-1000 ease-out ${
+              currentSlide === index 
+                ? "opacity-100 scale-100" 
+                : "opacity-0 scale-105"
+            }`}
+          >
+            <img
+              src={slide.image}
+              alt={`Slide ${index + 1}`}
+              className="w-full h-auto object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-black/10"></div>
+          </div>
+        ))}
+      </div>
 
-      {/* Líneas decorativas de secuencia */}
-      <img
-        src={lineas}
-        alt=""
-        className="
-          absolute  inset-0 z-[5] select-none pointer-events-none
-          w-full h-auto object-cover
-        "
-        aria-hidden="true"
-      />
+      {/* Content Container */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col min-h-screen">
+        {/* Hero Text with scroll and transition animations */}
+        <div className="text-center mb-auto pt-12 px-2 mt-20">
+          <h1 
+            className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-[#0E6F7E] mb-4 sm:mb-6 drop-shadow-lg font-[Poppins] transition-all duration-1000 ease-out ${
+              isVisible && !isTransitioning
+                ? "opacity-100 translate-y-0 scale-100"
+                : "opacity-0 translate-y-8 scale-95"
+            }`}
+            style={{ transitionDelay: isVisible ? "200ms" : "0ms" }}
+          >
+            {slides[currentSlide].title}
+          </h1>
+          <p 
+            className={`text-base sm:text-lg md:text-xl lg:text-2xl text-[#0E6F7E] max-w-3xl mx-auto drop-shadow-md font-[Manrope] transition-all duration-1000 ease-out ${
+              isVisible && !isTransitioning
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-8"
+            }`}
+            style={{ transitionDelay: isVisible ? "400ms" : "0ms" }}
+          >
+            {slides[currentSlide].subtitle}
+          </p>
+        </div>
 
-      {/* Imagen decorativa: arriba-derecha */}
-      <img
-        src={Img}
-        alt=""
-        className="
-          absolute top-0 right-0 z-20 select-none pointer-events-none
-          w-1/2 h-auto max-w-none
-          opacity-90
-        "
-      />
+        {/* Carousel Navigation with scroll animation */}
+        <div 
+          className={`absolute bottom-5 left-1/2 transform -translate-x-1/2 flex items-center gap-3 sm:gap-4 transition-all duration-1000 ease-out ${
+            isVisible
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-8"
+          }`}
+          style={{ transitionDelay: isVisible ? "600ms" : "0ms" }}
+        >
+          {/* Previous Button */}
+          <button
+            onClick={handlePrevSlide}
+            disabled={isTransitioning}
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#FFE67B] hover:bg-[#FFD700] flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Previous slide"
+          >
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-gray-900" />
+          </button>
 
-      {/* Imagen decorativa: abajo-izquierda (pegada) */}
-      <img
-        src={Img2}  
-        alt=""
-        className="
-          absolute left-[5%] -bottom-[8vh] md:-bottom-[10vh] lg:-bottom-[12vh] block
-          z-10 select-none pointer-events-none
-          w-[min(52vw,680px)] md:w-[min(44vw,760px)] h-auto max-w-none
-          opacity-90 -rotate-[10deg] origin-bottom-left
-        "
-      />
-
-      {/* Contenido */}
-      <div className="relative z-30 container mx-auto px-6 sm:px-8 lg:px-10 pt-24 md:pt-32 pb-32">
-        <div className="grid grid-cols-12 gap-8 lg:gap-12">
-          {/* Título + subtítulo (izquierda) */}
-          <div className="col-span-12 lg:col-span-7">
-            <h1 className="text-[clamp(2rem,6vw,4rem)] font-extrabold leading-tight tracking-tight uppercase text-[#FFFFFF]">
-              TWENTY SEVENTH
-            </h1>
-            <p className="mt-3 text-[clamp(1.125rem,2.5vw,1.75rem)] font-semibold text-slate-800">
-              reliable moves with purpose
-            </p>
-
-            {/* Cuadro 1: IZQUIERDA debajo del título */}
-            <h3 className="mt-8 text-lg font-extrabold tracking-wider text-[#0E6F7E]">
-              SINCE 2010
-            </h3>
-            <div
-              className="
-                mt-3 rounded-2xl p-5 sm:p-6 shadow-xl max-w-[640px]
-                text-white leading-relaxed text-xl
-                bg-[linear-gradient(135deg,#002C3D_0%,#0E6F7E_35%,#FFE67B_85%,#FFF7E6_100%)]
-              "
-            >
-              Our dream started with a single move and understanding that this step marks a before and after in every family's life. That's why, with our own home as inspiration, we began this journey.
-            </div>
+          {/* Slide Indicators */}
+          <div className="flex gap-2">
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => handleDotClick(index)}
+                disabled={isTransitioning}
+                className={`h-2 sm:h-3 rounded-full transition-all duration-300 disabled:cursor-not-allowed ${
+                  currentSlide === index
+                    ? "bg-[#FFE67B] w-6 sm:w-8"
+                    : "bg-white/50 hover:bg-white/80 w-2 sm:w-3"
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
           </div>
 
-          {/* Espaciador en desktop */}
-          <div className="hidden lg:block lg:col-span-5"></div>
-
-          {/* Cuadro 2: DERECHA abajo */}
-          <div className="col-span-12 lg:col-span-5 mt-10 lg:mt-20">
-            <h3 className="text-lg font-extrabold tracking-wider text-[#0E6F7E]">
-              OUR PURPOSE
-            </h3>
-            <div
-              className="mt-3 rounded-2xl p-5 sm:p-6 shadow-xl text-white leading-relaxed
-                  bg-[linear-gradient(135deg,#002C3D_0%,#0E6F7E_35%,#FFE67B_85%,#FFF7E6_100%)] text-xl"
-            >
-              This company represents the dream of millions of families, to reach every destination with the peace of mind and hope of having done a great job.
-            </div>
-          </div>
-
-          {/* Cuadro 3: CENTRO abajo */}
-          <div className="col-span-12 lg:col-start-4 lg:col-span-6 mt-10 lg:mt-20">
-            <h3 className="text-lg font-extrabold tracking-wider text-[#0E6F7E]">
-              MOVING PROFESSIONALS
-            </h3>
-            <div
-              className="mt-3 rounded-2xl p-5 sm:p-6 shadow-xl text-white leading-relaxed
-                  bg-[linear-gradient(135deg,#002C3D_0%,#0E6F7E_35%,#FFE67B_85%,#FFF7E6_100%)] text-xl"
-            >
-              Our team is made up of 100% trained professionals who understand that each object represents more than just something material. We take care of them for you and use the best materials.
-            </div>
-          </div>
+          {/* Next Button */}
+          <button
+            onClick={handleNextSlide}
+            disabled={isTransitioning}
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#FFE67B] hover:bg-[#FFD700] flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Next slide"
+          >
+            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-gray-900" />
+          </button>
         </div>
       </div>
+
+      {/* Decorative Elements - Animated on scroll */}
+      <div 
+        className={`absolute top-20 left-10 w-20 h-20 bg-[#FFE67B]/20 rounded-full blur-2xl transition-all duration-1000 ${
+          isVisible ? "opacity-100 scale-100" : "opacity-0 scale-50"
+        }`}
+        style={{ transitionDelay: "300ms" }}
+      />
+      <div 
+        className={`absolute bottom-40 right-10 w-32 h-32 bg-[#0E6F7E]/10 rounded-full blur-3xl transition-all duration-1000 ${
+          isVisible ? "opacity-100 scale-100" : "opacity-0 scale-50"
+        }`}
+        style={{ transitionDelay: "500ms" }}
+      />
     </section>
   );
 };
 
-export default CompanyStorySection;
+export default HeroSection;

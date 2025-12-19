@@ -116,7 +116,7 @@ const OpinionSection: React.FC = () => {
               : 'translate-x-12 opacity-0 scale-90'
         }`}>
           <div className="bg-[#FFE67B] rounded-full px-6 py-3 md:px-8 md:py-4 lg:px-10 lg:py-5 shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105">
-            <h2 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-[#0E6F7E]">
+            <h2 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold text-[#0E6F7E]">
               Opinion of our clients
             </h2>
           </div>
@@ -178,7 +178,7 @@ const OpinionSection: React.FC = () => {
                   
                   {/* User Info */}
                   <div className="flex items-start mb-2 md:mb-3">
-                    <div className={`w-9 h-9 md:w-10 md:h-10 lg:w-11 lg:h-11 bg-gradient-to-br from-orange-400 to-orange-500 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold text-sm md:text-base lg:text-lg shadow-lg transform transition-all duration-600 ${
+                    <div className={`w-9 h-9 md:w-10 md:h-10 lg:w-11 lg:h-11 bg-gradient-to-br from-orange-400 to-orange-500 rounded-full flex-shrink-0 flex items-center justify-center text-white font-semibold text-sm md:text-base lg:text-lg shadow-lg transform transition-all duration-600 ${
                       animateCards ? 'rotate-0 scale-100' : 'rotate-180 scale-0'
                     }`}
                     style={{

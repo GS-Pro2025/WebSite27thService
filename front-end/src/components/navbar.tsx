@@ -1,49 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import SignUpModal from "./Auth/SignUpModal";
-import LoginModal from "./Auth/LoginModal";
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isSignUpOpen, setIsSignUpOpen] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    const isTokenValid = (token?: string | null) => {
-      if (!token) return false;
-      if (token === "undefined" || token === "null") return false;
-      // Si es JWT, validar expiración; si no, considerarlo inválido de forma segura
-      try {
-        const parts = token.split(".");
-        if (parts.length !== 3) return false;
-        const payload = JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")));
-        if (payload && payload.exp) return payload.exp * 1000 > Date.now();
-        return false;
-      } catch {
-        return false;
-      }
-    };
-
-    const token = localStorage.getItem("token");
-    const valid = isTokenValid(token);
-    if (!valid && token) localStorage.removeItem("token");
-    setIsAuthenticated(valid);
-
-    // Sincronizar cambios de token entre pestañas
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === "token") {
-        const newToken = localStorage.getItem("token");
-        setIsAuthenticated(isTokenValid(newToken));
-      }
-    };
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
-  }, [location]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -56,15 +19,20 @@ const Navbar: React.FC = () => {
   const navigateToPage = (page: string) => {
     setIsMobileMenuOpen(false);
     navigate(`/${page}`);
-    // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const goToHome = () => {
     setIsMobileMenuOpen(false);
     navigate("/");
-    // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const openWhatsApp = () => {
+    setIsMobileMenuOpen(false);
+    const phoneNumber = "14075417478"; 
+    const message = encodeURIComponent("Hello! I'm interested in your moving services.");
+    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
 
   const toggleMobileMenu = () => {
@@ -78,16 +46,6 @@ const Navbar: React.FC = () => {
     );
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    setIsAuthenticated(false);
-    setIsMobileMenuOpen(false);
-    navigate("/");
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   return (
     <>
       <nav
@@ -98,17 +56,17 @@ const Navbar: React.FC = () => {
         }`}
       >
         <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-15">
             <div className="hidden md:block flex-shrink-0">
               <img
                 src="/assets/27_logo_white.svg"
                 alt="Twenty Seventh"
-                className="h-16 sm:h-20 w-auto transition-transform duration-300 hover:scale-110 cursor-pointer"
+                className="h-auto sm:h-20 w-auto transition-transform duration-300 hover:scale-110 cursor-pointer"
                 onClick={goToHome}
               />
             </div>
 
-            <div className="hidden md:flex items-center space-x-8 md:ml-10">
+            <div className="hidden md:flex items-center space-x-8 ml-auto">
               <button
                 onClick={() => navigateToPage("services")}
                 className="text-white font-medium transition-colors duration-300 hover:text-[#FFE67B]"
@@ -128,47 +86,13 @@ const Navbar: React.FC = () => {
                 ABOUT US
               </button>
               <button
-                onClick={() => navigateToPage("contact")}
-                className="bg-[#FFE67B] hover:bg-[#FFE67BCC] text-black font-semibold px-6 py-2 rounded-full transition-colors duration-300"
+                onClick={openWhatsApp}
+                className="bg-[#FFFFFF] hover:bg-[#FFE67BCC] text-black font-semibold px-6 py-2 rounded-xl transition-colors duration-300"
               >
                 CONTACT US
               </button>
             </div>
-            <div className="hidden md:flex items-center space-x-4 ml-auto">
-              {isAuthenticated ? (
-                <>
-                  {/* Botón elegante a user-dashboard, visible solo si está logeado */}
-                  <button
-                    onClick={() => { setIsMobileMenuOpen(false); navigate("/user-dashboard"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-                    className="bg-white/10 text-white border border-white/20 px-4 py-2 rounded-full font-semibold transition-all duration-200 hover:bg-white/20 hover:scale-[1.02] focus:outline-none"
-                    aria-label="Ir a dashboard"
-                  >
-                    Dashboard
-                  </button>
-                  <button
-                    onClick={handleLogout}
-                    className="bg-white text-black font-semibold px-5 py-2 rounded-full transition-colors duration-300 hover:bg-gray-200"
-                  >
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={() => setIsLoginOpen(true)}
-                    className="bg-white text-black font-semibold px-5 py-2 rounded-full transition-colors duration-300 hover:bg-gray-200"
-                  >
-                    Sign In
-                  </button>
-                  <button
-                    onClick={() => setIsSignUpOpen(true)}
-                    className="bg-[#FFE67B] text-black font-semibold px-5 py-2 rounded-full transition-colors duration-300 hover:bg-[#FFD84D]"
-                  >
-                    Sign Up
-                  </button>
-                </>
-              )}
-            </div>
+
             <div className="ml-auto md:hidden">
               <button
                 onClick={toggleMobileMenu}
@@ -203,8 +127,6 @@ const Navbar: React.FC = () => {
                   { page: "services", label: "SERVICES" },
                   { page: "your-move", label: "YOUR MOVE" },
                   { page: "about-us", label: "ABOUT US" },
-                  { page: "coverage", label: "COVERAGE" },
-                  { page: "contact", label: "CONTACT US" },
                 ].map((item) => (
                   <button
                     key={item.page}
@@ -218,54 +140,17 @@ const Navbar: React.FC = () => {
                     {item.label}
                   </button>
                 ))}
-
-                <div className="flex flex-col space-y-3 pt-4 border-t border-white/20 mt-4">
-                  {isAuthenticated ? (
-                    <button
-                      onClick={handleLogout}
-                      className="bg-white text-black font-semibold px-5 py-2 rounded-full transition-colors duration-300 hover:bg-gray-200"
-                    >
-                      Logout
-                    </button>
-                  ) : (
-                    <>
-                      <button
-                        onClick={() => {
-                          setIsLoginOpen(true);
-                          setIsMobileMenuOpen(false);
-                        }}
-                        className="bg-white text-black font-semibold px-5 py-2 rounded-full transition-colors duration-300 hover:bg-gray-200"
-                      >
-                        Sign In
-                      </button>
-                      <button
-                        onClick={() => {
-                          setIsSignUpOpen(true);
-                          setIsMobileMenuOpen(false);
-                        }}
-                        className="bg-[#FFE67B] text-black font-semibold px-5 py-2 rounded-full hover:bg-[#FFD84D]"
-                      >
-                        Sign Up
-                      </button>
-                      <button
-                        onClick={() => navigateToPage("contact")}
-                        className="bg-[#FFE67B] hover:bg-[#FFE67BCC] text-black font-semibold px-6 py-2 rounded-full transition-colors duration-300"
-                      >
-                        CONTACT US
-                      </button>
-                    </>
-                  )}
-                </div>
+                <button
+                  onClick={openWhatsApp}
+                  className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-white hover:text-[#FFE67B] hover:bg-white/10"
+                >
+                  CONTACT US
+                </button>
               </div>
             </div>
           )}
         </div>
       </nav>
-      <SignUpModal
-        isOpen={isSignUpOpen}
-        onClose={() => setIsSignUpOpen(false)}
-      />
-      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
     </>
   );
 };
