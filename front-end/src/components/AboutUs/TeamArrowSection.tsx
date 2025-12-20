@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import banner from "../../../public/assets/about.png";
 
 export default function MovingLeadersComponent() {
