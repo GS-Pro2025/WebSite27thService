@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from "react";
 import { MapPin, AlertCircle, CheckCircle2, Navigation, Package, TrendingUp, DollarSign } from "lucide-react";
 
@@ -23,8 +24,6 @@ const InterstateMoving: React.FC = () => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [directionsService, setDirectionsService] = useState<google.maps.DirectionsService | null>(null);
   const [directionsRenderer, setDirectionsRenderer] = useState<google.maps.DirectionsRenderer | null>(null);
-  const [originAutocomplete, setOriginAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
-  const [destinationAutocomplete, setDestinationAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
   
   const [formData, setFormData] = useState<FormData>({
     originAddress: "",
@@ -34,8 +33,6 @@ const InterstateMoving: React.FC = () => {
   
   const [coverageResult, setCoverageResult] = useState<CoverageResult | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
-  const [baseMarker, setBaseMarker] = useState<google.maps.Marker | null>(null);
-  const [pickupCircle, setPickupCircle] = useState<google.maps.Circle | null>(null);
 
   // Configuración
   const VIRGINIA_BASE = { 
@@ -139,10 +136,8 @@ const InterstateMoving: React.FC = () => {
       infoWindow.open(mapInstance, marker);
     });
 
-    setBaseMarker(marker);
-
     // Agregar círculo de cobertura de recogida (150 millas)
-    const circle = new google.maps.Circle({
+    new google.maps.Circle({
       strokeColor: "#0E6F7E",
       strokeOpacity: 0.8,
       strokeWeight: 2,
@@ -152,8 +147,6 @@ const InterstateMoving: React.FC = () => {
       center: VIRGINIA_BASE.coords,
       radius: MAX_PICKUP_DISTANCE * 1609.34, // Convertir millas a metros
     });
-
-    setPickupCircle(circle);
 
     // Inicializar autocomplete cuando los inputs estén listos
     initializeAutocomplete(mapInstance);
@@ -179,8 +172,6 @@ const InterstateMoving: React.FC = () => {
       }
     });
 
-    setOriginAutocomplete(originAc);
-
     // Autocomplete para destino (restringido a USA)
     const destinationAc = new google.maps.places.Autocomplete(destinationInputRef.current, {
       componentRestrictions: { country: "us" },
@@ -194,8 +185,6 @@ const InterstateMoving: React.FC = () => {
         setFormData(prev => ({ ...prev, finalAddress: place.formatted_address || "" }));
       }
     });
-
-    setDestinationAutocomplete(destinationAc);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -260,6 +249,7 @@ const InterstateMoving: React.FC = () => {
             suppressMarkers: false,
             markerOptions: {
               icon: {
+                url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png", // Falta añadir la url de lo que se quiere mientras coloco esta para el despliegue
                 scaledSize: new google.maps.Size(40, 40)
               }
             }

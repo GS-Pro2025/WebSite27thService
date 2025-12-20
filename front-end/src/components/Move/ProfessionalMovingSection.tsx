@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -64,14 +65,16 @@ const HeroSection: React.FC = () => {
       }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const target = sectionRef.current;
+    if (target) {
+      observer.observe(target);
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (target) {
+        observer.unobserve(target);
       }
+      observer.disconnect();
     };
   }, [hasAnimated]);
 
