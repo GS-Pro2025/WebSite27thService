@@ -98,7 +98,7 @@ const HeroSection: React.FC = () => {
   return (
     <div 
       ref={sectionRef}
-      className="relative w-full h-[60vh] md:h-screen overflow-hidden"
+      className="relative w-full h-auto lg:h-screen overflow-hidden"
     >
       {/* Background Image Container with Carousel */}
       <div className="absolute inset-0">
@@ -123,7 +123,7 @@ const HeroSection: React.FC = () => {
       </div>
 
       {/* Content Container */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full px-4 py-6 md:py-8">
+      <div className="relative z-10 flex flex-col items-center justify-start lg:justify-center h-full px-4 py-8 md:py-12 pt-16 md:pt-20 lg:pt-0">
         {/* Hero Text */}
         <div 
           className={`text-center transition-all duration-1000 ease-out ${
@@ -137,7 +137,7 @@ const HeroSection: React.FC = () => {
             Know what we move for you
           </h1>
           <p 
-            className={`text-xs sm:text-base md:text-lg lg:text-xl text-gray-200 max-w-3xl mx-auto drop-shadow-lg px-4 transition-all duration-1000 ease-out ${
+            className={`hidden lg:block text-xs sm:text-base md:text-lg lg:text-xl text-gray-200 max-w-3xl mx-auto drop-shadow-lg px-4 transition-all duration-1000 ease-out ${
               isVisible 
                 ? "opacity-100 translate-y-0" 
                 : "opacity-0 translate-y-10"
@@ -149,9 +149,9 @@ const HeroSection: React.FC = () => {
           </p>
         </div>
 
-        {/* Feature Badges - Ocultas en móvil, visibles en desktop */}
+        {/* Feature Badges - Ocultas en móvil, visibles en tablet+ */}
         <div 
-          className={`hidden md:block w-full absolute bottom-8 left-0 right-0 transition-all duration-1000 ease-out ${
+          className={`hidden md:block w-full lg:absolute lg:bottom-8 lg:left-0 lg:right-0 transition-all duration-1000 ease-out mt-0 md:mt-20 lg:mt-0 ${
             isVisible 
               ? "opacity-100 translate-y-0" 
               : "opacity-0 translate-y-20"
