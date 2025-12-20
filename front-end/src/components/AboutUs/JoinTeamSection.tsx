@@ -1,4 +1,3 @@
-import React from 'react';
 import banner from "../../../public/assets/about.png";
 export default function FamilyDreamComponent() {
   return (

@@ -1,5 +1,5 @@
 import React from "react";
-import { Package, Box, Truck, Home, ClipboardList, Boxes } from "lucide-react";
+import { Package, Box, Truck, ClipboardList, Boxes } from "lucide-react";
 
 type ServiceKey = "pack" | "wrap" | "load" | "unload" | "unpack" | "home_org";
 
