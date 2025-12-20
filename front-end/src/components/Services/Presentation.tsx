@@ -1,18 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import banner from "/assets/slider1.png";
-import banner1 from "/assets/slider2.png";
-import banner2 from "/assets/slider3.png";
-import banner3 from "/assets/slider4.png";
-import banner4 from "/assets/slider5.png";
-import banner5 from "/assets/slider6.png";
-import banner6 from "/assets/slider7.png";
-import icon1 from "/assets/icono1.png";
-import icon2 from "/assets/icono2.png";
-import icon3 from "/assets/icono3.png";
-import icon4 from "/assets/icono4.png";
-import icon5 from "/assets/icono5.png";
-import icon6 from "/assets/icono6.png";
-import icon7 from "/assets/icono7.png";
 
 interface Slide {
   title: string;
@@ -25,44 +11,44 @@ const slides: Slide[] = [
   {
     title: "Twenty-seventh\nchoice",
     description: "Professional moving services tailored to your needs",
-    image: banner,
-    icon: icon1,
+    image: "/assets/slider1.png",
+    icon: "/assets/icono1.png",
   },
   {
     title: "Commercial\nrelocation",
     description: "Efficient business moving solutions",
-    image: banner1,
-    icon: icon2,
+    image: "/assets/slider2.png",
+    icon: "/assets/icono2.png",
   },
   {
     title: "Fast\nmoves",
     description: "Quick and reliable moving services",
-    image: banner2,
-    icon: icon3,
+    image: "/assets/slider3.png",
+    icon: "/assets/icono3.png",
   },
   {
     title: "Residential\nrelocation",
     description: "Safe home moving for families",
-    image: banner3,
-    icon: icon4,
+    image: "/assets/slider4.png",
+    icon: "/assets/icono4.png",
   },
   {
     title: "International\nrelocation",
     description: "Global moving expertise",
-    image: banner4,
-    icon: icon5,
+    image: "/assets/slider5.png",
+    icon: "/assets/icono5.png",
   },
   {
     title: "Storage\nsolutions",
     description: "Secure storage facilities",
-    image: banner5,
-    icon: icon6,
+    image: "/assets/slider6.png",
+    icon: "/assets/icono6.png",
   },
   {
     title: "Reliable\nchoice",
     description: "Your trusted moving partner",
-    image: banner6,
-    icon: icon7,
+    image: "/assets/slider7.png",
+    icon: "/assets/icono7.png",
   },
 ];
 
