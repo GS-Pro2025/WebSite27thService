@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import banner from "../../../public/assets/sliderAbout.png";
-import slide2 from "../../../public/assets/sliderAbout1.png";
-
 interface Slide {
   id: number;
   image: string;
@@ -21,14 +18,14 @@ const HeroSection: React.FC = () => {
   const slides: Slide[] = [
     {
       id: 1,
-      image: banner,
+      image: "/assets/sliderAbout.png",
       title: "Your move step by step",
       subtitle:
         "Because your belongings deserve to follow high-quality protocols, follow your move with us",
     },
     {
       id: 2,
-      image: slide2,
+      image: "/assets/sliderAbout1.png",
       title: "Professional moving services",
       subtitle:
         "Expert care for your most valuable possessions, ensuring a safe and efficient relocation experience",
@@ -120,7 +117,7 @@ const HeroSection: React.FC = () => {
       className="relative w-full flex items-start justify-center overflow-hidden"
     >
       {/* Background Images Container */}
-      <div className="absolute inset-0 z-0 h-auto w-full">
+      <div className="absolute inset-0 z-0 h-full w-full">
         {slides.map((slide, index) => (
           <div
             key={slide.id}
@@ -141,11 +138,11 @@ const HeroSection: React.FC = () => {
       </div>
 
       {/* Content Container */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col min-h-screen">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col h-auto lg:min-h-screen">
         {/* Hero Text with scroll and transition animations */}
-        <div className="text-center mb-auto pt-12 px-2 mt-20">
+        <div className="text-center pt-10 sm:pt-14 md:pt-20 px-2">
           <h1 
-            className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-[#0E6F7E] mb-4 sm:mb-6 drop-shadow-lg font-[Poppins] transition-all duration-1000 ease-out ${
+            className={`text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-semibold text-[#0E6F7E] mb-2 sm:mb-3 md:mb-4 drop-shadow-lg font-[Poppins] transition-all duration-1000 ease-out ${
               isVisible && !isTransitioning
                 ? "opacity-100 translate-y-0 scale-100"
                 : "opacity-0 translate-y-8 scale-95"
@@ -155,7 +152,7 @@ const HeroSection: React.FC = () => {
             {slides[currentSlide].title}
           </h1>
           <p 
-            className={`text-base sm:text-lg md:text-xl lg:text-2xl text-[#0E6F7E] max-w-3xl mx-auto drop-shadow-md font-[Manrope] transition-all duration-1000 ease-out ${
+            className={`hidden sm:block text-xs sm:text-sm md:text-lg lg:text-xl text-[#0E6F7E] max-w-3xl mx-auto drop-shadow-md font-[Manrope] transition-all duration-1000 ease-out ${
               isVisible && !isTransitioning
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-8"
@@ -166,25 +163,18 @@ const HeroSection: React.FC = () => {
           </p>
         </div>
 
+        {/* Spacer to push controls down */}
+        <div className="flex-grow"></div>
+
         {/* Carousel Navigation with scroll animation */}
         <div 
-          className={`absolute bottom-5 left-1/2 transform -translate-x-1/2 flex items-center gap-3 sm:gap-4 transition-all duration-1000 ease-out ${
+          className={`flex flex-col items-center gap-3 sm:gap-4 py-4 sm:py-6 transition-all duration-1000 ease-out ${
             isVisible
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-8"
           }`}
           style={{ transitionDelay: isVisible ? "600ms" : "0ms" }}
         >
-          {/* Previous Button */}
-          <button
-            onClick={handlePrevSlide}
-            disabled={isTransitioning}
-            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#FFE67B] hover:bg-[#FFD700] flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
-            aria-label="Previous slide"
-          >
-            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-gray-900" />
-          </button>
-
           {/* Slide Indicators */}
           <div className="flex gap-2">
             {slides.map((_, index) => (
@@ -202,15 +192,28 @@ const HeroSection: React.FC = () => {
             ))}
           </div>
 
-          {/* Next Button */}
-          <button
-            onClick={handleNextSlide}
-            disabled={isTransitioning}
-            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#FFE67B] hover:bg-[#FFD700] flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
-            aria-label="Next slide"
-          >
-            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-gray-900" />
-          </button>
+          {/* Previous and Next Buttons */}
+          <div className="flex gap-3 sm:gap-4">
+            {/* Previous Button */}
+            <button
+              onClick={handlePrevSlide}
+              disabled={isTransitioning}
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#FFE67B] hover:bg-[#FFD700] flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
+              aria-label="Previous slide"
+            >
+              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-gray-900" />
+            </button>
+
+            {/* Next Button */}
+            <button
+              onClick={handleNextSlide}
+              disabled={isTransitioning}
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#FFE67B] hover:bg-[#FFD700] flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
+              aria-label="Next slide"
+            >
+              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-gray-900" />
+            </button>
+          </div>
         </div>
       </div>
 

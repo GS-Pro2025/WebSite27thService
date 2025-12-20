@@ -1,6 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import juliePhoto from "/assets/julie.png";
-import andresPhoto from "/assets/andres.png";
 
 type Member = {
   name: string;
@@ -10,11 +8,11 @@ type Member = {
 const TEAM: Member[] = [
   {
     name: "Julie Perilla",
-    photoSrc: juliePhoto,
+    photoSrc: "/assets/julie.png",
   },
   {
     name: "Andres Londoño",
-    photoSrc: andresPhoto,
+    photoSrc: "/assets/andres.png",
   },
 ];
 
@@ -63,7 +61,7 @@ const TeamCard: React.FC<Member & { index: number }> = ({ name, photoSrc, index 
       }`}
     >
       {/* Foto del miembro con efecto hover */}
-      <div className="relative w-full aspect-square rounded-2xl overflow-hidden mb-6 group">
+      <div className="relative w-full h-64 sm:h-80 md:aspect-square rounded-2xl overflow-hidden mb-6 group">
         {photoSrc ? (
           <>
             <img
