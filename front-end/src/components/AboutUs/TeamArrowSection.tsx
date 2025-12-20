@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import banner from "../../../public/assets/about.png";
 
 export default function MovingLeadersComponent() {
   const [isVisible, setIsVisible] = useState(false);
@@ -102,7 +101,7 @@ export default function MovingLeadersComponent() {
           {/* Imagen de ejemplo */}
           <div className="relative">
             <img
-              src={banner}
+              src="/assets/about.png"
               alt="Safe box"
               className="w-full h-full object-cover"
             />

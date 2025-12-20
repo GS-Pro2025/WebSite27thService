@@ -183,7 +183,7 @@ const HeroSection: React.FC = () => {
 
         {/* Feature Badges with Staggered Animation */}
         <div 
-          className={`flex flex-col sm:flex-row justify-center gap-3 sm:gap-2 max-w-5xl mx-auto px-4 mb-4 transition-all duration-1000 ease-out ${
+          className={`hidden lg:flex flex-col sm:flex-row justify-center gap-3 sm:gap-2 max-w-5xl mx-auto px-4 mb-4 transition-all duration-1000 ease-out ${
             isLoaded && isVisible
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-12"
