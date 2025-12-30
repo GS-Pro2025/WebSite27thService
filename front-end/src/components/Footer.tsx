@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
               <img
                 src={TwentySeventhLogo}
                 alt="Twenty Seventh Logo"
-                className="h-50 w-auto"
+                className="h-auto w-120"
               />
             </div>
 
@@ -97,25 +97,6 @@ const Footer: React.FC = () => {
                   contact@twentyseventhservicesgroup.com
                 </a>
               </div>
-            </div>
-
-            {/* Footer Links */}
-            <div className="flex flex-wrap gap-x-6 gap-y-2 pt-4 border-t border-white/20">
-              <span className="text-white text-sm cursor-pointer hover:text-yellow-300 transition-colors duration-300">
-                Terms of Use
-              </span>
-              <span className="text-white text-sm cursor-pointer hover:text-yellow-300 transition-colors duration-300">
-                Contact
-              </span>
-              <span className="text-white text-sm cursor-pointer hover:text-yellow-300 transition-colors duration-300">
-                Privacy Policy
-              </span>
-              <span className="text-white text-sm cursor-pointer hover:text-yellow-300 transition-colors duration-300">
-                Jobs
-              </span>
-              <span className="text-white text-sm cursor-pointer hover:text-yellow-300 transition-colors duration-300">
-                Help
-              </span>
             </div>
           </div>
         </div>

@@ -9,12 +9,27 @@ import Footer from "../components/Footer";
 const YourMove: React.FC = () => {
   return (
     <div className="w-full min-h-screen overflow-visible">
-      <ProfessionalMovingSection />
-      <MovingStagesSection />
-      <CoverageSection />
-      <WeightSection />
-      <CalculatorSection />
-        <Footer />
+      <div id="professional-moving-section">
+        <ProfessionalMovingSection />
+      </div>
+      
+      <div id="moving-stages-section">
+        <MovingStagesSection />
+      </div>
+      
+      <div id="coverage-section">
+        <CoverageSection />
+      </div>
+      
+      <div id="weight-section">
+        <WeightSection />
+      </div>
+      
+      <div id="calculator-section">
+        <CalculatorSection />
+      </div>
+      
+      <Footer />
     </div>
   );
 };
