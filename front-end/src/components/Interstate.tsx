@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import USAMapImage from "/assets/inter.png";
 
 const InterstateMoveSection: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -32,6 +34,17 @@ const InterstateMoveSection: React.FC = () => {
       }
     };
   }, []);
+
+  const handleNavigateToCoverage = () => {
+    navigate("/your-move#coverage");
+    // Pequeño delay para asegurar que la página cargue antes de hacer scroll
+    setTimeout(() => {
+      const coverageElement = document.getElementById("coverage-section");
+      if (coverageElement) {
+        coverageElement.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 100);
+  };
 
   return (
     <div 
@@ -155,6 +168,7 @@ const InterstateMoveSection: React.FC = () => {
             style={{ transitionDelay: "800ms" }}
           >
             <button
+              onClick={handleNavigateToCoverage}
               className="
                 bg-[#FFE67B] hover:bg-[#FFE67B]/60 
                 text-gray-900 font-semibold 
@@ -162,6 +176,7 @@ const InterstateMoveSection: React.FC = () => {
                 rounded-xl text-lg sm:text-xl 
                 transition-all duration-300 
                 hover:scale-105 hover:shadow-xl
+                cursor-pointer
               "
             >
               Find your destination here

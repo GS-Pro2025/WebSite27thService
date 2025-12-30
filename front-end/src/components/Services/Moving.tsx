@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 const CTASection: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -33,7 +35,14 @@ const CTASection: React.FC = () => {
   }, []);
 
   const handleRequestMove = () => {
-    console.log("Request your move clicked");
+    navigate("/your-move#calculator-section");
+    // Pequeño delay para asegurar que la página cargue antes de hacer scroll
+    setTimeout(() => {
+      const calculatorElement = document.getElementById("calculator-section");
+      if (calculatorElement) {
+        calculatorElement.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 100);
   };
 
   return (

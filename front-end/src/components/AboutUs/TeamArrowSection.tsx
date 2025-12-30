@@ -51,10 +51,7 @@ export default function MovingLeadersComponent() {
     <div ref={sectionRef} className="min-h-screen bg-white">
       <svg 
         xmlns="http://www.w3.org/2000/svg" 
-        viewBox="0 0 1440 320"
-        className={`transition-all duration-1000 ${
-          isVisible ? "opacity-100" : "opacity-0"
-        }`}
+        viewBox="0 0 1440 320" 
       >
         <path fill="#C9E1EC" fillOpacity="1" d="M0,192L80,170.7C160,149,320,107,480,122.7C640,139,800,213,960,229.3C1120,245,1280,203,1360,181.3L1440,160L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
       </svg>

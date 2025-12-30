@@ -4,7 +4,7 @@ import TeamSection from "../components/AboutUs/TeamSection";
 import TeamArrowSection from "../components/AboutUs/TeamArrowSection";
 import CompanyValuesSection from "../components/AboutUs/CompanyValuesSection";
 import JoinTeamSection from "../components/AboutUs/JoinTeamSection";
-import PackingSection from "../components/PackingSection";
+import CalculatorSection from "../components/Move/CalculatorSection";
 import Footer from "../components/Footer";
 
 const AboutUs: React.FC = () => {
@@ -15,10 +15,9 @@ const AboutUs: React.FC = () => {
       <TeamArrowSection />
       <CompanyValuesSection />
       <TeamSection />
-      <PackingSection />
-      <div className="-mt-10 md:-mt-50">
-        <Footer />
-      </div>
+      <CalculatorSection />
+      <Footer />
+
     </>
   );
 };
