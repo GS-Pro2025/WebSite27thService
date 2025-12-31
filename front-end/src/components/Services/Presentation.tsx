@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import Image1 from "../../../public/assets/slider1.png";
-import Image2 from "../../../public/assets/slider2.png";
-import Image3 from "../../../public/assets/slider3.png";
-import Image4 from "../../../public/assets/slider4.png";
-import Image5 from "../../../public/assets/slider5.png";
-import Image6 from "../../../public/assets/slider6.png";
-import Image7 from "../../../public/assets/slider7.png";
+import Image2 from "/assets/slider2.png";
+import Image1 from "/assets/slider1.png";
+import Image3 from "/assets/slider3.png";
+import Image4 from "/assets/slider4.png";
+import Image5 from "/assets/slider5.png";
+import Image6 from "/assets/slider6.png";
+import Image7 from "/assets/slider7.png";
 
 interface Slide {
   title: string;
