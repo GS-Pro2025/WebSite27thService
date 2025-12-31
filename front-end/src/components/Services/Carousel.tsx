@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import emailjs from "@emailjs/browser";
 
 // Import de las imágenes
-import valuableItemsImage from "/assets/valueItem.png";
-import valuableItemsImage1 from "/assets/violin.png";
-import valuableItemsImage2 from "/assets/reloj2.png";
-import valuableItemsImage3 from "/assets/cuadro.png";
+import valuableItemsImage from "../../../public/assets/valueItem.png";
+import valuableItemsImage1 from "../../../public/assets/violin.png";
+import valuableItemsImage2 from "../../../public/assets/reloj2.png";
+import valuableItemsImage3 from "../../../public/assets/cuadro.png";
 
 interface ValuableItem {
   name: string;
