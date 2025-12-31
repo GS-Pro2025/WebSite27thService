@@ -1,4 +1,11 @@
 import { useState, useEffect, useRef } from "react";
+import Image1 from "../../../public/assets/slider1.png";
+import Image2 from "../../../public/assets/slider2.png";
+import Image3 from "../../../public/assets/slider3.png";
+import Image4 from "../../../public/assets/slider4.png";
+import Image5 from "../../../public/assets/slider5.png";
+import Image6 from "../../../public/assets/slider6.png";
+import Image7 from "../../../public/assets/slider7.png";
 
 interface Slide {
   title: string;
@@ -11,43 +18,43 @@ const slides: Slide[] = [
   {
     title: "Twenty-seventh\nchoice",
     description: "Professional moving services tailored to your needs",
-    image: "/assets/slider1.png",
+    image: Image1,
     icon: "/assets/icono1.png",
   },
   {
     title: "Commercial\nrelocation",
     description: "Efficient business moving solutions",
-    image: "/assets/slider2.png",
+    image: Image2,
     icon: "/assets/icono2.png",
   },
   {
     title: "Fast\nmoves",
     description: "Quick and reliable moving services",
-    image: "/assets/slider3.png",
+    image: Image3,
     icon: "/assets/icono3.png",
   },
   {
     title: "Residential\nrelocation",
     description: "Safe home moving for families",
-    image: "/assets/slider4.png",
+    image: Image4,
     icon: "/assets/icono4.png",
   },
   {
     title: "International\nrelocation",
     description: "Global moving expertise",
-    image: "/assets/slider5.png",
+    image: Image5,
     icon: "/assets/icono5.png",
   },
   {
     title: "Storage\nsolutions",
     description: "Secure storage facilities",
-    image: "/assets/slider6.png",
+    image:Image6,
     icon: "/assets/icono6.png",
   },
   {
     title: "Reliable\nchoice",
     description: "Your trusted moving partner",
-    image: "/assets/slider7.png",
+    image: Image7,
     icon: "/assets/icono7.png",
   },
 ];
