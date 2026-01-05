@@ -1,18 +1,18 @@
 import { useState, useEffect, useRef } from "react";
-import Image1 from "/assets/slider1.png";
-import Image2 from "/assets/slider2.png";
-import Image3 from "/assets/slider3.png";
-import Image4 from "/assets/slider4.png";
-import Image5 from "/assets/slider5.png";
-import Image6 from "/assets/slider6.png";
-import Image7 from "/assets/slider7.png";
-import Icon1 from "/assets/icono1.png";
-import Icon2 from "/assets/icono2.png";
-import Icon3 from "/assets/icono3.png";
-import Icon4 from "/assets/icono4.png";
-import Icon5 from "/assets/icono5.png";
-import Icon6 from "/assets/icono6.png";
-import Icon7 from "/assets/icono7.png";
+import Image1 from "../../../public/assets/slider1.png";
+import Image2 from "../../../public/assets/slider2.png";
+import Image3 from "../../../public/assets/slider3.png";
+import Image5 from "../../../public/assets/slider5.png";
+import Image4 from "../../../public/assets/slider4.png";
+import Image6 from "../../../public/assets/slider6.png";
+import Image7 from "../../../public/assets/slider7.png";
+import Icon1 from "../../../public/assets/icono1.png";
+import Icon2 from "../../../public/assets/icono2.png";
+import Icon3 from "../../../public/assets/icono3.png";
+import Icon4 from "../../../public/assets/icono4.png";
+import Icon5 from "../../../public/assets/icono5.png";
+import Icon6 from "../../../public/assets/icono6.png";
+import Icon7 from "../../../public/assets/icono7.png";
 
 interface Slide {
   title: string;
