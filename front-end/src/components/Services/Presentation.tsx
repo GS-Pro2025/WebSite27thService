@@ -1,18 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import Image1 from "../../../public/assets/slider1.png";
-import Image2 from "../../../public/assets/slider2.png";
-import Image3 from "../../../public/assets/slider3.png";
-import Image5 from "../../../public/assets/slider5.png";
-import Image4 from "../../../public/assets/slider4.png";
-import Image6 from "../../../public/assets/slider6.png";
-import Image7 from "../../../public/assets/slider7.png";
-import Icon1 from "../../../public/assets/icono1.png";
-import Icon2 from "../../../public/assets/icono2.png";
-import Icon3 from "../../../public/assets/icono3.png";
-import Icon4 from "../../../public/assets/icono4.png";
-import Icon5 from "../../../public/assets/icono5.png";
-import Icon6 from "../../../public/assets/icono6.png";
-import Icon7 from "../../../public/assets/icono7.png";
+
 
 interface Slide {
   title: string;
@@ -25,46 +12,47 @@ const slides: Slide[] = [
   {
     title: "Twenty-seventh\nchoice",
     description: "Professional moving services tailored to your needs",
-    image: Image1,
-    icon: Icon1,
+    image: "/assets/slider1.png",
+    icon: "/assets/icono1.png",
   },
   {
     title: "Commercial\nrelocation",
     description: "Efficient business moving solutions",
-    image: Image2,
-    icon: Icon2,
+    image: "/assets/slider2.png",
+    icon: "/assets/icono2.png",
   },
   {
     title: "Fast\nmoves",
     description: "Quick and reliable moving services",
-    image: Image3,
-    icon: Icon3,
+    image: "/assets/slider3.png",
+    icon: "/assets/icono3.png",
   },
   {
     title: "Residential\nrelocation",
     description: "Safe home moving for families",
-    image: Image4,
-    icon: Icon4,
+    image: "/assets/slider4.png",
+    icon: "/assets/icono4.png",
   },
   {
     title: "International\nrelocation",
     description: "Global moving expertise",
-    image: Image5,
-    icon: Icon5,
+    image: "/assets/slider5.png",
+    icon: "/assets/icono5.png",
   },
   {
     title: "Storage\nsolutions",
     description: "Secure storage facilities",
-    image: Image6,
-    icon: Icon6,
+    image: "/assets/slider6.png",
+    icon: "/assets/icono6.png",
   },
   {
     title: "Reliable\nchoice",
     description: "Your trusted moving partner",
-    image: Image7,
-    icon: Icon7,
+    image: "/assets/slider7.png",
+    icon: "/assets/icono7.png",
   },
 ];
+
 
 const HeroSection: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
