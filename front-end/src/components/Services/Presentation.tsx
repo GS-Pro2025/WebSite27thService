@@ -1,5 +1,20 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
+// Import images
+import slider1 from "/assets/slider1.png";
+import slider2 from "/assets/slider2.png";
+import slider3 from "/assets/slider3.png";
+import slider4 from "/assets/slider4.png";
+import slider5 from "/assets/slider5.png";
+import slider6 from "/assets/slider6.png";
+import slider7 from "/assets/slider7.png";
+import icon1 from "/assets/icono1.png";
+import icon2 from "/assets/icono2.png";
+import icon3 from "/assets/icono3.png";
+import icon4 from "/assets/icono4.png";
+import icon5 from "/assets/icono5.png";
+import icon6 from "/assets/icono6.png";
+import icon7 from "/assets/icono7.png";
 
 interface Slide {
   title: string;
@@ -8,66 +23,57 @@ interface Slide {
   icon: string;
 }
 
-const slides: Slide[] = [
-  {
-    title: "Twenty-seventh\nchoice",
-    description: "Professional moving services tailored to your needs",
-    image: "/assets/slider1.png",
-    icon: "/assets/icono1.png",
-  },
-  {
-    title: "Commercial\nrelocation",
-    description: "Efficient business moving solutions",
-    image: "/assets/slider2.png",
-    icon: "/assets/icono2.png",
-  },
-  {
-    title: "Fast\nmoves",
-    description: "Quick and reliable moving services",
-    image: "/assets/slider3.png",
-    icon: "/assets/icono3.png",
-  },
-  {
-    title: "Residential\nrelocation",
-    description: "Safe home moving for families",
-    image: "/assets/slider4.png",
-    icon: "/assets/icono4.png",
-  },
-  {
-    title: "International\nrelocation",
-    description: "Global moving expertise",
-    image: "/assets/slider5.png",
-    icon: "/assets/icono5.png",
-  },
-  {
-    title: "Storage\nsolutions",
-    description: "Secure storage facilities",
-    image: "/assets/slider6.png",
-    icon: "/assets/icono6.png",
-  },
-  {
-    title: "Reliable\nchoice",
-    description: "Your trusted moving partner",
-    image: "/assets/slider7.png",
-    icon: "/assets/icono7.png",
-  },
-];
-
-
 const HeroSection: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  // Auto-play functionality
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
+  const slides: Slide[] = [
+    {
+      title: "Twenty-seventh\nchoice",
+      description: "Professional moving services tailored to your needs",
+      image: slider1,
+      icon: icon1,
+    },
+    {
+      title: "Commercial\nrelocation",
+      description: "Efficient business moving solutions",
+      image: slider2,
+      icon: icon2,
+    },
+    {
+      title: "Fast\nmoves",
+      description: "Quick and reliable moving services",
+      image: slider3,
+      icon: icon3,
+    },
+    {
+      title: "Residential\nrelocation",
+      description: "Safe home moving for families",
+      image: slider4,
+      icon: icon4,
+    },
+    {
+      title: "International\nrelocation",
+      description: "Global moving expertise",
+      image: slider5,
+      icon: icon5,
+    },
+    {
+      title: "Storage\nsolutions",
+      description: "Secure storage facilities",
+      image: slider6,
+      icon: icon6,
+    },
+    {
+      title: "Reliable\nchoice",
+      description: "Your trusted moving partner",
+      image: slider7,
+      icon: icon7,
+    },
+  ];
 
-    return () => clearInterval(interval);
-  }, []);
-
+  // Intersection Observer for scroll animations
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -92,6 +98,15 @@ const HeroSection: React.FC = () => {
       }
     };
   }, []);
+
+  // Auto-play functionality
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [slides.length]);
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
