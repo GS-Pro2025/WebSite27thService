@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 
 // Import images
-import slider1 from "/assets/slider1.png";
-import slider2 from "/assets/slider2.png";
-import slider3 from "/assets/slider3.png";
-import slider4 from "/assets/slider4.png";
-import slider5 from "/assets/slider5.png";
-import slider6 from "/assets/slider6.png";
-import slider7 from "/assets/slider7.png";
+import slider1 from "/assets/Slider1.png";
+import slider2 from "/assets/Slider2.png";
+import slider3 from "/assets/Slider3.png";
+import slider4 from "/assets/Slider4.png";
+import slider5 from "/assets/Slider5.png";
+import slider6 from "/assets/Slider6.png";
+import slider7 from "/assets/Slider7.png";
 import icon1 from "/assets/icono1.png";
 import icon2 from "/assets/icono2.png";
 import icon3 from "/assets/icono3.png";
@@ -23,7 +23,7 @@ interface Slide {
   icon: string;
 }
 
-const HeroSection: React.FC = () => {
+const SectionPresentacion: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -233,4 +233,4 @@ const HeroSection: React.FC = () => {
   );
 };
 
-export default HeroSection;
+export default SectionPresentacion;
