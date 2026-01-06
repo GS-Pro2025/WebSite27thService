@@ -73,7 +73,7 @@ export default function StatsComponent() {
           }`}
         >
           <img 
-            src="/assets/bannerCamion.png"
+            src="/assets/bannerCamion.webp"
             alt="Safe box"
             className="w-full h-auto object-cover md:scale-100"
           />
