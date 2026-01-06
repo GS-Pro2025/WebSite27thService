@@ -59,9 +59,6 @@ Desktop.ini
 # Optional: next.js build output
 .next/
 
-# Optional: vercel
-.vercel/
-
 # Optional: Netlify
 .netlify/
 
