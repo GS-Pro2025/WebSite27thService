@@ -1,11 +1,11 @@
 import React from "react";
 import ImageCarousel from "./ImageCarousel";
-import mudanza1 from "/assets/mudanza1.png";
-import mudanza2 from "/assets/mudanza2.png";
-import mudanza3 from "/assets/mudanza3.png";
-import mudanza4 from "/assets/mudanza4.png";
-import mudanza5 from "/assets/mudanza5.png";
-import mudanza6 from "/assets/mudanza6.png";
+import mudanza1 from "/assets/mudanza1.webp";
+import mudanza2 from "/assets/mudanza2.webp";
+import mudanza3 from "/assets/mudanza3.webp";
+import mudanza4 from "/assets/mudanza4.webp";
+import mudanza5 from "/assets/mudanza5.webp";
+import mudanza6 from "/assets/mudanza6.webp";
 
 const PhotoCarouselSection: React.FC = () => {
   const carouselImages = [

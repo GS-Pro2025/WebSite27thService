@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Zap, Globe, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import banner from "../../../public/assets/bannerCamion.png";
-import banner1 from "../../../public/assets/home.png";
+import banner from "../../../public/assets/bannerCamion.webp";
+import banner1 from "../../../public/assets/home.webp";
 import QuoteFormCard from "./QuoteFormCard";
 
 interface QuoteFormData {

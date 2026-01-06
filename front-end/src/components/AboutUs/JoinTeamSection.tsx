@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import banner from "../../../public/assets/team.png";
+import banner from "../../../public/assets/team.webp";
 
 export default function FamilyDreamComponent() {
   const [isVisible, setIsVisible] = useState({

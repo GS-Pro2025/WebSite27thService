@@ -18,14 +18,14 @@ const HeroSection: React.FC = () => {
   const slides: Slide[] = [
     {
       id: 1,
-      image: "/assets/sliderAbout.png",
+      image: "/assets/sliderAbout.webp",
       title: "Your move step by step",
       subtitle:
         "Because your belongings deserve to follow high-quality protocols, follow your move with us",
     },
     {
       id: 2,
-      image: "/assets/sliderAbout1.png",
+      image: "/assets/sliderAbout1.webp",
       title: "Professional moving services",
       subtitle:
         "Expert care for your most valuable possessions, ensuring a safe and efficient relocation experience",

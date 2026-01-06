@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 // Import your stage images
-import stage1Image from "/assets/sliderM1.png";
-import stage2Image from "/assets/sliderM2.png";
-import stage3Image from "/assets/sliderM3.png";
-import stage4Image from "/assets/sliderM4.png";
-import stage5Image from "/assets/sliderM5.png";
-import stage6Image from "/assets/sliderM6.png";
-import stage7Image from "/assets/sliderM7.png";
+import stage1Image from "/assets/sliderM1.webp";
+import stage2Image from "/assets/sliderM2.webp";
+import stage3Image from "/assets/sliderM3.webp";
+import stage4Image from "/assets/sliderM4.webp";
+import stage5Image from "/assets/sliderM5.webp";
+import stage6Image from "/assets/sliderM6.webp";
+import stage7Image from "/assets/sliderM7.webp";
 
 interface Stage {
   id: number;
