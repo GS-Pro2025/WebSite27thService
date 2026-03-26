@@ -1,12 +1,9 @@
 User-agent: *
 Allow: /
 
-# Sitemap location
+# Sitemaps
 Sitemap: https://twentyseventhsg.com/sitemap.xml
 
-# Crawl delay (optional)
-Crawl-delay: 1
 
-# Disallow admin or private pages if any
-# Disallow: /admin/
-# Disallow: /private/
+Disallow: /dist/
+Disallow: /node_modules/

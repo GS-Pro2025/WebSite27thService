@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
+import { HelmetProvider } from "react-helmet-async"; // 1. Importamos el Provider
 import Navbar from "./components/navbar";
 import Loader from "./pages/Loader";
 import "./App.css";
@@ -12,20 +13,22 @@ const AboutUs = lazy(() => import("./pages/AboutUs"));
 
 function App() {
   return (
-    <Router>
-      <div className="w-full overflow-visible">
-        <Navbar />
+    <HelmetProvider>
+      <Router>
+        <div className="w-full overflow-visible">
+          <Navbar />
 
-        <Suspense fallback={<Loader message="Loading page..." />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/services" element={<Service />} />
-            <Route path="/your-move" element={<YourMove />} />
-            <Route path="/about-us" element={<AboutUs />} />
-          </Routes>
-        </Suspense>
-      </div>
-    </Router>
+          <Suspense fallback={<Loader message="Loading page..." />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/services" element={<Service />} />
+              <Route path="/your-move" element={<YourMove />} />
+              <Route path="/about-us" element={<AboutUs />} />
+            </Routes>
+          </Suspense>
+        </div>
+      </Router>
+    </HelmetProvider>
   );
 }
 
